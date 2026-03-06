@@ -370,7 +370,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
       Use case resumes at step 3.
 
 
-
 **MSS**
 
 1. Main Success Scenario (MSS)
@@ -398,8 +397,27 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
    * 7a. Invalid status entered
       * 7a1. OfferFlow informs the user that the status is invalid.
       * 7a2. OfferFlow requests the user to specify a valid status.
-      
+
       Use case resumes from step 7.
+
+**Use case: Create Contact**
+
+**MSS**
+
+1. User request to add new job application.
+2. OfferFlow prompts for or accepts the required job application details.
+3. User enters the job application details.
+4. OfferFlow creates the new job application.
+
+    Use case ends.
+
+**Extensions**
+
+3a. The user enters details in an invalid format.
+   3a1. OfferFlow shows an error message.
+   3a2. User re-enters the details.
+
+Use case resumes at step 3.
 
 ### Non-Functional Requirements
 
