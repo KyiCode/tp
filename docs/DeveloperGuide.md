@@ -331,6 +331,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 *{More to be added}*
 
 
+**Use case: Update status**
+
 **MSS**
 
 1. Main Success Scenario (MSS)
@@ -373,6 +375,21 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * **Mainstream OS**: Windows, Linux, Unix, MacOS
 * **Private contact detail**: A contact detail that is not meant to be shared with others
+* **Mainstream OS**: Windows, Linux, Unix, MacOS
+* **Private contact detail**: A contact detail that is not meant to be shared with others
+* **Application**: A job or internship application submitted by the user to a company.
+* **Duplicate**:  A repeated Application with the same <Company_Name> and <Job_Role>.
+* **Contact**: A record containing information about a company or recruiter, including name, role, and company.
+* **Application Status**:  The current stage of a job application (e.g., Plan to Apply, Applied, Interviewing, Rejected, Offered).
+* **Notification**:  A reminder sent by OfferFlow to alert the user about upcoming deadlines or interview dates.
+* **Folder**:  A storage group that allows users to archive past job search sessions.
+* **Interaction**:   Any recorded communication or follow-up with a recruiter or company (e.g., email reply or interview invitation).
+* **Sample Data**:   Preloaded example entries that allow new users to explore the app before adding their own information.
+* **Cache / Archive**:  A way to store old job search records so that users can start a new job search while keeping historical data.
+* **Filtering**:  A feature that allows users to view applications based on certain attributes such as company name or deadline.
+
+
+
 
 --------------------------------------------------------------------------------------------------------------------
 
