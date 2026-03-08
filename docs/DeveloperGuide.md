@@ -294,10 +294,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 |----------|-------------------|-------------------------------------------------------------------|----------------------------------------------------------------------|
 | `* * *`  | student           | see usage instructions                                            | keep track of my applications                                        |
 | `* * *`  | user              | update or remove contact                                          | update my application status                                         |
-| `* * *`  | careless user     | look for specific contacts                                        | I will not double apply to the same job.                             |
+| `* * *`  | careless user     | look for specific contacts                                        | avoid applying twice to the same job.                                |
 | `* * *`  | impatient user    | filter the contacts by features                                   | view only the relevant information easily                            |
-| `* *`    | user              | enable and customise notification settings                        | can be reminded of the relevant task nearing the date                |
-| `*`      | user              | buttons, tabs, and statuses to look consistent throughout the app | do not get confused while navigating                                 |
+| `* *`    | user              | enable and customise notification settings                        | be reminded of the relevant task nearing the date                    |
+| `*`      | user              | buttons, tabs, and statuses to look consistent throughout the app | avoid getting confused while navigating                              |
 
 *{More to be added}*
 
