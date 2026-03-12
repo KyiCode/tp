@@ -29,7 +29,7 @@ public class Application {
     /**
      * Every field must be present and not null.
      */
-    public Application(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
+    public Application(Name name, Role role, Phone phone, Email email, Address address, Set<Tag> tags) {
         requireAllNonNull(name, phone, email, address, tags);
         this.name = name;
         //this.role = role;

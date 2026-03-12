@@ -103,7 +103,7 @@ class JsonAdaptedApplication {
         final Address modelAddress = new Address(address);
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Application(modelName, modelPhone, modelEmail, modelAddress, modelTags);
+        return new Application(modelName, , modelPhone, modelEmail, modelAddress, modelTags);
     }
 
 }
