@@ -292,7 +292,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 | Priority | As a …​                                    | I want to …​                               | So that I can…​                                                       |
 |----------|-------------------|-------------------------------------------------------------------|----------------------------------------------------------------------|
-| `* * *`  | student           | see usage instructions                                            | keep track of my applications                                        |
+| `* * *`  | student           | add contacts with names, roles, company                                            | keep track of my applications                                        |
 | `* * *`  | user              | update or remove contact                                          | update my application status                                         |
 | `* * *`  | careless user     | look for specific contacts                                        | avoid applying twice to the same job.                                |
 | `* * *`  | impatient user    | filter the contacts by features                                   | view only the relevant information easily                            |
