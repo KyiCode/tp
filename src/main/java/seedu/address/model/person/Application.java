@@ -26,6 +26,9 @@ public class Application {
     private final Address address;
     private final Set<Tag> tags = new HashSet<>();
 
+    //Internal field
+    private boolean isBeingEdited = false;
+
     /**
      * Every field must be present and not null.
      */
@@ -74,6 +77,10 @@ public class Application {
 
         return otherApplication != null
                 && otherApplication.getName().equals(getName());
+    }
+
+    public void setBeingEdited(boolean isEdit) {
+        this.isBeingEdited = isEdit;
     }
 
     /**
