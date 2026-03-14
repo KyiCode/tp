@@ -19,8 +19,7 @@ public class StatusCommand extends Command {
     public static final String COMMAND_WORD = "status";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Updates an application's status.\n"
-            + "Parameters: n/NAME s/STATUS\n"
-            + "Example: status n/Google s/Interviewing";
+                                    + "Parameters: n/NAME s/STATUS\n" + "Example: status n/Google s/Interviewing";
 
     public static final String MESSAGE_SUCCESS = "Updated status: %1$s";
 
@@ -35,6 +34,14 @@ public class StatusCommand extends Command {
         requireNonNull(status);
         this.name = name;
         this.status = status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 
     @Override
@@ -56,16 +63,9 @@ public class StatusCommand extends Command {
             throw new CommandException("Application not found.");
         }
 
-        Application updatedApplication = new Application(
-                target.getName(),
-                target.getPhone(),
-                target.getEmail(),
-                target.getAddress(),
-                target.getTags(),
-                target.getDate(),
-                target.getRole(),
-                status
-        );
+        Application updatedApplication = new Application(target.getName(), target.getPhone(), target.getEmail(),
+                                        target.getAddress(), target.getTags(), target.getDate(), target.getRole(),
+                                        status);
 
         model.setPerson(target, updatedApplication);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);

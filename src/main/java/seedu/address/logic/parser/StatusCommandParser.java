@@ -6,8 +6,19 @@ import seedu.address.logic.commands.StatusCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Status;
 
+/**
+ * Parses input arguments and creates a new StatusCommand object.
+ */
 public class StatusCommandParser implements Parser<StatusCommand> {
 
+    /**
+     * Parses the given {@code String} of arguments in the context of the StatusCommand
+     * and returns a StatusCommand object for execution.
+     *
+     * @param args user input arguments
+     * @return StatusCommand object
+     * @throws ParseException if the user input does not conform to the expected format
+     */
     public StatusCommand parse(String args) throws ParseException {
         requireNonNull(args);
 

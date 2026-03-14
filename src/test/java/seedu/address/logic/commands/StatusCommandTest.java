@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.commands.StatusCommand;
 import seedu.address.model.person.Status;
 
 public class StatusCommandTest {
