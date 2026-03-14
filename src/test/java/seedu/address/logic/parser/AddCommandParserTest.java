@@ -188,7 +188,7 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_optionalFieldsMissing_success() {
-        // zero tags - but all other required fields must be present
+        // zero tags
         Application expectedPerson = new PersonBuilder(AMY).withTags().build();
         assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + ADDRESS_DESC_AMY
                 + DATE_DESC_AMY + ROLE_DESC_AMY + STATUS_DESC_AMY,
