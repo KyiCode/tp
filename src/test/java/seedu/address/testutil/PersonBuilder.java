@@ -5,9 +5,12 @@ import java.util.Set;
 
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Application;
+import seedu.address.model.person.Date;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Role;
+import seedu.address.model.person.Status;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
 
@@ -20,12 +23,18 @@ public class PersonBuilder {
     public static final String DEFAULT_PHONE = "85355255";
     public static final String DEFAULT_EMAIL = "amy@gmail.com";
     public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
+    public static final String DEFAULT_DATE = "2025-11-11";
+    public static final String DEFAULT_ROLE = "CEO";
+    public static final String DEFAULT_STATUS = "Applied";
 
     private Name name;
     private Phone phone;
     private Email email;
     private Address address;
     private Set<Tag> tags;
+    private Role role;
+    private Date date;
+    private Status status;
 
     /**
      * Creates a {@code PersonBuilder} with the default details.
@@ -35,6 +44,9 @@ public class PersonBuilder {
         phone = new Phone(DEFAULT_PHONE);
         email = new Email(DEFAULT_EMAIL);
         address = new Address(DEFAULT_ADDRESS);
+        date = new Date(DEFAULT_DATE);
+        role = new Role(DEFAULT_ROLE);
+        status = new Status(DEFAULT_STATUS);
         tags = new HashSet<>();
     }
 
@@ -46,6 +58,9 @@ public class PersonBuilder {
         phone = personToCopy.getPhone();
         email = personToCopy.getEmail();
         address = personToCopy.getAddress();
+        date = personToCopy.getDate();
+        status = personToCopy.getStatus();
+        role = personToCopy.getRole();
         tags = new HashSet<>(personToCopy.getTags());
     }
 
@@ -89,8 +104,32 @@ public class PersonBuilder {
         return this;
     }
 
+    /**
+     * Sets the {@code Email} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withStatus(String status) {
+        this.status = new Status(status);
+        return this;
+    }
+
+    /**
+     * Sets the {@code Email} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withRole(String role) {
+        this.role = new Role(role);
+        return this;
+    }
+
+    /**
+     * Sets the {@code Email} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withDate(String date) {
+        this.date = new Date(date);
+        return this;
+    }
+
     public Application build() {
-        return new Application(name, phone, email, address, tags);
+        return new Application(name, phone, email, address, tags, date, role, status);
     }
 
 }
