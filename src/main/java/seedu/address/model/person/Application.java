@@ -20,10 +20,13 @@ public class Application {
     private final Name name;
     private final Phone phone;
     private final Email email;
+    private final Role role;
+    private final Date date;
+    private final Address address;
+    private final Status status;
     //private final Role role;
 
     // Data fields
-    private final Address address;
     private final Set<Tag> tags = new HashSet<>();
 
     //Internal field
@@ -32,14 +35,18 @@ public class Application {
     /**
      * Every field must be present and not null.
      */
-    public Application(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        requireAllNonNull(name, phone, email, address, tags);
+    public Application(Name name, Phone phone, Email email, Address address, Set<Tag> tags,
+                Date date, Role role, Status status) {
+        requireAllNonNull(name, phone, email, role, tags, status, date, address);
         this.name = name;
-        //this.role = role;
         this.phone = phone;
         this.email = email;
-        this.address = address;
+        this.role = role;
+        this.date = date;
         this.tags.addAll(tags);
+        this.address = address;
+        this.status = status;
+
     }
 
     public Name getName() {
@@ -58,8 +65,21 @@ public class Application {
         return address;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
     /**
-     * Returns an immutable tag set, which throws {@code UnsupportedOperationException}
+     * Returns an immutable tag set, which throws
+     * {@code UnsupportedOperationException}
      * if modification is attempted.
      */
     public Set<Tag> getTags() {
@@ -75,8 +95,12 @@ public class Application {
             return true;
         }
 
-        return otherApplication != null
-                && otherApplication.getName().equals(getName());
+        if (otherApplication == null) {
+            return false;
+        }
+
+        return Objects.equals(this.getName(), otherApplication.getName())
+                && Objects.equals(this.getRole(), otherApplication.getRole());
     }
 
     public void setBeingEdited(boolean isEdit) {
@@ -98,18 +122,22 @@ public class Application {
             return false;
         }
 
-        Application otherPerson = (Application) other;
-        return name.equals(otherPerson.name)
-                && phone.equals(otherPerson.phone)
-                && email.equals(otherPerson.email)
-                && address.equals(otherPerson.address)
-                && tags.equals(otherPerson.tags);
+        Application otherApplication = (Application) other;
+        return name.equals(otherApplication.name)
+                && phone.equals(otherApplication.phone)
+                && email.equals(otherApplication.email)
+                && address.equals(otherApplication.address)
+                && date.equals(otherApplication.date)
+                && role.equals(otherApplication.role)
+                && status.equals(otherApplication.status)
+                && tags.equals(otherApplication.tags);
     }
+
 
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags);
+        return Objects.hash(name, phone, email, date, role, address, status, tags);
     }
 
     @Override
@@ -118,8 +146,11 @@ public class Application {
                 .add("name", name)
                 .add("phone", phone)
                 .add("email", email)
-                .add("address", address)
+                .add("role", role)
+                .add("date", date)
                 .add("tags", tags)
+                .add("address", address)
+                .add("status", status)
                 .toString();
     }
 
