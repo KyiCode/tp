@@ -15,9 +15,12 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Address;
+import seedu.address.model.person.Date;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Role;
+import seedu.address.model.person.Status;
 import seedu.address.model.tag.Tag;
 
 public class ParserUtilTest {
@@ -26,6 +29,9 @@ public class ParserUtilTest {
     private static final String INVALID_ADDRESS = " ";
     private static final String INVALID_EMAIL = "example.com";
     private static final String INVALID_TAG = "#friend";
+    private static final String INVALID_DATE = "2024-13-45";
+    private static final String INVALID_ROLE = "";
+    private static final String INVALID_STATUS = " ";
 
     private static final String VALID_NAME = "Rachel Walker";
     private static final String VALID_PHONE = "123456";
@@ -33,6 +39,9 @@ public class ParserUtilTest {
     private static final String VALID_EMAIL = "rachel@example.com";
     private static final String VALID_TAG_1 = "friend";
     private static final String VALID_TAG_2 = "neighbour";
+    private static final String VALID_DATE = "2024-03-15";
+    private static final String VALID_ROLE = "Software Engineer";
+    private static final String VALID_STATUS = "pending";
 
     private static final String WHITESPACE = " \t\r\n";
 
@@ -43,8 +52,8 @@ public class ParserUtilTest {
 
     @Test
     public void parseIndex_outOfRangeInput_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, ()
-            -> ParserUtil.parseIndex(Long.toString(Integer.MAX_VALUE + 1)));
+        assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () ->
+                ParserUtil.parseIndex(Long.toString(Integer.MAX_VALUE + 1)));
     }
 
     @Test
@@ -146,6 +155,75 @@ public class ParserUtilTest {
         String emailWithWhitespace = WHITESPACE + VALID_EMAIL + WHITESPACE;
         Email expectedEmail = new Email(VALID_EMAIL);
         assertEquals(expectedEmail, ParserUtil.parseEmail(emailWithWhitespace));
+    }
+
+    @Test
+    public void parseDate_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseDate((String) null));
+    }
+
+    @Test
+    public void parseDate_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseDate(INVALID_DATE));
+    }
+
+    @Test
+    public void parseDate_validValueWithoutWhitespace_returnsDate() throws Exception {
+        Date expectedDate = new Date(VALID_DATE);
+        assertEquals(expectedDate, ParserUtil.parseDate(VALID_DATE));
+    }
+
+    @Test
+    public void parseDate_validValueWithWhitespace_returnsTrimmedDate() throws Exception {
+        String dateWithWhitespace = WHITESPACE + VALID_DATE + WHITESPACE;
+        Date expectedDate = new Date(VALID_DATE);
+        assertEquals(expectedDate, ParserUtil.parseDate(dateWithWhitespace));
+    }
+
+    @Test
+    public void parseRole_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseRole((String) null));
+    }
+
+    @Test
+    public void parseRole_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseRole(INVALID_ROLE));
+    }
+
+    @Test
+    public void parseRole_validValueWithoutWhitespace_returnsRole() throws Exception {
+        Role expectedRole = new Role(VALID_ROLE);
+        assertEquals(expectedRole, ParserUtil.parseRole(VALID_ROLE));
+    }
+
+    @Test
+    public void parseRole_validValueWithWhitespace_returnsTrimmedRole() throws Exception {
+        String roleWithWhitespace = WHITESPACE + VALID_ROLE + WHITESPACE;
+        Role expectedRole = new Role(VALID_ROLE);
+        assertEquals(expectedRole, ParserUtil.parseRole(roleWithWhitespace));
+    }
+
+    @Test
+    public void parseStatus_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseStatus((String) null));
+    }
+
+    @Test
+    public void parseStatus_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseStatus(INVALID_STATUS));
+    }
+
+    @Test
+    public void parseStatus_validValueWithoutWhitespace_returnsStatus() throws Exception {
+        Status expectedStatus = new Status(VALID_STATUS);
+        assertEquals(expectedStatus, ParserUtil.parseStatus(VALID_STATUS));
+    }
+
+    @Test
+    public void parseStatus_validValueWithWhitespace_returnsTrimmedStatus() throws Exception {
+        String statusWithWhitespace = WHITESPACE + VALID_STATUS + WHITESPACE;
+        Status expectedStatus = new Status(VALID_STATUS);
+        assertEquals(expectedStatus, ParserUtil.parseStatus(statusWithWhitespace));
     }
 
     @Test
