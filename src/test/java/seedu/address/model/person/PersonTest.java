@@ -4,9 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_DATE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_ROLE_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_STATUS_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
@@ -32,22 +35,36 @@ public class PersonTest {
         // null -> returns false
         assertFalse(ALICE.isSameApplication(null));
 
-        // same name, all other attributes different -> returns true
-        Application editedAlice = new PersonBuilder(ALICE).withPhone(VALID_PHONE_BOB).withEmail(VALID_EMAIL_BOB)
-                .withAddress(VALID_ADDRESS_BOB).withTags(VALID_TAG_HUSBAND).build();
+        // same name and role, all other attributes different -> returns true
+        Application editedAlice = new PersonBuilder(ALICE)
+                .withPhone(VALID_PHONE_BOB)
+                .withEmail(VALID_EMAIL_BOB)
+                .withAddress(VALID_ADDRESS_BOB)
+                .withDate(VALID_DATE_BOB)
+                .withStatus(VALID_STATUS_BOB)
+                .withTags(VALID_TAG_HUSBAND)
+                .build();
         assertTrue(ALICE.isSameApplication(editedAlice));
 
-        // different name, all other attributes same -> returns false
+        // different name, same role -> returns false
         editedAlice = new PersonBuilder(ALICE).withName(VALID_NAME_BOB).build();
         assertFalse(ALICE.isSameApplication(editedAlice));
 
-        // name differs in case, all other attributes same -> returns false
-        Application editedBob = new PersonBuilder(BOB).withName(VALID_NAME_BOB.toLowerCase()).build();
-        assertFalse(BOB.isSameApplication(editedBob));
+        // same name, different role -> returns false
+        editedAlice = new PersonBuilder(ALICE).withRole(VALID_ROLE_BOB).build();
+        assertFalse(ALICE.isSameApplication(editedAlice));
 
-        // name has trailing spaces, all other attributes same -> returns false
+        // name differs in case, same role -> returns true
+        Application editedBob = new PersonBuilder(BOB)
+                .withName(VALID_NAME_BOB.toLowerCase())
+                .build();
+        assertTrue(BOB.isSameApplication(editedBob));
+
+        // name has trailing spaces, same role -> returns false
         String nameWithTrailingSpaces = VALID_NAME_BOB + " ";
-        editedBob = new PersonBuilder(BOB).withName(nameWithTrailingSpaces).build();
+        editedBob = new PersonBuilder(BOB)
+                .withName(nameWithTrailingSpaces)
+                .build();
         assertFalse(BOB.isSameApplication(editedBob));
     }
 
@@ -85,6 +102,18 @@ public class PersonTest {
         editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB).build();
         assertFalse(ALICE.equals(editedAlice));
 
+        // different date -> returns false
+        editedAlice = new PersonBuilder(ALICE).withDate(VALID_DATE_BOB).build();
+        assertFalse(ALICE.equals(editedAlice));
+
+        // different role -> returns false
+        editedAlice = new PersonBuilder(ALICE).withRole(VALID_ROLE_BOB).build();
+        assertFalse(ALICE.equals(editedAlice));
+
+        // different status -> returns false
+        editedAlice = new PersonBuilder(ALICE).withStatus(VALID_STATUS_BOB).build();
+        assertFalse(ALICE.equals(editedAlice));
+
         // different tags -> returns false
         editedAlice = new PersonBuilder(ALICE).withTags(VALID_TAG_HUSBAND).build();
         assertFalse(ALICE.equals(editedAlice));
@@ -94,7 +123,9 @@ public class PersonTest {
     public void toStringMethod() {
         String expected = Application.class.getCanonicalName()
                 + "{name=" + ALICE.getName() + ", phone=" + ALICE.getPhone()
-                + ", email=" + ALICE.getEmail() + ", address=" + ALICE.getAddress() + ", tags=" + ALICE.getTags() + "}";
+                + ", email=" + ALICE.getEmail() + ", role=" + ALICE.getRole()
+                + ", date=" + ALICE.getDate() + ", tags=" + ALICE.getTags()
+                + ", address=" + ALICE.getAddress() + ", status=" + ALICE.getStatus() + "}";
         assertEquals(expected, ALICE.toString());
     }
 }
