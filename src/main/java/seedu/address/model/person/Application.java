@@ -77,6 +77,10 @@ public class Application {
         return status;
     }
 
+    public boolean getEditingStatus() {
+        return isBeingEdited;
+    }
+
     /**
      * Returns an immutable tag set, which throws
      * {@code UnsupportedOperationException}
