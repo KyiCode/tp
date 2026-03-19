@@ -147,11 +147,11 @@ Format: `status n/COMPANY_NAME r/JOB_ROLE s/STATUS`
 - If application exists → status is updated
 - If not found → error shown
 
-Example success:
-Updated status: Tiktok - Data Analyst
-
-Example error:
-Application not found.
+#### Outcome
+**Success:**
+- Updated status: Tiktok - Data Analyst
+**Failure:**
+- Application not found.
 
 #### Notes
 - Both **company name and role must match exactly**
@@ -253,6 +253,7 @@ Action     | Format, Examples
 **Clear**  | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
+**Status** | `status n/COMPANY r/ROLE s/STATUS`<br> e.g., `status n/Tiktok r/Data Analyst s/Rejected`
 **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **List**   | `list`
 **Help**   | `help`
