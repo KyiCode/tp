@@ -1,11 +1,14 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ROLE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_STATUS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
@@ -21,20 +24,19 @@ public class AddCommand extends Command {
     public static final String COMMAND_WORD = "add";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a company application.\n"
-            + "Planning to apply:\n"
-            + "add "
-            + PREFIX_NAME + "<Company_Name> "
-            + PREFIX_ROLE + "<Job_Role>\n"
-            + "Applied:\n"
-            + "add "
-            + PREFIX_NAME + "<Company_Name> "
-            + PREFIX_PHONE + "<Company_Number> "
-            + PREFIX_EMAIL + "<Company_Email> "
-            + PREFIX_ROLE + "<Job_Role> "
-            + PREFIX_DATE + "<Date_Applied>\n"
+            + PREFIX_NAME + "NAME "
+            + PREFIX_PHONE + "PHONE "
+            + PREFIX_EMAIL + "EMAIL "
+            + PREFIX_ADDRESS + "ADDRESS "
+            + PREFIX_ROLE + "ROLE "
+            + PREFIX_DATE + "DATE "
+            + PREFIX_STATUS + "STATUS "
+            + PREFIX_TAG + "[TAGS...]\n"
             + "Example:\n"
-            + "add n/GoodWorkPlace r/CEO\n"
-            + "add n/Google p/00000000 e/google@gmail.com r/CEO d/2025-11-11";
+            + "add n/Microsoft p/4258828080 e/jobs@microsoft.com "
+            + "a/One Microsoft Way, Redmond, WA "
+            + "d/2024-03-16 r/Product Manager "
+            + "s/interviewed t/tech";
 
     public static final String MESSAGE_SUCCESS = "New application added: %1$s";
     public static final String MESSAGE_DUPLICATE_PERSON = "This application already exists.";
@@ -61,6 +63,10 @@ public class AddCommand extends Command {
 
         model.addPerson(toAdd);
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd)));
+    }
+
+    public Application geApplication() {
+        return toAdd;
     }
 
     @Override
