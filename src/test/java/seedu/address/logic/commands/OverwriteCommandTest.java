@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
-import seedu.address.logic.commands.DuplicateApplicationStore;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -39,8 +38,8 @@ public class OverwriteCommandTest {
             model.addPerson(alice);
         }
 
-        duplicateAlice = new PersonBuilder(ALICE).withPhone("98989898").
-                withAddress("test street")
+        duplicateAlice = new PersonBuilder(ALICE).withPhone("98989898")
+                .withAddress("test street")
                 .build();
 
         newApplication = new PersonBuilder()
@@ -83,8 +82,7 @@ public class OverwriteCommandTest {
         assertTrue(DuplicateApplicationStore.hasLastDuplicateApplication());
 
         OverwriteCommand overwriteCommand = new OverwriteCommand();
-        assertThrows(DuplicateApplicationException.class,
-                () -> overwriteCommand.execute(model));
+        assertThrows(DuplicateApplicationException.class, () -> overwriteCommand.execute(model));
 
         assertFalse(DuplicateApplicationStore.hasLastDuplicateApplication());
     }
@@ -95,7 +93,6 @@ public class OverwriteCommandTest {
 
         OverwriteCommand overwriteCommand = new OverwriteCommand();
         assertThrows(DuplicateApplicationException.class,
-                OverwriteCommand.MESSAGE_NO_DUPLICATE,
-                () -> overwriteCommand.execute(model));
+                OverwriteCommand.MESSAGE_NO_DUPLICATE, () -> overwriteCommand.execute(model));
     }
 }

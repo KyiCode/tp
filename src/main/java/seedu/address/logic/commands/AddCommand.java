@@ -40,7 +40,7 @@ public class AddCommand extends Command {
 
     public static final String MESSAGE_SUCCESS = "New application added: %1$s";
     public static final String MESSAGE_DUPLICATE_PERSON =
-            "This application already exists. Use /OverWrite to replace existing application";
+            "This application already exists. Use overwrite to replace existing application";
     public static final String INVALID_DATE = "OOPS! Invalid date format, use the format (YYYY-MM-DD)";
 
 
