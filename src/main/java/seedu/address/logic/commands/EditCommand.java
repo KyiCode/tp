@@ -105,6 +105,7 @@ public class EditCommand extends Command {
         Date updatedDate = editPersonDescriptor.getDate().orElse(personToEdit.getDate());
         Role updatedRole = editPersonDescriptor.getRole().orElse(personToEdit.getRole());
         Status updatedStatus = editPersonDescriptor.getStatus().orElse(personToEdit.getStatus());
+        //Upcoming updateUpcoming = editPersonDescriptor.getUpcoming().orElse(personToEdit.getStatus());
 
         return new Application(updatedName, updatedPhone, updatedEmail, updatedAddress,
                 updatedTags, updatedDate, updatedRole, updatedStatus);

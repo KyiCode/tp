@@ -52,7 +52,9 @@ public class Messages {
                 .append(person.getDate())
                 .append("; Status: ")
                 .append(person.getStatus())
-                .append("; Tags: ");
+                .append("; Tags: ")
+                .append(person.getUpcoming())
+                .append("; Upcoming: ");
         person.getTags().forEach(builder::append);
         return builder.toString();
     }

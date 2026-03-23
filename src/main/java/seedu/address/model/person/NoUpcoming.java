@@ -1,5 +1,8 @@
 package seedu.address.model.person;
 
+/**
+ * Class to represent no upcoming events.
+ */
 public class NoUpcoming extends Upcoming {
 
     public NoUpcoming() {
