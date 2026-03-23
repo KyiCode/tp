@@ -1,18 +1,32 @@
 package seedu.address.model.person;
 
-import seedu.address.commons.util.ToStringBuilder;
-
 import java.util.Objects;
 
+import seedu.address.commons.util.ToStringBuilder;
+
+
+/**
+ * Event class to represent upcoming tasks of an application.
+ */
 public class Event {
     private final String eventName;
     private final Date eventDate;
 
+
+    /**
+     * Event with no deadlines.
+     * @param eventName event Description.
+     */
     public Event(String eventName) {
         this.eventName = eventName;
         this.eventDate = null;
     }
 
+    /**
+     * Event with a deadline.
+     * @param eventName event Description.
+     * @param eventDate event date.
+     */
     public Event(String eventName, String eventDate) {
         this.eventName = eventName;
         this.eventDate = new Date(eventDate);
