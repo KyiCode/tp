@@ -19,12 +19,14 @@ import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.ExitCommand;
+import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.OverwriteCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Application;
+import seedu.address.model.person.CompanyContainsKeywordPredicate;
 import seedu.address.model.person.DuplicateApplicationStore;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.testutil.PersonBuilder;
@@ -71,6 +73,12 @@ public class AddressBookParserTest {
         FindCommand command = (FindCommand) parser.parseCommand(
                 FindCommand.COMMAND_WORD + " " + keywords.stream().collect(Collectors.joining(" ")));
         assertEquals(new FindCommand(new NameContainsKeywordsPredicate(keywords)), command);
+    }
+
+    @Test
+    public void parseCommand_filter() throws Exception {
+        FilterCommand command = (FilterCommand) parser.parseCommand("/FILTER /COMPANY /Amy");
+        assertEquals(new FilterCommand(new CompanyContainsKeywordPredicate("Amy")), command);
     }
 
     @Test
@@ -129,6 +137,7 @@ public class AddressBookParserTest {
             ExitCommand.COMMAND_WORD,
             HelpCommand.COMMAND_WORD,
             FindCommand.COMMAND_WORD + " test",
+            FilterCommand.COMMAND_WORD_WITH_SLASH + " /company /test",
             DeleteCommand.COMMAND_WORD + " 1",
             possibleAddCommand
         };

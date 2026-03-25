@@ -144,6 +144,14 @@ public class ParserUtil {
     }
 
     /**
+     * Returns true if the given {@code date} is a valid date in YYYY-MM-DD format after trimming.
+     */
+    public static boolean isParsableDate(String date) {
+        requireNonNull(date);
+        return Date.isValidDate(date.trim());
+    }
+
+    /**
      * Parses a {@code String role} into a {@code Role}.
      * Leading and trailing whitespaces will be trimmed.
      *
