@@ -92,7 +92,7 @@ Adds the internship application you have applied for, to help you keep track of 
 <box type="warning" seamless>
 
 **Caution:**
-OfferFlow by default does not allow duplicate application with same name and role. Hence, if you choose to add application with duplicate name and role, you can choose whether or not to [overwrite](###Overwrite-duplicate-application) it (ie: replace the pre-existing application with the new application)
+OfferFlow by default does not allow duplicate application with same name and role. Hence, if you choose to add application with duplicate name and role, you can choose whether or not to [overwrite](#overwrite-duplicate-application--overwrite) it (ie: replace the pre-existing application with the new application)
 </box>
 
 Format: `add n/NAME p/PHONE e/EMAIL a/ADDRESS d/DATE r/ROLE s/STATUS [t/TAG]...​`
