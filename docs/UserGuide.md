@@ -241,6 +241,28 @@ Format: `find KEYWORD [MORE_KEYWORDS]`
 #### Expected Outcome:
 
   ![result for 'find Google Meta'](images/Find.png)
+  
+### Filtering applications: `/filter`
+
+Filters applications by company, applied date, status, or tag.
+
+Format:
+* `/filter /company /KEYWORD`
+* `/filter /applied /YYYY-MM-DD`
+* `/filter /status /STATUS`
+* `/filter /tag /TAG`
+
+Notes:
+* Filter matching is case-insensitive.
+* Leading and trailing spaces are ignored.
+* Internal spacing still matters.
+* Applied dates must use `YYYY-MM-DD`.
+
+Examples:
+* `/filter /company /Google`
+* `/filter /applied /2025-11-11`
+* `/filter /status /Applied`
+* `/filter /tag /java`
 
 ### Deleting an application : `delete`
 
@@ -346,6 +368,7 @@ Export past applications into different folder to declutter your active list.
 | **Delete** | `delete n/NAME r/ROLE` | `delete n/Google r/Backend Developer` |
 | **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]...` | `edit 2 n/James Lee e/jameslee@example.com` |
 | **Status** | `status n/COMPANY r/ROLE s/STATUS` | `status n/Tiktok r/Data Analyst s/Rejected` |
+| **Filter** | `/filter /company /KEYWORD` or `/filter /applied /YYYY-MM-DD` or `/filter /status /STATUS` or `/filter /tag /TAG`| `test` |
 | **Find** | `find KEYWORD [MORE_KEYWORDS]` | `find James Jake` |
 | **List** | `list` | `list` |
 | **Help** | `help` | `help` |
