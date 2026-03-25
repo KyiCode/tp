@@ -178,6 +178,28 @@ Examples:
 * `find alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
 
+### Filtering applications: `/filter`
+
+Filters applications by company, applied date, status, or tag.
+
+Format:
+* `/filter /company /KEYWORD`
+* `/filter /applied /YYYY-MM-DD`
+* `/filter /status /STATUS`
+* `/filter /tag /TAG`
+
+Notes:
+* Filter matching is case-insensitive.
+* Leading and trailing spaces are ignored.
+* Internal spacing still matters.
+* Applied dates must use `YYYY-MM-DD`.
+
+Examples:
+* `/filter /company /Google`
+* `/filter /applied /2025-11-11`
+* `/filter /status /Applied`
+* `/filter /tag /java`
+
 ### Deleting a person : `delete`
 
 Deletes a specified application from the address book via index or reference via Company name and Role.
@@ -255,5 +277,6 @@ Action     | Format, Examples
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Status** | `status n/COMPANY r/ROLE s/STATUS`<br> e.g., `status n/Tiktok r/Data Analyst s/Rejected`
 **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
+**Filter** | `/filter /company /KEYWORD` or `/filter /applied /YYYY-MM-DD` or `/filter /status /STATUS` or `/filter /tag /TAG`
 **List**   | `list`
 **Help**   | `help`
