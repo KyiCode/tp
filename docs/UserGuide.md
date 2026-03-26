@@ -3,9 +3,19 @@ layout: default.md
   title: "User Guide"
   pageNav: 3
 ---
-# AB-3 User Guide
 
-Application List Level 3 (AB3) is a **desktop app for managing contacts, optimized for use via a  Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AB3 can get your contact management tasks done faster than traditional GUI apps.
+# OfferFlow User Guide
+
+## 🎯 For the Internship-Hunting CS Student
+
+Let's be honest applying for internships can be a nightmare. Between grinding LeetCode questions, projects and actually attending classes, tracking internship applications can itself become a full-time job.
+
+Hence, **OfferFlow** was built by CS students by CS students as we understand the struggle. OfferFlow is a desktop app that helps you:
+- Track every internship application without the spreadsheet and calender reminder chaos
+- Update and moniter application statuses in seconds unlike spreadsheet which can be very time-consuming
+- Keep all your opportunities organised with minimal overhead!
+
+If you can type fast, OfferFlow will manage your internship pipeline faster than any GUI-focused application!
 
 <!-- * Table of Contents -->
 
@@ -17,10 +27,13 @@ Application List Level 3 (AB3) is a **desktop app for managing contacts, optimiz
 
 1. Ensure you have Java `17` or above installed in your Computer.`<br>`
    **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
-2. Download the latest `.jar` file from [here](https://github.com/AY2526S2-CS2103T-F10-4/tp/releases).
-3. Copy the file to the folder you want to use as the _home folder_ for your OfferFlow.
-4. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar addressbook.jar` command to run the application.`<br>`
-   A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.`<br>`
+
+1. Download the latest `.jar` file from [here](https://github.com/AY2526S2-CS2103T-F10-4/tp/releases).
+
+1. Copy the file to the folder you want to use as the _home folder_ for your OfferFlow.
+
+1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar OfferFlow.jar` command to run the application.<br>
+   A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
    ![Ui](images/Ui.png)
 5. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.`<br>`
    Some example commands you can try:
@@ -55,35 +68,81 @@ Application List Level 3 (AB3) is a **desktop app for managing contacts, optimiz
 
 ### Viewing help : `help`
 
-Shows a message explaining how to access the help page.
+Shows you a message explaining how to access the help page.
 
 ![help message](images/helpMessage.png)
 
 Format: `help`
 
-### Adding a person: `add`
 
-Adds a person to the application list.
+### Adding an internship application: `add`
+
+Adds the internship application you have applied for, to help you keep track of all your applications.
+
+<box type="warning" seamless>
+
+**Caution:**
+OfferFlow by default does not allow duplicate application with same name and role. Hence, if you choose to add application with duplicate name and role, you can choose whether or not to [overwrite](#overwrite-duplicate-application--overwrite) it (ie: replace the pre-existing application with the new application)
+</box>
 
 Format: `add n/NAME p/PHONE e/EMAIL a/ADDRESS d/DATE r/ROLE s/STATUS [t/TAG]...`
 
 <box type="tip" seamless>
 
-**Tip:** A person can have any number of tags (including 0)
-`</box>`
+**Tip:** An application can have any number of tags (including 0)
+</box>
 
-Examples:
+#### Parameters
+- `n/NAME` → Name of the company
+- `p/PHONE` → company telephone number
+- `e/EMAIL` → company email
+- `a/ADDRESS` → company location
+- `d/DATE` → date when you applied
+- `r/ROLE` → job position applied for
+- `s/STATUS` → application progress
+- `t/TAGS` → optional fields
 
+#### Examples:
 * `add n/Google p/96789012 e/google@gmail.com a/70 Pasir Panjang Rd, #03-71 d/2024-06-18 r/Backend Developer s/interviewed t/java`
 * `add n/Google p/12345678 e/careers@google.com a/123 qSilicon Valley d/2025-06-01 r/Software Engineer s/pending`
 
-### Listing all persons : `list`
+#### Expected Outcome:
 
-Shows a list of all the internship applications on OfferFlow.
+![Output](images/AddCommand.png)
+
+
+### Overwrite duplicate application : `overwrite`
+
+<box type="warning" seamless>
+
+**Caution:**
+OfferFlow by default does not allow duplicate application with same name and role. Hence, if you choose to add application with duplicate name and role, you can choose whether or not to overwrite it (ie: replace the pre-existing application with the new application)
+</box>
+
+Overwrites pre-existing application in OfferFlow that has the same name and role, with the new application when you try to add an application with the same name and role as another already existing application
+
+![DuplicateApplication](images/DuplicateApplication.png)
+
+Format: `overwrite`
+
+If you choose to overwrite, type `overwrite`. If not, continue using the app as per normal and the new duplication application you were trying to add will be automatically discarded
+
+#### Expected Outcome (overwrite):
+
+![Overwrite](images/Overwrite.png)
+
+
+### Listing all internship applications : `list`
+
+Shows a list of all the internship applications you have added on OfferFlow.
 
 Format: `list`
 
-### Editing a person : `edit`
+#### Expected Outcome:
+
+![List](images/List.png)
+
+### Editing an application : `edit`
 
 Edits an existing application in OfferFlow.
 
@@ -103,7 +162,7 @@ Examples:
 
 ### Updating application status: `status`
 
-Updates the status of an application.
+Updates the status of an **existing** application.
 
 Format: `status n/COMPANY_NAME r/JOB_ROLE s/STATUS`
 
@@ -119,13 +178,14 @@ Format: `status n/COMPANY_NAME r/JOB_ROLE s/STATUS`
 - `r/JOB_ROLE` → Role applied for (must match exactly)
 - `s/STATUS` → New status
 
-#### Valid Status Values
-
-- Interested
-- Applied
-- Interviewing
-- Rejected
-- Offered
+#### Valid Statuses
+| Status | When to use |
+|:-------|:------------|
+| **Interested** | Found the role, planning to apply |
+| **Applied** | Submitted your application |
+| **Interviewing** | Interviews scheduled (congrats, halfway there!) |
+| **Rejected** | Didn't get it (we've all been there) |
+| **Offered** | 🎉 You got the offer! |
 
 #### Examples
 
@@ -138,50 +198,60 @@ Format: `status n/COMPANY_NAME r/JOB_ROLE s/STATUS`
 - If application exists → status is updated
 - If not found → error shown
 
-#### Outcome
+![UpdateStatus](images/Update_Status.png)
 
-**Success:**
+<box type="warning" seamless>
 
-- Updated status: Tiktok - Data Analyst
-  **Failure:**
-- Application not found.
-
-#### Notes
-
+**Caution:**
 - Both **company name and role must match exactly**
 - Command will fail if:
   - missing parameters
   - invalid format
   - application does not exist
+</box>
 
-### Locating persons by name: `find`
+### Locating applications by the company name: `find`
 
-Finds persons whose names contain any of the given keywords.
+Helps you finds applications whose company names contain any of the given keywords.
 
 Format: `find KEYWORD [MORE_KEYWORDS]`
 
-* The search is case-insensitive. e.g `hans` will match `Hans`
-* The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
-* Only the name is searched.
-* Only full words will be matched e.g. `Han` will not match `Hans`
-* Persons matching at least one keyword will be returned (i.e. `OR` search).
-  e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
+#### Parameters
+- `KEYWORD` → Name of the company
+- `[MORE_KEYWORD}` → Name of the company
 
-Examples:
+* The search is case-insensitive. e.g `google` will match `Google`
+* The order of the keywords does not matter. e.g. `Google Meta` will match `Meta Google`
+* Only the company name is searched.
+* Only full words will be matched e.g. `Goog` will not match `Google`
+* Applications matching at least one keyword will be returned (i.e. `OR` search).
+  e.g. `Google Meta` will return `Google`, `Meta`
 
-* `find John` returns `john` and `John Doe`
-* `find alex david` returns `Alex Yeoh`, `David Li<br>`
-  ![result for 'find alex david'](images/findAlexDavidResult.png)
+#### Examples
+* `find Meta` returns all applications applied to `Meta`
+* `find Meta Google` returns all applications applied to `Meta` and `Google`<br>
 
-### Filtering applications: `/filter`
+#### Expected Outcome:
+
+  ![result for 'find Google Meta'](images/Find.png)
+
+#### Examples
+* `find Meta` returns all applications applied to `Meta`
+* `find Meta Google` returns all applications applied to `Meta` and `Google`<br>
+
+#### Expected Outcome:
+
+  ![result for 'find Google Meta'](images/Find.png)
+
+### Filtering applications: `/f`
 
 Filters applications by company, applied date, status, or tag.
 
 Format:
-* `/filter /company /KEYWORD`
-* `/filter /applied /YYYY-MM-DD`
-* `/filter /status /STATUS`
-* `/filter /tag /TAG`
+* `/f /c /KEYWORD`
+* `/f /a /YYYY-MM-DD`
+* `/f /s /STATUS`
+* `/f /t /TAG`
 
 Notes:
 * Filter matching is case-insensitive.
@@ -190,99 +260,88 @@ Notes:
 * Applied dates must use `YYYY-MM-DD`.
 
 Examples:
-* `/filter /company /Google`
-* `/filter /applied /2025-11-11`
-* `/filter /status /Applied`
-* `/filter /tag /java`
+* `/f /c /Google`
+* `/f /a /2025-11-11`
+* `/f /s /Applied`
+* `/f /t /java`
 
-### Creating a new folder : `folder`
+### Deleting an application : `delete`
 
-Creates a new empty application list saved under `data/<FOLDER_NAME>.json` and switches to it.
-
-Format: `folder FOLDER_NAME`
-
-* `FOLDER_NAME` must be a valid filename (no spaces or special characters).
-* A new empty application list is created at `data/<FOLDER_NAME>.json`.
-* Any existing data in the current folder is unaffected.
-
-Examples:
-
-* `folder Y1S2` creates a new empty application list at `data/Y1S2.json` and switches to it.
-* `folder Internships2025` creates a new application list for internship applications.
-
-### Switching to an existing folder : `toggle`
-
-Switches the active application list to an existing folder (JSON file) at `data/<FOLDER_NAME>.json`.
-
-Format: `toggle FOLDER_NAME`
-
-* `FOLDER_NAME` must correspond to an existing file at `data/<FOLDER_NAME>.json`.
-* All previously saved data in that folder will be loaded.
-* Use `folder` instead if you want to create a new empty application list.
-
-Examples:
-
-* `toggle Y1S2` switches to the application list stored at `data/Y1S2.json`.
-* `toggle Internships2025` loads your saved internship applications from `data/Internships2025.json`.
-
-### Deleting a person : `delete`
-
-Deletes a specified application from the application list via index or reference via Company name and Role.
+You can delete a specified application from OfferFlow via index or reference via Company name and Role.
 
 Format: `delete INDEX`
 
 * Deletes the Application at the specified `INDEX`.
-* The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …
 
-Format: `delete n/<Company_Name> r/<Role>`
+#### Parameters
+- `INDEX` → the index number shown in the displayed application list
+<box type="warning" seamless>
+
+**Caution:**
+* The index **must be a positive integer** 1, 2, 3, …​
+</box>
+
+#### Examples
+* `delete 2` deletes the application displayed at index 2
+
+#### Expected Outcome:
+
+  ![Delete_index](images/Index.png)
+
+Format: `delete n/NAME r/ROLE`
 
 * Deletes the specific Name and Role Application
-* Role must consist of only letters.
 
-Examples:
+#### Parameters
+- `NAME` → company name
+- `ROLE` → job position
 
-* `list` followed by `delete 2` deletes the 2nd Application in the application list.
-* `find Google` followed by `delete 1` deletes the 1st Application in the results of the `find` command.
-* `delete n/google r/CEO` deletes the Application for Google as CEO.
+#### Examples
+* `delete n/google r/Backend Developer` deletes the application for Google as Backend Developer.
+
+#### Expected Outcome:
+
+  ![Delete_ref](images/Delete_ref.png)
 
 ### Clearing all entries : `clear`
 
-Clears all entries from the application list.
+⚠️ Removes **ALL** applications. Use with caution.
+
+You can delete all applications on OfferFlow with just 1 command hassle-free!
 
 Format: `clear`
 
 ### Exiting the program : `exit`
 
-Exits the program.
+Closes OfferFlow.
 
 Format: `exit`
 
 ### Saving the data
 
-Application List data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
+OfferFlow data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
 
 ### Editing the data file
 
-Application List data are saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are welcome to update data directly by editing that data file.
+OfferFlow data are saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are welcome to update data directly by editing that data file.
 
 <box type="warning" seamless>
 
 **Caution:**
-If your changes to the data file makes its format invalid, Application List will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.`<br>`
-Furthermore, certain edits can cause the Application List to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
-`</box>`
+If your changes to the data file makes its format invalid, OfferFlow will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
+Furthermore, certain edits can cause OfferFlow to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+</box>
 
 ### Archiving data files `[coming in v2.0]`
 
-_Details coming soon ..._
+Export past applications into different folder to declutter your active list.
 
 ---
 
 ## FAQ
 
-**Q**: How do I transfer my data to another Computer?`<br>`
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous Application List home folder.
+**Q**: How do I transfer my data to another Computer?<br>
+**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous OfferFlow home folder.
 
 ---
 
@@ -293,18 +352,24 @@ _Details coming soon ..._
 
 ---
 
+## Glossary
+
+1. **GUI:** Graphical User Interface (GUI) is a visual way to interact with a computer, using icons, menus, and pointers rather than typed commands.
+
+--------------------------------------------------------------------------------------------------------------------
+
 ## Command summary
 
-Action     | Format, Examples
------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-**Add**    | `add n/NAME p/PHONE e/EMAIL a/ADDRESS d/DATE r/ROLE s/STATUS [t/TAG]...​` <br> e.g., `add n/Google p/96789012 e/google@gmail.com a/70 Pasir Panjang Rd, #03-71 d/2024-06-18 r/Backend Developer s/interviewed t/java`
-**Clear**  | `clear`
-**Delete** | `delete INDEX`<br> e.g., `delete 3`
-**Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
-**Status** | `status n/COMPANY r/ROLE s/STATUS`<br> e.g., `status n/Tiktok r/Data Analyst s/Rejected`
-**Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
-**Filter** | `/filter /company /KEYWORD` or `/filter /applied /YYYY-MM-DD` or `/filter /status /STATUS` or `/filter /tag /TAG`
-**Folder** | `folder FOLDER_NAME`<br> e.g., `folder Y1S2`
-**Toggle** | `toggle FOLDER_NAME`<br> e.g., `toggle Y1S2`
-**List**   | `list`
-**Help**   | `help`
+| Action | Format | Example |
+|:-------|:-------|:--------|
+| **Add** | `add n/NAME p/PHONE e/EMAIL a/ADDRESS d/DATE r/ROLE s/STATUS [t/TAG]...` | `add n/Google p/96789012 e/google@gmail.com a/70 Pasir Panjang Rd, #03-71 d/2024-06-18 r/Backend Developer s/interviewed t/java` |
+| **Overwrite** | `overwrite` | `overwrite` |
+| **Clear** | `clear` | `clear` |
+| **Delete** | `delete INDEX` | `delete 3` |
+| **Delete** | `delete n/NAME r/ROLE` | `delete n/Google r/Backend Developer` |
+| **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]...` | `edit 2 n/James Lee e/jameslee@example.com` |
+| **Status** | `status n/COMPANY r/ROLE s/STATUS` | `status n/Tiktok r/Data Analyst s/Rejected` |
+| **Find** | `find KEYWORD [MORE_KEYWORDS]` | `find James Jake` |
+| **Filter** | `/f /c /KEYWORD` or `/f /a /YYYY-MM-DD` or `/f /s /STATUS` or `/f /t /TAG` | `/f /c /Tiktok` or `/f /a /2024-06-18` or `/f /s /Rejected` or `/f /t /priority`|
+| **List** | `list` | `list` |
+| **Help** | `help` | `help` |

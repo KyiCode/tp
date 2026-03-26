@@ -1,13 +1,18 @@
 package seedu.address.model.person;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
+import static seedu.address.commons.util.AppUtil.checkArgument;
+import static seedu.address.model.person.Date.isValidDate;
 
-import seedu.address.commons.util.ToStringBuilder;
+import java.util.Objects;
 
 /**
  * Event class to represent reminder tasks of an application.
  */
 public class Reminder {
+    public static final String VALIDATION_REGEX = "[A-Za-z][A-Za-z ]*";
+    public static final String MESSAGE_CONSTRAINTS = "Reminder should be letters, and it should not be blank";
+
     private final String reminderName;
     private final Date reminderDate;
 
@@ -17,6 +22,9 @@ public class Reminder {
      * @param reminderDate event date.
      */
     public Reminder(String reminderName, String reminderDate) {
+        requireNonNull(reminderName, reminderDate);
+        checkArgument(isValidReminder(reminderName), MESSAGE_CONSTRAINTS);
+        checkArgument(isValidDate(reminderDate), MESSAGE_CONSTRAINTS);
         this.reminderName = reminderName;
         this.reminderDate = new Date(reminderDate);
     }
@@ -29,6 +37,10 @@ public class Reminder {
         return reminderDate;
     }
 
+    public static boolean isValidReminder(String test) {
+        return test.matches(VALIDATION_REGEX);
+    }
+
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
@@ -37,9 +49,13 @@ public class Reminder {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .add("Upcoming", reminderName)
-                .add("Date", reminderDate).toString();
+        return new StringBuilder()
+                .append("[Upcoming: ")
+                .append(reminderName)
+                .append(", Date: ")
+                .append(reminderDate)
+                .append("]")
+                .toString();
     }
 
 }

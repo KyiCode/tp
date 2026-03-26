@@ -194,6 +194,10 @@ public class ParserUtil {
         String trimmedReminderName = reminderReminderName.trim();
         String trimmedReminderDate = reminderReminderDate.trim();
 
+        if (!Reminder.isValidReminder(trimmedReminderName)) {
+            throw new ParseException(Reminder.MESSAGE_CONSTRAINTS);
+        }
+
         if (!Date.isValidDate(trimmedReminderDate)) {
             throw new ParseException(Date.MESSAGE_CONSTRAINTS);
         }

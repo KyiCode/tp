@@ -21,6 +21,7 @@ import seedu.address.logic.commands.FolderCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.OverwriteCommand;
+import seedu.address.logic.commands.RemoveReminderCommand;
 import seedu.address.logic.commands.StatusCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.DuplicateApplicationStore;
@@ -113,6 +114,9 @@ public class AddressBookParser {
 
         case FolderCommand.COMMAND_WORD_TOGGLE:
             return new FolderCommandParser(false).parse(arguments);
+
+        case RemoveReminderCommand.COMMAND_WORD:
+            return new RemoveReminderCommandParser().parse(arguments);
 
         default:
             logger.finer("This user input caused a ParseException: " + userInput);
