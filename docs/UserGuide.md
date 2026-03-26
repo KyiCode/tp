@@ -173,13 +173,15 @@ Examples:
 
 Use `editmode` command to modify or create new Reminders.
 
-Format: `u/upcoming interview ud/2026-12-12`
+Format: `u/DESCRIPTION ud/DATE`
+Example: `u/upcoming interview ud/2026-12-12`
 
 * Creates a new upcoming interview Reminder on 12 December 2026.
 
 Use `rmr` command **outside** of `editmode` to remove Reminder of specified Applciation.
 
 Format: `rmr <INDEX>` or `rmr n/<Company_Name> r/<Role>`
+Example: `rmr 1` or `rmr n/Google r/software engineer`
 
 * Removes reminder associated to the specified Application.
 * `INDEX`: Application index reflected on list.
