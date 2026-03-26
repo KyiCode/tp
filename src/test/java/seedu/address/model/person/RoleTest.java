@@ -1,12 +1,10 @@
 package seedu.address.model.person;
 
-import org.junit.jupiter.api.Test;
-
-import java.util.jar.JarException;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
+
+import org.junit.jupiter.api.Test;
 
 public class RoleTest {
 
@@ -54,7 +52,7 @@ public class RoleTest {
         // null -> returns false
         assertFalse(role.equals(null));
 
-        assertFalse(role .equals(5.0f));
+        assertFalse(role.equals(5.0f));
     }
 
 }
