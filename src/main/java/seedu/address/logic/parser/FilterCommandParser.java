@@ -24,13 +24,13 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             "OOPS! Unknown filter type. Use c, a, s, or t.";
     public static final String MESSAGE_INVALID_DATE_FORMAT = "Invalid date format. Use YYYY-MM-DD.";
     public static final String MESSAGE_INVALID_COMPANY_FORMAT =
-            "OOPS! Invalid format, use format: /f /c /<keyword>";
+            "OOPS! Invalid format, use format: filter /c /<keyword>";
     public static final String MESSAGE_INVALID_APPLIED_FORMAT =
-            "OOPS! Invalid format, use format: /f /a /<YYYY-MM-DD>";
+            "OOPS! Invalid format, use format: filter /a /<YYYY-MM-DD>";
     public static final String MESSAGE_INVALID_STATUS_FORMAT =
-            "OOPS! Invalid format, use format: /f /s /<status>";
+            "OOPS! Invalid format, use format: filter /s /<status>";
     public static final String MESSAGE_INVALID_TAG_FORMAT =
-            "OOPS! Invalid format, use format: /f /t /<tag>";
+            "OOPS! Invalid format, use format: filter /t /<tag>";
 
     private static final Pattern FILTER_ARGUMENTS_FORMAT = Pattern.compile("^/(?<type>\\S+)(?<value>.*)$");
 
