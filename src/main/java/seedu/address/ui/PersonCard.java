@@ -64,6 +64,11 @@ public class PersonCard extends UiPart<Region> {
         address.setText(person.getAddress().value);
         email.setText(person.getEmail().value);
         status.setText(person.getStatus().value);
+        status.getStyleClass().removeIf(s -> s.startsWith("status-"));
+        status.getStyleClass().add("status-" + person.getStatus().getStyleClass());
+        String sc = person.getStatus().getStyleClass();
+        System.out.println("Adding class: status-" + sc); // e.g. "status-applied"
+
         if (person.hasReminder()) {
             Reminder u = person.getReminder();
             this.reminder.setVisible(true);
