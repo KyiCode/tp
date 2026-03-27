@@ -37,6 +37,20 @@ public class Status {
         return test.matches(VALIDATION_REGEX);
     }
 
+
+    public String getStyleClass() {
+        String statusVal = this.value.toLowerCase();
+        return switch (statusVal) {
+        case "interested" -> "interested";
+        case "applied" -> "applied";
+        case "interviewing" -> "interviewing";
+        case "rejected" -> "rejected";
+        case "offered" -> "offered";
+        default -> "default";
+        };
+    }
+
+
     @Override
     public String toString() {
         return value;

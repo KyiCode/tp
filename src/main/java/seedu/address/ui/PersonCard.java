@@ -58,12 +58,15 @@ public class PersonCard extends UiPart<Region> {
         this.person = person;
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
-        role.setText(" - " + person.getRole().value);
+        role.setText(" - " + person.getRole().value + "  ");
         date.setText(person.getDate().toString());
         phone.setText(person.getPhone().value);
         address.setText(person.getAddress().value);
         email.setText(person.getEmail().value);
         status.setText(person.getStatus().value);
+        status.getStyleClass().removeIf(s -> s.startsWith("status-"));
+        status.getStyleClass().add("status-" + person.getStatus().getStyleClass());
+
         if (person.hasReminder()) {
             Reminder u = person.getReminder();
             this.reminder.setVisible(true);
