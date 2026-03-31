@@ -25,17 +25,17 @@ public class NameTest {
         assertThrows(NullPointerException.class, () -> Name.isValidName(null));
 
         // invalid name
-        assertFalse(Name.isValidName("")); // empty string
-        assertFalse(Name.isValidName(" ")); // spaces only
-        assertFalse(Name.isValidName("^")); // only non-alphanumeric characters
-        assertFalse(Name.isValidName("peter*")); // contains non-alphanumeric characters
+        assertFalse(Name.isValidName("")); // empty string (equivalence paritioning)
+        assertFalse(Name.isValidName(" ")); // spaces only (equivalence paritioning)
+        assertFalse(Name.isValidName("^")); // only non-alphanumeric characters (equivalence paritioning)
+        assertFalse(Name.isValidName("peter*")); // contains non-alphanumeric characters (equivalence paritioning)
 
         // valid name
-        assertTrue(Name.isValidName("peter jack")); // alphabets only
-        assertTrue(Name.isValidName("12345")); // numbers only
-        assertTrue(Name.isValidName("peter the 2nd")); // alphanumeric characters
-        assertTrue(Name.isValidName("Capital Tan")); // with capital letters
-        assertTrue(Name.isValidName("David Roger Jackson Ray Jr 2nd")); // long names
+        assertTrue(Name.isValidName("peter jack")); // alphabets only (equivalence paritioning)
+        assertTrue(Name.isValidName("12345")); // numbers only (equivalence paritioning)
+        assertTrue(Name.isValidName("peter the 2nd")); // alphanumeric characters (equivalence paritioning)
+        assertTrue(Name.isValidName("Capital Tan")); // with capital letters (equivalence paritioning)
+        assertTrue(Name.isValidName("David Roger Jackson Ray Jr 2nd")); // long names (equivalence paritioning)
     }
 
     @Test
