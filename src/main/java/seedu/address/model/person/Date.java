@@ -6,6 +6,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 
 /**
  * A Class to represent the date applied for a job application.
@@ -59,7 +60,9 @@ public class Date {
 
         // Additional validation using LocalDate to catch invalid dates like 2024-02-31
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter formatter = DateTimeFormatter
+                    .ofPattern("uuuu-MM-dd")
+                    .withResolverStyle(ResolverStyle.STRICT);
             LocalDate.parse(test, formatter);
             return true;
         } catch (DateTimeParseException e) {
