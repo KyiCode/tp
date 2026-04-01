@@ -109,6 +109,18 @@ public class AddCommandParser implements Parser<AddCommand> {
     }
 
     /**
+     * Tokenizes the given argument string using the specified prefixes
+     *
+     * @param args the argument string to tokenize
+     * @return an ArgumentMultimap containing the tokenized arguments
+     */
+    private ArgumentMultimap tokenizeArguments(String args) {
+        assert args != null : "argument string should not be null";
+        return ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS,
+                        PREFIX_TAG, PREFIX_ROLE, PREFIX_STATUS, PREFIX_DATE, PREFIX_REMINDER, PREFIX_REMINDER_DATE);
+    }
+
+    /**
      * Returns true if none of the prefixes contains empty {@code Optional} values in the given
      * {@code ArgumentMultimap}.
      */
@@ -116,4 +128,73 @@ public class AddCommandParser implements Parser<AddCommand> {
         return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
 
+    private Phone parsePhone(ArgumentMultimap argMultimap) throws ParseException {
+        if (arePrefixesPresent(argMultimap, PREFIX_PHONE)) {
+            logger.info("phone: " + argMultimap.getValue(PREFIX_PHONE).get());
+            return ParserUtil.parsePhone(argMultimap.getValue(PREFIX_PHONE).get());
+        } else {
+            return null;
+        }
+    }
+
+    private Email parseEmail(ArgumentMultimap argMultimap) throws ParseException {
+        if (arePrefixesPresent(argMultimap, PREFIX_EMAIL)) {
+            logger.info("email: " + argMultimap.getValue(PREFIX_EMAIL).get());
+            return ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get());
+        } else {
+            return null;
+        }
+    }
+
+    private Address parseAddress(ArgumentMultimap argMultimap) throws ParseException {
+        if (arePrefixesPresent(argMultimap, PREFIX_ADDRESS)) {
+            logger.info("address: " + argMultimap.getValue(PREFIX_ADDRESS).get());
+            return ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get());
+        } else {
+            return null;
+        }
+    }
+
+    private Status parseStatus(ArgumentMultimap argMultimap) throws ParseException {
+        if (arePrefixesPresent(argMultimap, PREFIX_STATUS)) {
+            logger.info("status: " + argMultimap.getValue(PREFIX_STATUS).get());
+            return ParserUtil.parseStatus(argMultimap.getValue(PREFIX_STATUS).get());
+        } else {
+            return null;
+        }
+    }
+
+    private Date parseDate(ArgumentMultimap argMultimap) throws ParseException {
+        if (arePrefixesPresent(argMultimap, PREFIX_DATE)) {
+            logger.info("date: " + argMultimap.getValue(PREFIX_DATE).get());
+            return ParserUtil.parseDate(argMultimap.getValue(PREFIX_DATE).get());
+        } else {
+            return null;
+        }
+    }
+
+    private Reminder parseReminder(ArgumentMultimap argMultimap) throws ParseException {
+        if (arePrefixesPresent(argMultimap, PREFIX_REMINDER, PREFIX_REMINDER_DATE)) {
+
+            logger.info("reminder: " + argMultimap.getValue(PREFIX_REMINDER).get());
+            logger.info("reminder date: " + argMultimap.getValue(PREFIX_REMINDER_DATE).get());
+
+            return ParserUtil.parseReminder(argMultimap.getValue(PREFIX_REMINDER).get(),
+                        argMultimap.getValue(PREFIX_REMINDER_DATE).get());
+        } else {
+            return null;
+        }
+    }
+
+    private Set<Tag> parseTags(ArgumentMultimap argMultimap) throws ParseException {
+        return ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
+    }
+
+    private Name parseName(ArgumentMultimap argMultimap) throws ParseException {
+        return ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());
+    }
+
+    private Role parseRole(ArgumentMultimap argMultimap) throws ParseException {
+        return ParserUtil.parseRole(argMultimap.getValue(PREFIX_ROLE).get());
+    }
 }
