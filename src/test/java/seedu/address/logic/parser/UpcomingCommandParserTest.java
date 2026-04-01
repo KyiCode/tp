@@ -35,18 +35,20 @@ public class UpcomingCommandParserTest {
     public void parse_outOfRangeIntArg_throwsParseException() {
         assertParseFailure(parser, "   -12  ", String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                 UpcomingCommand.MESSAGE_INVALID_ARGS));
+        assertParseFailure(parser, "   9  ", String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                UpcomingCommand.MESSAGE_INVALID_ARGS));
     }
 
     @Test
     public void parse_validArgs_returnsFindCommand() {
         // no leading and trailing whitespaces
-        Date sampleDate = new Date(LocalDate.now().plusDays(20));
+        Date sampleDate = new Date(LocalDate.now().plusDays(5));
         UpcomingCommand expectedUpcomingCommand =
-                new UpcomingCommand(new ReminderWithinOffsetPredicate(sampleDate), 20);
-        assertParseSuccess(parser, "20", expectedUpcomingCommand);
+                new UpcomingCommand(new ReminderWithinOffsetPredicate(sampleDate), 5);
+        assertParseSuccess(parser, "5", expectedUpcomingCommand);
 
         // multiple whitespaces between keywords
-        assertParseSuccess(parser, " \n 20 \n", expectedUpcomingCommand);
+        assertParseSuccess(parser, " \n 5 \n", expectedUpcomingCommand);
     }
 
 }

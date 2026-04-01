@@ -15,7 +15,8 @@ import seedu.address.model.person.ReminderWithinOffsetPredicate;
  */
 public class UpcomingCommandParser implements Parser<UpcomingCommand> {
 
-    private static final int MIN_OFFSET = 0;
+    private static final int MIN_OFFSET = UpcomingCommand.MIN_OFFSET;
+    private static final int MAX_OFFSET = UpcomingCommand.MAX_OFFSET;
 
     /**
      * Parses the given {@code String} of arguments in the context of the UpcomingCommand
@@ -44,7 +45,8 @@ public class UpcomingCommandParser implements Parser<UpcomingCommand> {
 
         try {
             int value = Integer.parseInt(s);
-            return value >= MIN_OFFSET && !s.startsWith("+"); // "+1" is successfully parsed by Integer#parseInt(String)
+            return value >= MIN_OFFSET && value <= MAX_OFFSET && !s.startsWith("+");
+            // "+1" is successfully parsed by Integer#parseInt(String)
         } catch (NumberFormatException nfe) {
             return false;
         }

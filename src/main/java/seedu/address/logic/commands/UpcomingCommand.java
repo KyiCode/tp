@@ -11,6 +11,9 @@ import seedu.address.model.person.ReminderWithinOffsetPredicate;
  */
 public class UpcomingCommand extends Command {
 
+    public static final int MIN_OFFSET = 0;
+    public static final int MAX_OFFSET = 7;
+
     public static final String COMMAND_WORD = "upcoming";
     public static final String COMMAND_WORD_WITH_SLASH = "/upcoming";
 
@@ -21,7 +24,7 @@ public class UpcomingCommand extends Command {
     public static final String MESSAGE_NO_MATCHES = "No upcoming applications in %d days";
     public static final String MESSAGE_MATCHES_FOUND = "There are %d application(s) due in %d days.";
     public static final String MESSAGE_INVALID_ARGS = "Days parameter must be an "
-            + "non-negative integer in digit form, e.g 12.";
+            + "an integer between " + MIN_OFFSET + " and " + MAX_OFFSET + " inclusive in digit form, e.g 5.";
 
     private final int daysOffset;
     private final ReminderWithinOffsetPredicate predicate;
