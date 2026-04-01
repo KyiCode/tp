@@ -123,6 +123,13 @@ public class AddCommandParser implements Parser<AddCommand> {
         return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
 
+    /**
+     * Parses phone number if present else return null
+     *
+     * @param argMultimap the ArgumentMultimap containing the parsed arguments
+     * @return a Phone object if present, else null
+     * @throws ParseException
+     */
     private Phone parsePhone(ArgumentMultimap argMultimap) throws ParseException {
         if (arePrefixesPresent(argMultimap, PREFIX_PHONE)) {
             logger.info("phone: " + argMultimap.getValue(PREFIX_PHONE).get());
@@ -132,6 +139,13 @@ public class AddCommandParser implements Parser<AddCommand> {
         }
     }
 
+    /**
+     * Parses email if present else return null
+     *
+     * @param argMultimap the ArgumentMultimap containing the parsed arguments
+     * @return a Email object if present, else null
+     * @throws ParseException
+     */
     private Email parseEmail(ArgumentMultimap argMultimap) throws ParseException {
         if (arePrefixesPresent(argMultimap, PREFIX_EMAIL)) {
             logger.info("email: " + argMultimap.getValue(PREFIX_EMAIL).get());
@@ -141,6 +155,13 @@ public class AddCommandParser implements Parser<AddCommand> {
         }
     }
 
+    /**
+     * Parses address if present else return null
+     *
+     * @param argMultimap the ArgumentMultimap containing the parsed arguments
+     * @return a Address object if present, else null
+     * @throws ParseException
+     */
     private Address parseAddress(ArgumentMultimap argMultimap) throws ParseException {
         if (arePrefixesPresent(argMultimap, PREFIX_ADDRESS)) {
             logger.info("address: " + argMultimap.getValue(PREFIX_ADDRESS).get());
@@ -150,6 +171,13 @@ public class AddCommandParser implements Parser<AddCommand> {
         }
     }
 
+    /**
+     * Parses status if present else return null
+     *
+     * @param argMultimap the ArgumentMultimap containing the parsed arguments
+     * @return a Status object if present, else null
+     * @throws ParseException
+     */
     private Status parseStatus(ArgumentMultimap argMultimap) throws ParseException {
         if (arePrefixesPresent(argMultimap, PREFIX_STATUS)) {
             logger.info("status: " + argMultimap.getValue(PREFIX_STATUS).get());
@@ -159,6 +187,13 @@ public class AddCommandParser implements Parser<AddCommand> {
         }
     }
 
+    /**
+     * Parses date if present else return null
+     *
+     * @param argMultimap the ArgumentMultimap containing the parsed arguments
+     * @return a Date object if present, else null
+     * @throws ParseException
+     */
     private Date parseDate(ArgumentMultimap argMultimap) throws ParseException {
         if (arePrefixesPresent(argMultimap, PREFIX_DATE)) {
             logger.info("date: " + argMultimap.getValue(PREFIX_DATE).get());
@@ -168,6 +203,13 @@ public class AddCommandParser implements Parser<AddCommand> {
         }
     }
 
+    /**
+     * Parses reminder if present else return null
+     *
+     * @param argMultimap the ArgumentMultimap containing the parsed arguments
+     * @return a Reminder object if present, else null
+     * @throws ParseException
+     */
     private Reminder parseReminder(ArgumentMultimap argMultimap) throws ParseException {
         if (arePrefixesPresent(argMultimap, PREFIX_REMINDER, PREFIX_REMINDER_DATE)) {
 
@@ -181,14 +223,35 @@ public class AddCommandParser implements Parser<AddCommand> {
         }
     }
 
+    /**
+     * Parses tags if present
+     *
+     * @param argMultimap the ArgumentMultimap containing the parsed arguments
+     * @return a Set of Tag objects if present
+     * @throws ParseException
+     */
     private Set<Tag> parseTags(ArgumentMultimap argMultimap) throws ParseException {
         return ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
     }
 
+    /**
+     * Parses name
+     *
+     * @param argMultimap the ArgumentMultimap containing the parsed arguments
+     * @return a Name object
+     * @throws ParseException
+     */
     private Name parseName(ArgumentMultimap argMultimap) throws ParseException {
         return ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());
     }
 
+    /**
+     * Parses role
+     *
+     * @param argMultimap the ArgumentMultimap containing the parsed arguments
+     * @return a Role object
+     * @throws ParseException
+     */
     private Role parseRole(ArgumentMultimap argMultimap) throws ParseException {
         return ParserUtil.parseRole(argMultimap.getValue(PREFIX_ROLE).get());
     }
