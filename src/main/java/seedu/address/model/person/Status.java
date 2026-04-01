@@ -3,6 +3,8 @@ package seedu.address.model.person;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
+import java.util.Objects;
+
 /**
  * Represents a Person's application status in the address book.
  * Guarantees: immutable; is valid as declared in {@link #isValidStatus(String)}
@@ -34,7 +36,7 @@ public class Status {
      * Returns true if a given string is a valid status.
      */
     public static boolean isValidStatus(String test) {
-        return test.matches(VALIDATION_REGEX);
+        return Objects.equals(test, "") || test.matches(VALIDATION_REGEX);
     }
 
 

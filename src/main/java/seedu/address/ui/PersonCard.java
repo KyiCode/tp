@@ -16,7 +16,7 @@ import seedu.address.model.person.Reminder;
 public class PersonCard extends UiPart<Region> {
 
     private static final String FXML = "PersonListCard.fxml";
-
+    private static final String NONESTRING = "None";
     /**
      * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX.
      * As a consequence, UI elements' variable names cannot be set to such keywords
@@ -59,13 +59,39 @@ public class PersonCard extends UiPart<Region> {
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
         role.setText(" - " + person.getRole().value + "  ");
-        date.setText(person.getDate().toString());
-        phone.setText(person.getPhone().value);
-        address.setText(person.getAddress().value);
-        email.setText(person.getEmail().value);
-        status.setText(person.getStatus().value);
-        status.getStyleClass().removeIf(s -> s.startsWith("status-"));
-        status.getStyleClass().add("status-" + person.getStatus().getStyleClass());
+
+
+        if (person.getDate() != null) {
+            date.setText("Date: " + person.getDate().toString());
+        } else {
+            date.setText("Date: " + NONESTRING);
+        }
+
+        if (person.getPhone() == null || person.getPhone().toString().isEmpty()) {
+            phone.setText("Contact: " + NONESTRING);
+        } else {
+            phone.setText("Phone: " + person.getPhone().value);
+        }
+
+        if (person.getAddress() != null) {
+            address.setText("Address: " + person.getAddress().value);
+        } else {
+            address.setText("Address: " + NONESTRING);
+        }
+
+        if (person.getEmail() != null) {
+            email.setText("Email: " + person.getEmail().value);
+        } else {
+            email.setText("Email: " + NONESTRING);
+        }
+
+        if (person.getStatus() != null) {
+            status.setText(person.getStatus().value);
+            status.getStyleClass().removeIf(s -> s.startsWith("status-"));
+            status.getStyleClass().add("status-" + person.getStatus().getStyleClass());
+        } else {
+            status.setText(NONESTRING);
+        }
 
         if (person.hasReminder()) {
             Reminder u = person.getReminder();
@@ -79,6 +105,45 @@ public class PersonCard extends UiPart<Region> {
         }
 
         person.getTags().stream().sorted(Comparator.comparing(tag -> tag.tagName))
+                .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+    }
+
+    private void setBasicInfo(int displayedIndex) {
+        id.setText(displayedIndex + ". ");
+        name.setText(person.getName().fullName);
+        role.setText(" - " + person.getRole().value + "  ");
+        date.setText("Date: " + (person.getDate() != null ? person.getDate().toString() : NONESTRING));
+    }
+
+    private void setContactInfo() {
+        phone.setText("Phone: " + (person.getPhone() != null ? person.getPhone().value : NONESTRING));
+        address.setText("Address: " + (person.getAddress() != null ? person.getAddress().value : NONESTRING));
+        email.setText("Email: " + (person.getEmail() != null ? person.getEmail().value : NONESTRING));
+    }
+
+    private void setStatusInfo() {
+        if (person.getStatus() != null) {
+            status.setText(person.getStatus().value);
+            status.getStyleClass().removeIf(s -> s.startsWith("status-"));
+            status.getStyleClass().add("status-" + person.getStatus().getStyleClass());
+        } else {
+            status.setText(NONESTRING);
+        }
+    }
+
+    private void setReminderInfo() {
+        if (person.hasReminder()) {
+            Reminder u = person.getReminder();
+            reminder.setVisible(true);
+            reminder.setText(u.getReminderName() + " - " + u.getReminderDate().value);
+        } else {
+            reminder.setVisible(false);
+        }
+    }
+
+    private void setTags() {
+        person.getTags().stream()
+                .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
     }
 }

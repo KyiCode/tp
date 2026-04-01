@@ -6,6 +6,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Objects;
 
 /**
  * A Class to represent the date applied for a job application.
@@ -35,7 +36,7 @@ public class Date {
         requireNonNull(date);
         checkArgument(isValidDate(date), MESSAGE_CONSTRAINTS);
         value = date;
-        this.localDate = parseToLocalDate(date);
+        this.localDate = date.isEmpty() ? null : parseToLocalDate(date); // guard empty string
     }
 
     /**
@@ -53,6 +54,10 @@ public class Date {
      * Returns true if a given string is a valid date.
      */
     public static boolean isValidDate(String test) {
+        if (Objects.equals(test, "")) {
+            return true;
+        }
+
         test = test.trim();
         if (!test.matches(VALIDATION_REGEX)) {
             return false;
