@@ -8,11 +8,13 @@ import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.commons.exceptions.DataLoadingException;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.AddressBookEditingParser;
 import seedu.address.logic.parser.AddressBookParser;
+import seedu.address.logic.parser.UpcomingCommandParser;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
@@ -35,6 +37,7 @@ public class LogicManager implements Logic {
     private final AddressBookParser normalParser;
     private final AddressBookEditingParser editingParser;
     private AddressBookParser currentParser;
+    private ParserMode currentMode;
 
     /**
      * Constructs a {@code LogicManager} with the given {@code Model} and {@code Storage}.
@@ -45,6 +48,14 @@ public class LogicManager implements Logic {
         normalParser = new AddressBookParser();
         editingParser = new AddressBookEditingParser();
         currentParser = normalParser;
+
+        /* This is for the purposes of forcing application to send a reminder on start-up.
+          Not *perfect*, but I'm not sure how to reduce coupling. */
+        try {
+            new UpcomingCommandParser().parse(Integer.toString(model.getReminderOffset())).execute(model);
+        } catch (ParseException e) {
+            logger.info("Internal Error: Unable to send reminder notification on bootup.");
+        }
     }
 
     @Override
@@ -52,17 +63,24 @@ public class LogicManager implements Logic {
         logger.info("----------------[USER COMMAND][" + commandText + "]");
         CommandResult commandResult;
 
-        if (commandText.equals("/edit")) {
-            currentParser = editingParser;
-            return new CommandResult("Entered editing mode.");
-        }
-
-        if (commandText.equals("/exit")) {
-            currentParser = normalParser;
-            return new CommandResult("Exited editing mode.");
-        }
         Command command = currentParser.parseCommand(commandText);
         commandResult = command.execute(model);
+
+        // check if editing mode or normal mode
+        switch (commandResult.getParserMode()) {
+        case EDITING:
+            currentParser = editingParser;
+            currentMode = ParserMode.EDITING;
+            break;
+        case NORMAL:
+            currentParser = normalParser;
+            currentMode = ParserMode.NORMAL;
+            break;
+        case NO_CHANGE:
+            break;
+        default:
+            break;
+        }
 
         try {
             storage.saveAddressBook(model.getAddressBook());
@@ -70,6 +88,11 @@ public class LogicManager implements Logic {
             throw new CommandException(String.format(FILE_OPS_PERMISSION_ERROR_FORMAT, e.getMessage()), e);
         } catch (IOException ioe) {
             throw new CommandException(String.format(FILE_OPS_ERROR_FORMAT, ioe.getMessage()), ioe);
+        }
+
+        String folderName = commandResult.getFolderName();
+        if (folderName != null) {
+            handleFolderSwitch(folderName, commandResult.isCreateNew());
         }
 
         return commandResult;
@@ -98,5 +121,26 @@ public class LogicManager implements Logic {
     @Override
     public void setGuiSettings(GuiSettings guiSettings) {
         model.setGuiSettings(guiSettings);
+    }
+
+    /**
+     * Handles switching the active address book to a different folder.
+     * Storage is responsible for the file-level operations;
+     * this method updates the model to reflect the new data.
+     */
+    private void handleFolderSwitch(String folderName, boolean createNew) throws CommandException {
+        try {
+            if (createNew) {
+                storage.createFolder(folderName);
+                model.setAddressBook(storage.readAddressBook().orElseThrow());
+            } else {
+                ReadOnlyAddressBook loaded = storage.toggleFolder(folderName);
+                model.setAddressBook(loaded);
+            }
+            model.setAddressBookFilePath(storage.getAddressBookFilePath());
+            storage.saveUserPrefs(model.getUserPrefs());
+        } catch (IOException | DataLoadingException e) {
+            throw new CommandException(e.getMessage(), e);
+        }
     }
 }

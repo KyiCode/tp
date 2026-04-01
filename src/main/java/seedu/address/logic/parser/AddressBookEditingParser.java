@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.Command;
+import seedu.address.logic.commands.EditExitCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
@@ -18,7 +19,7 @@ public class AddressBookEditingParser extends AddressBookParser {
     /**
      * Used for initial separation of command word and args.
      */
-    private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<arguments>.*)");
+    private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
     private static final Logger logger = LogsCenter.getLogger(AddressBookParser.class);
 
     /**
@@ -33,18 +34,28 @@ public class AddressBookEditingParser extends AddressBookParser {
     public Command parseCommand(String userInput) throws ParseException {
         final Matcher matcher = BASIC_COMMAND_FORMAT.matcher(userInput.trim());
         if (!matcher.matches()) {
-            // Note: will need to update EditCommand to throw different error messages depending
-            // on if error was made in entering edit mode or during edit mode.
+
             throw new ParseException(MESSAGE_INVALID_COMMAND_FORMAT);
         }
 
+        final String commandWord = matcher.group("commandWord");
         final String arguments = matcher.group("arguments");
 
         // Note to developers: Change the log level in config.json to enable lower level (i.e., FINE, FINER and lower)
         // log messages such as the one below.
         // Lower level log messages are used sparingly to minimize noise in the code.
-        logger.fine("Arguments: " + arguments);
-        return new EditCommandParser().parse(arguments);
+        logger.fine("Command word: " + commandWord + "; Arguments: " + arguments + "; Full input: " + userInput.trim());
+
+        if (commandWord.equals(EditExitCommand.COMMAND_WORD)) {
+            return new EditExitCommand();
+        }
+        // "edit " appended for one reason: ArgumentTokenizer expects a preamble / command word
+        // and will ignore it. EditCommand's new syntax has no preamble, so this causes
+        // the first arg to be ignored. This hack-y method isn't ideal, but minimizes how much
+        // of the code has to be reworked to account for this ONE unique case.
+        // Better to adapt one unique format to the standard than the opposite I assume?
+        return new EditCommandParser().parse("edit " + userInput.trim());
+
     }
 
 }

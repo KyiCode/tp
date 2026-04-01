@@ -350,3 +350,44 @@
     -fx-background-radius: 2;
     -fx-font-size: 11;
 }
+
+
+.list-cell .label.status-applied {
+    -fx-background-color: yellow;
+    -fx-text-fill: black;
+    -fx-padding: .1 6 .1 6;
+}
+
+.list-cell .label.status-interested {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-padding: .1 6 .1 6;
+}
+
+.list-cell .label.status-interviewing {
+    -fx-background-color: orange;
+    -fx-text-fill: white;
+    -fx-padding: .1 6 .1 6;
+}
+
+.list-cell .label.status-rejected {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-padding: .1 6 .1 6;
+}
+
+.list-cell .label.status-offered {
+    -fx-background-color: green;
+    -fx-text-fill: white;
+    -fx-padding: .1 6 .1 6;
+}
+
+.reminder-due {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
+
+.reminder-notDue {
+    -fx-background-color: orange;
+    -fx-text-fill: black;
+}

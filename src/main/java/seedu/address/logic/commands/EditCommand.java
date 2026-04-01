@@ -15,18 +15,20 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.CollectionUtil;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
+import seedu.address.logic.ParserMode;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Application;
 import seedu.address.model.person.Date;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.IsBeingEditedPredicate;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Reminder;
 import seedu.address.model.person.Role;
 import seedu.address.model.person.Status;
 import seedu.address.model.tag.Tag;
@@ -36,37 +38,32 @@ import seedu.address.model.tag.Tag;
  */
 public class EditCommand extends Command {
 
-    public static final String COMMAND_WORD = "edit";
-
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the person identified "
-            + "by the index number used in the displayed person list. "
+    public static final String MESSAGE_USAGE = "Edits the details of the application identified "
+            + "by the index number used in the displayed application list / combination of Company Name and Job Role. "
             + "Existing values will be overwritten by the input values.\n"
-            + "Parameters: INDEX (must be a positive integer) "
-            + "[" + PREFIX_NAME + "NAME] "
+            + "Parameters: [" + PREFIX_NAME + "NAME] "
             + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_EMAIL + "EMAIL] "
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
             + "[" + PREFIX_TAG + "TAG]...\n"
-            + "Example: " + COMMAND_WORD + " 1 "
+            + "Example: "
             + PREFIX_PHONE + "91234567 "
             + PREFIX_EMAIL + "johndoe@example.com";
 
-    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
+    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Application: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
+    public static final String MESSAGE_DUPLICATE_PERSON = "This application already exists in the address book.";
+    public static final String MESSAGE_NO_APPLICATION_EDITED = "No application is marked for editing "
+            + "- this is likely due to an internal error.";
 
-    private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
 
     /**
-     * @param index of the person in the filtered person list to edit
      * @param editPersonDescriptor details to edit the person with
      */
-    public EditCommand(Index index, EditPersonDescriptor editPersonDescriptor) {
-        requireNonNull(index);
+    public EditCommand(EditPersonDescriptor editPersonDescriptor) {
         requireNonNull(editPersonDescriptor);
 
-        this.index = index;
         this.editPersonDescriptor = new EditPersonDescriptor(editPersonDescriptor);
     }
 
@@ -75,23 +72,21 @@ public class EditCommand extends Command {
         requireNonNull(model);
         List<Application> lastShownList = model.getFilteredPersonList();
 
-        if (index.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
-        }
+        IsBeingEditedPredicate predicate = new IsBeingEditedPredicate();
+        Application applicationToEdit = lastShownList.stream().filter(predicate).findFirst()
+                .orElseThrow(() -> new CommandException(MESSAGE_NO_APPLICATION_EDITED));
 
-        Application personToEdit = lastShownList.get(index.getZeroBased());
-        personToEdit.setBeingEdited(true); //important: set this before editedPerson so isBeingEdited carries over
-        Application editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
+        Application editedPerson = createEditedPerson(applicationToEdit, editPersonDescriptor);
+        editedPerson.setBeingEdited(true);
 
-        if (!personToEdit.isSameApplication(editedPerson) && model.hasPerson(editedPerson)) {
+        if (!applicationToEdit.isSameApplication(editedPerson) && model.hasPerson(editedPerson)) {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
 
-        editedPerson.setBeingEdited(false); //TO REMOVE on creation of ExitCommand
-
-        model.setPerson(personToEdit, editedPerson);
+        model.setPerson(applicationToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
+        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)),
+                false, ParserMode.EDITING, false);
     }
 
     /**
@@ -109,9 +104,10 @@ public class EditCommand extends Command {
         Date updatedDate = editPersonDescriptor.getDate().orElse(personToEdit.getDate());
         Role updatedRole = editPersonDescriptor.getRole().orElse(personToEdit.getRole());
         Status updatedStatus = editPersonDescriptor.getStatus().orElse(personToEdit.getStatus());
+        Reminder updateReminder = editPersonDescriptor.getReminder().orElse(personToEdit.getReminder());
 
         return new Application(updatedName, updatedPhone, updatedEmail, updatedAddress,
-                updatedTags, updatedDate, updatedRole, updatedStatus);
+                updatedTags, updatedDate, updatedRole, updatedStatus, updateReminder);
     }
 
     @Override
@@ -126,14 +122,12 @@ public class EditCommand extends Command {
         }
 
         EditCommand otherEditCommand = (EditCommand) other;
-        return index.equals(otherEditCommand.index)
-                && editPersonDescriptor.equals(otherEditCommand.editPersonDescriptor);
+        return editPersonDescriptor.equals(otherEditCommand.editPersonDescriptor);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("index", index)
                 .add("editPersonDescriptor", editPersonDescriptor)
                 .toString();
     }
@@ -151,6 +145,7 @@ public class EditCommand extends Command {
         private Role role;
         private Date date;
         private Status status;
+        private Reminder reminder;
 
         public EditPersonDescriptor() {}
 
@@ -167,13 +162,14 @@ public class EditCommand extends Command {
             setRole(toCopy.role);
             setStatus(toCopy.status);
             setDate(toCopy.date);
+            setReminder(toCopy.reminder);
         }
 
         /**
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, phone, email, address, tags, status, role, date);
+            return CollectionUtil.isAnyNonNull(name, phone, email, address, tags, status, role, date, reminder);
         }
 
         public void setName(Name name) {
@@ -247,6 +243,14 @@ public class EditCommand extends Command {
          */
         public Optional<Set<Tag>> getTags() {
             return (tags != null) ? Optional.of(Collections.unmodifiableSet(tags)) : Optional.empty();
+        }
+
+        public void setReminder(Reminder reminder) {
+            this.reminder = reminder;
+        }
+
+        public Optional<Reminder> getReminder() {
+            return Optional.ofNullable(reminder);
         }
 
         @Override

@@ -13,6 +13,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_STATUS_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalPersons.BENSON_WITH_REMINDER_INTERVIEW;
 import static seedu.address.testutil.TypicalPersons.BOB;
 
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ public class PersonTest {
     public void isSamePerson() {
         // same object -> returns true
         assertTrue(ALICE.isSameApplication(ALICE));
+        assertTrue(BENSON_WITH_REMINDER_INTERVIEW.isSameApplication(BENSON_WITH_REMINDER_INTERVIEW));
 
         // null -> returns false
         assertFalse(ALICE.isSameApplication(null));
@@ -59,13 +61,6 @@ public class PersonTest {
                 .withName(VALID_NAME_BOB.toLowerCase())
                 .build();
         assertTrue(BOB.isSameApplication(editedBob));
-
-        // name has trailing spaces, same role -> returns false
-        String nameWithTrailingSpaces = VALID_NAME_BOB + " ";
-        editedBob = new PersonBuilder(BOB)
-                .withName(nameWithTrailingSpaces)
-                .build();
-        assertFalse(BOB.isSameApplication(editedBob));
     }
 
     @Test

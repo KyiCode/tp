@@ -20,7 +20,8 @@ public class StatusCommand extends Command {
     public static final String COMMAND_WORD = "status";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Updates an application's status.\n"
-                                    + "Parameters: n/NAME s/STATUS\n" + "Example: status n/Google s/Interviewing";
+                                    + "Parameters: n/NAME r/ROLE s/STATUS\n"
+                                    + "Example: status n/Google r/CEO s/Interviewing";
 
     public static final String MESSAGE_SUCCESS = "Updated status: %1$s";
 
@@ -58,6 +59,7 @@ public class StatusCommand extends Command {
         List<Application> applicationList = model.getFilteredPersonList();
 
         Application target = null;
+        Application updatedApplication = null;
 
         for (Application app : applicationList) {
             if (app.getName().fullName.equalsIgnoreCase(name) && app.getRole().value.equalsIgnoreCase(role)) {
@@ -70,9 +72,16 @@ public class StatusCommand extends Command {
             throw new CommandException(Messages.MESSAGE_INVALID_APPLICATION_IDENTIFIER);
         }
 
-        Application updatedApplication = new Application(target.getName(), target.getPhone(), target.getEmail(),
-                                        target.getAddress(), target.getTags(), target.getDate(), target.getRole(),
-                                        status);
+        if (target.hasReminder()) {
+            updatedApplication = new Application(target.getName(), target.getPhone(), target.getEmail(),
+                    target.getAddress(), target.getTags(), target.getDate(), target.getRole(),
+                    status, target.getReminder());
+        } else {
+            updatedApplication = new Application(target.getName(), target.getPhone(), target.getEmail(),
+                    target.getAddress(), target.getTags(), target.getDate(), target.getRole(),
+                    status);
+        }
+
 
         model.setPerson(target, updatedApplication);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
