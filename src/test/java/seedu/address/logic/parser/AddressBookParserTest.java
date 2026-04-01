@@ -29,8 +29,8 @@ import seedu.address.model.person.Application;
 import seedu.address.model.person.ApplicationMatchesAllPredicate;
 import seedu.address.model.person.CompanyContainsKeywordPredicate;
 import seedu.address.model.person.DuplicateApplicationStore;
-import seedu.address.model.person.DateMatchesPredicate;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.person.RoleMatchesPredicate;
 import seedu.address.model.person.StatusMatchesPredicate;
 import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.PersonUtil;
@@ -60,7 +60,7 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_delete() throws Exception {
         DeleteCommand command = (DeleteCommand) parser.parseCommand(
-                DeleteCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
+                                        DeleteCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
         assertEquals(new DeleteCommand(INDEX_FIRST_PERSON), command);
     }
 
@@ -73,24 +73,26 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_find() throws Exception {
         List<String> keywords = Arrays.asList("foo", "bar", "baz");
-        FindCommand command = (FindCommand) parser.parseCommand(
-                FindCommand.COMMAND_WORD + " " + keywords.stream().collect(Collectors.joining(" ")));
+        FindCommand command = (FindCommand) parser.parseCommand(FindCommand.COMMAND_WORD + " "
+                                        + keywords.stream().collect(Collectors.joining(" ")));
         assertEquals(new FindCommand(new NameContainsKeywordsPredicate(keywords)), command);
     }
 
     @Test
     public void parseCommand_filter() throws Exception {
-        FilterCommand command = (FilterCommand) parser.parseCommand("FILTER n/Amy s/applied");
-        assertEquals(new FilterCommand(new ApplicationMatchesAllPredicate(List.of(
-                new CompanyContainsKeywordPredicate("Amy"),
-                new StatusMatchesPredicate("applied")))), command);
+        FilterCommand command = (FilterCommand) parser.parseCommand("FILTER n/Amy r/Software Engineer s/applied");
+        assertEquals(new FilterCommand(new ApplicationMatchesAllPredicate(
+                                        List.of(new CompanyContainsKeywordPredicate("Amy"),
+                                                                        new RoleMatchesPredicate(
+                                                                                "Software Engineer"),
+                                                                        new StatusMatchesPredicate("applied")))),
+                                        command);
     }
 
     @Test
     public void parseCommand_filterWithSlashSuffix_throwsParseException() {
-        assertThrows(ParseException.class,
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE),
-                () -> parser.parseCommand("filter/"));
+        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE);
+        assertThrows(ParseException.class, expectedMessage, () -> parser.parseCommand("filter/"));
     }
 
     @Test
@@ -113,8 +115,8 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_unrecognisedInput_throwsParseException() {
-        assertThrows(ParseException.class, String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE), ()
-            -> parser.parseCommand(""));
+        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE);
+        assertThrows(ParseException.class, expectedMessage, () -> parser.parseCommand(""));
     }
 
     @Test
@@ -140,8 +142,10 @@ public class AddressBookParserTest {
         Application application = new PersonBuilder().build();
         AddCommand addCommand = new AddCommand(application);
 
-        String possibleAddCommand = "add n/Meta p/6505434800 e/facebook.careers@meta.com "
-                + "a/1 Hacker Way, Menlo Park, CA d/2024-03-19 r/Frontend Engineer s/interviewed t/tech";
+        String possibleAddCommand =
+                "add n/Meta p/6505434800 e/facebook.careers@meta.com "
+                + "a/1 Hacker Way, Menlo Park, CA d/2024-03-19 "
+                + "r/Frontend Engineer s/interviewed t/tech";
 
         String[] nonOverwriteCommand = {
             ListCommand.COMMAND_WORD,
