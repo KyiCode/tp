@@ -5,6 +5,7 @@ import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.List;
 
+import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
@@ -66,7 +67,7 @@ public class StatusCommand extends Command {
         }
 
         if (target == null) {
-            throw new CommandException("Application not found.");
+            throw new CommandException(Messages.MESSAGE_INVALID_APPLICATION_IDENTIFIER);
         }
 
         Application updatedApplication = new Application(target.getName(), target.getPhone(), target.getEmail(),
@@ -77,5 +78,30 @@ public class StatusCommand extends Command {
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(updatedApplication)));
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+
+        if (!(other instanceof StatusCommand)) {
+            return false;
+        }
+
+        StatusCommand otherStatusCommand = (StatusCommand) other;
+        return name.equals(otherStatusCommand.name)
+                && role.equals(otherStatusCommand.role)
+                && status.equals(otherStatusCommand.status);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .add("name", name)
+                .add("role", role)
+                .add("status", status)
+                .toString();
     }
 }
