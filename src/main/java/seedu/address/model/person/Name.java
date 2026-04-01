@@ -10,13 +10,20 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Name {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Names should only contain alphanumeric characters and spaces, and it should not be blank";
+            "Company names must start with a letter or number and cannot be blank.\n"
+            + "Allowed characters: letters, numbers, spaces, and "
+            + "symbols: & . ' , ( ) ! @ # $ % * + - / = ? _ "
+            + "Note: Company names cannot end with any symbols except . ! "
+            + "and cannot have consecutive spaces or be a single character.";
 
     /*
      * The first character of the address must not be a whitespace,
      * otherwise " " (a blank string) becomes a valid input.
      */
-    public static final String VALIDATION_REGEX = "[\\p{Alnum}][\\p{Alnum} ]*";
+    public static final String VALIDATION_REGEX =
+        "^[\\p{Alnum}](?!.*[ ]{2})"
+        + "[\\p{Alnum} &.'(),!@#_$%*+\\-\\/=?]*"
+        + "[\\p{Alnum}.!]$";
 
     public final String fullName;
 
@@ -28,7 +35,7 @@ public class Name {
     public Name(String name) {
         requireNonNull(name);
         checkArgument(isValidName(name), MESSAGE_CONSTRAINTS);
-        fullName = name;
+        fullName = name.trim();
     }
 
     /**

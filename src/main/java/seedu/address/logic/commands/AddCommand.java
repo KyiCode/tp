@@ -60,6 +60,14 @@ public class AddCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
+        checkForDuplicate(model);
+        model.addPerson(toAdd);
+        clearStoredDuplicate();
+
+        return successResult();
+    }
+
+    private void checkForDuplicate(Model model) throws CommandException {
         if (model.hasPerson(toAdd)) {
             Application existingApplication = model.getFilteredPersonList().stream()
                     .filter(application -> application.isSameApplication(toAdd))
@@ -70,9 +78,13 @@ public class AddCommand extends Command {
             String existingMessage = String.format(MESSAGE_DUPLICATE_PERSON, formatApplication(existingApplication));
             throw new CommandException(existingMessage);
         }
+    }
 
-        model.addPerson(toAdd);
+    private void clearStoredDuplicate() {
         DuplicateApplicationStore.clear();
+    }
+
+    private CommandResult successResult() {
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd)));
     }
 
