@@ -1,6 +1,7 @@
 package seedu.address.storage;
 
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -96,8 +97,12 @@ public class StorageManager implements Storage {
     }
 
     @Override
-    public void createFolder(String folderName) throws IOException {
+    public void createFolder(String folderName) throws IOException, FileAlreadyExistsException {
         Path newPath = Paths.get("data", folderName + ".json");
+        if (newPath.toFile().exists()) {
+            throw new FileAlreadyExistsException("Folder '" + folderName
+                                                        + "' already exist. Use 'toggle' to switch files.");
+        }
         addressBookStorage.setAddressBookFilePath(newPath);
         addressBookStorage.saveAddressBook(new AddressBook());
     }

@@ -1,25 +1,25 @@
 package seedu.address.logic.parser;
 
-import seedu.address.logic.commands.FolderCommand;
+import seedu.address.logic.commands.ToggleCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
- * Parses input arguments and creates a new {@code FolderCommand}.
+ * Parses input arguments and creates a new {@code ToggleCommand}.
  */
-public class FolderCommandParser implements Parser<FolderCommand> {
+public class ToggleCommandParser implements Parser<ToggleCommand> {
 
     private static final String VALID_FOLDER_NAME_REGEX = "[\\w\\-]+";
 
     @Override
-    public FolderCommand parse(String args) throws ParseException {
+    public ToggleCommand parse(String args) throws ParseException {
         String name = args.trim();
         if (name.isEmpty()) {
-            throw new ParseException("Folder name cannot be empty.\n" + FolderCommand.MESSAGE_USAGE);
+            throw new ParseException("Folder name cannot be empty.\n" + ToggleCommand.MESSAGE_USAGE);
         }
         if (!name.matches(VALID_FOLDER_NAME_REGEX)) {
             throw new ParseException("Folder name can only contain letters, numbers, underscores, and hyphens.");
         }
-        return new FolderCommand(name);
+        return new ToggleCommand(name);
     }
 
 }

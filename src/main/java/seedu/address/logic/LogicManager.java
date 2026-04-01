@@ -94,7 +94,6 @@ public class LogicManager implements Logic {
         if (folderName != null) {
             handleFolderSwitch(folderName, commandResult.isCreateNew());
         }
-
         return commandResult;
     }
 

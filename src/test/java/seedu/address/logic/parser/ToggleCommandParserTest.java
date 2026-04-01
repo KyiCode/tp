@@ -5,16 +5,16 @@ import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSucces
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.commands.FolderCommand;
+import seedu.address.logic.commands.ToggleCommand;
 
-public class FolderCommandParserTest {
+public class ToggleCommandParserTest {
 
-    private final FolderCommandParser parser = new FolderCommandParser();
+    private final ToggleCommandParser parser = new ToggleCommandParser();
 
     @Test
     public void parse_emptyArgs_throwsParseException() {
         assertParseFailure(parser, " ",
-                "Folder name cannot be empty.\n" + FolderCommand.MESSAGE_USAGE);
+                "Folder name cannot be empty.\n" + ToggleCommand.MESSAGE_USAGE);
     }
 
     @Test
@@ -30,18 +30,18 @@ public class FolderCommandParserTest {
     }
 
     @Test
-    public void parse_validArgs_returnsFolderCommand() {
-        assertParseSuccess(parser, "Y1S2", new FolderCommand("Y1S2"));
+    public void parse_validArgs_returnsToggleCommand() {
+        assertParseSuccess(parser, "Y1S2", new ToggleCommand("Y1S2"));
     }
 
     @Test
-    public void parse_validArgsWithWhitespace_returnsFolderCommand() {
-        assertParseSuccess(parser, "  Y1S2  ", new FolderCommand("Y1S2"));
+    public void parse_validArgsWithWhitespace_returnsToggleCommand() {
+        assertParseSuccess(parser, "  Y1S2  ", new ToggleCommand("Y1S2"));
     }
 
     @Test
-    public void parse_validArgsWithHyphen_returnsFolderCommand() {
-        assertParseSuccess(parser, "Y1-S2", new FolderCommand("Y1-S2"));
+    public void parse_validArgsWithHyphen_returnsToggleCommand() {
+        assertParseSuccess(parser, "Y1-S2", new ToggleCommand("Y1-S2"));
     }
 
 }

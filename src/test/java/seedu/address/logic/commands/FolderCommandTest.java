@@ -15,9 +15,9 @@ public class FolderCommandTest {
 
     @Test
     public void equals() {
-        FolderCommand folderA = new FolderCommand("Y1S2", true);
-        FolderCommand folderB = new FolderCommand("Y1S2", false);
-        FolderCommand folderC = new FolderCommand("Y1S2", true);
+        FolderCommand folderA = new FolderCommand("Y1S2");
+        FolderCommand folderB = new FolderCommand("Y2S1");
+        FolderCommand folderC = new FolderCommand("Y1S2");
 
         assertTrue(folderA.equals(folderA));
         assertTrue(folderA.equals(folderC));
@@ -28,16 +28,9 @@ public class FolderCommandTest {
 
     @Test
     public void execute_folder_returnsCreatedMessage() {
-        FolderCommand command = new FolderCommand("Y1S2", true);
+        FolderCommand command = new FolderCommand("Y1S2");
         CommandResult result = command.execute(model);
         assertEquals("Created and switched to folder: Y1S2", result.getFeedbackToUser());
-    }
-
-    @Test
-    public void execute_toggle_returnsSwitchedMessage() {
-        FolderCommand command = new FolderCommand("Y1S2", false);
-        CommandResult result = command.execute(model);
-        assertEquals("Switched to folder: Y1S2", result.getFeedbackToUser());
     }
 
 }

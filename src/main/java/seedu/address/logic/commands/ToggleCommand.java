@@ -5,20 +5,20 @@ import static java.util.Objects.requireNonNull;
 import seedu.address.model.Model;
 
 /**
- * Creates a new empty address book saved under data/{@code FOLDER_NAME}.json.
+ * Switches the active address book to an existing folder (JSON file).
  */
-public class FolderCommand extends Command {
+public class ToggleCommand extends Command {
 
-    public static final String COMMAND_WORD = "folder";
+    public static final String COMMAND_WORD = "toggle";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Creates a new empty address book saved under data/<FOLDER_NAME>.json.\n"
+            + ": Switches to an existing address book at data/<FOLDER_NAME>.json.\n"
             + "Example: " + COMMAND_WORD + " Y1S2";
 
     private final String folderName;
 
-    /** Creates a {@code FolderCommand} with the given {@code folderName}. */
-    public FolderCommand(String folderName) {
+    /** Creates a {@code ToggleCommand} with the given {@code folderName}. */
+    public ToggleCommand(String folderName) {
         requireNonNull(folderName);
         this.folderName = folderName;
     }
@@ -26,7 +26,7 @@ public class FolderCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
-        return new CommandResult("Created and switched to folder: " + folderName, folderName, true);
+        return new CommandResult("Switched to folder: " + folderName, folderName, false);
     }
 
     @Override
@@ -34,10 +34,10 @@ public class FolderCommand extends Command {
         if (this == other) {
             return true;
         }
-        if (!(other instanceof FolderCommand)) {
+        if (!(other instanceof ToggleCommand)) {
             return false;
         }
-        FolderCommand o = (FolderCommand) other;
+        ToggleCommand o = (ToggleCommand) other;
         return folderName.equals(o.folderName);
     }
 

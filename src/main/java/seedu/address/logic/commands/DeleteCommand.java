@@ -100,7 +100,6 @@ public class DeleteCommand extends Command {
         requireNonNull(model);
         List<Application> lastShownList = model.getFilteredPersonList();
         SameCompanySameRolePredicate predicate = new SameCompanySameRolePredicate(name, role);
-
         Application personToDelete = lastShownList.stream().filter(predicate).findFirst()
                 .orElseThrow(() -> new CommandException(Messages.MESSAGE_INVALID_APPLICATION_IDENTIFIER));
 
