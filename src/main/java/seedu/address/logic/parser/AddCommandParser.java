@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Application;
@@ -42,6 +43,13 @@ public class AddCommandParser implements Parser<AddCommand> {
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS,
                         PREFIX_TAG, PREFIX_ROLE, PREFIX_STATUS, PREFIX_DATE, PREFIX_REMINDER, PREFIX_REMINDER_DATE);
         validatePrefixes(argMultimap);
+
+        try {
+            validateDate(argMultimap);
+        } catch (CommandException e) {
+            throw new ParseException(e.getMessage());
+        }
+
         Application application = buildApplication(argMultimap);
         return new AddCommand(application);
     }
@@ -73,7 +81,24 @@ public class AddCommandParser implements Parser<AddCommand> {
         return new Application(name, phone, email, address, tagList, date, role, status, reminder);
     }
 
+    /**
+     * Checks if the date is a future date.
+     * @param argMultimap the ArgumentMultimap containing the date to validate
+     * @throws CommandException if the date is in the future
+     */
+    private void validateDate(ArgumentMultimap argMultimap) throws CommandException {
+        if (arePrefixesPresent(argMultimap, PREFIX_DATE)) {
+            String dateString = argMultimap.getValue(PREFIX_DATE).get();
+            Date applicationDate = new Date(dateString);
+            applicationDate.checkNotFutureDate();
+        }
+    }
 
+    /**
+     * Validates that the required prefixes are present and that there are no duplicate prefixes.
+     * @param argMultimap the ArgumentMultimap to validate
+     * @throws ParseException if the validation fails
+     */
     private void validatePrefixes(ArgumentMultimap argMultimap) throws ParseException {
         if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_ROLE)
                 || !argMultimap.getPreamble().isEmpty()) {
