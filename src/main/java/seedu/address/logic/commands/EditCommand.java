@@ -56,6 +56,7 @@ public class EditCommand extends Command {
     public static final String MESSAGE_DUPLICATE_PERSON = "This application already exists in the address book.";
     public static final String MESSAGE_NO_APPLICATION_EDITED = "No application is marked for editing "
             + "- this is likely due to an internal error.";
+    public static final String MESSAGE_DATE_NOT_ALLOWED = "Date cannot be a date later than today.";
 
     private final EditPersonDescriptor editPersonDescriptor;
 
@@ -96,7 +97,6 @@ public class EditCommand extends Command {
      */
     private static Application createEditedPerson(Application personToEdit, EditPersonDescriptor editPersonDescriptor) {
         assert personToEdit != null;
-
         Name updatedName = editPersonDescriptor.getName().orElse(personToEdit.getName());
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
