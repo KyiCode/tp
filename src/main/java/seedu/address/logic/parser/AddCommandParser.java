@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.AddCommand;
-import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Application;
@@ -46,10 +45,8 @@ public class AddCommandParser implements Parser<AddCommand> {
         ArgumentMultimap argMultimap = tokenizeArguments(args);
         validatePrefixes(argMultimap);
 
-        try {
-            validateDate(argMultimap);
-        } catch (CommandException e) {
-            throw new ParseException(e.getMessage());
+        if (!validateDate(argMultimap)) {
+            throw new ParseException(Date.MESSAGE_FUTURE_DATE);
         }
 
         Application application = buildApplication(argMultimap);
@@ -75,15 +72,17 @@ public class AddCommandParser implements Parser<AddCommand> {
 
     /**
      * Checks if the date is a future date.
+     *
      * @param argMultimap the ArgumentMultimap containing the date to validate
-     * @throws CommandException if the date is in the future
+     * @return true if the date is not in the future
      */
-    private void validateDate(ArgumentMultimap argMultimap) throws CommandException {
+    private boolean validateDate(ArgumentMultimap argMultimap) {
         if (arePrefixesPresent(argMultimap, PREFIX_DATE)) {
             String dateString = argMultimap.getValue(PREFIX_DATE).get();
             Date applicationDate = new Date(dateString);
-            applicationDate.checkNotFutureDate();
+            return applicationDate.checkNotFutureDate();
         }
+        return true;
     }
 
     /**
