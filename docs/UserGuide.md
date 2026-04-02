@@ -149,44 +149,33 @@ Format: `list`
 
 ### Editing an application : `editmode`
 
-Format: `edit INDEX`
-OR `edit [n/NAME] [r/ROLE]`
+Format:
+1. `editmode INDEX` or `editmode n/NAME r/ROLE` to enter edit mode to edit that particular application
+2. Type in any combination of at least one of the parameters below to edit the application
+3. `exitedit` to finish editing and exit the editing mode
 
-* Enters editing mode for the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …
-* At least one of the optional fields must be provided.
+Notes: 
+* Enters editing mode for the application at the specified `INDEX` or with the specified `NAME` and `ROLE`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …
+* Once editing mode is entered, *all commands* except for *editexit* and *editing commands* will be disabled.
+* Edit the application in edit mode by typing in at least one of the optional fields.
 * Existing values will be updated to the input values.
 * When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
 * You can remove all the person’s tags by typing `t/` without
   specifying any tags after it.
 
-Examples:
-
-* `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
-* `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
-Edits an existing application in OfferFlow by entering editing mode with `editmode`
-
-Format:
-1. `editmode INDEX` or `editmode n/NAME r/ROLE` to enter edit mode to edit that particular application
-2. possible editing commands
-    `n/NAME`
-    `r/ROLE`
-    `p/PHONE`
-    `e/EMAIL`
-    `a/ADDRESS`
-    `s/STATUS`
-    `d/DATE`
-    `t/TAG`
-3. `exitedit` to finish editing and exit the editing mode
-
-* Edits the application at the specified `INDEX`. The index refers to the index number shown in the displayed application list. The index **must be a positive integer** 1, 2, 3, … or specify a particular application using `NAME` and `ROLE`​
-* Existing values will be updated to the input values.
-* When editing tags, the existing tags of the application will be removed i.e adding of tags is not cumulative.
-* You can remove all the application’s tags by typing `t/` without
-    specifying any tags after it.
+#### Parameters
+- `n/NAME` → Name of the company
+- `p/PHONE` → company telephone number
+- `e/EMAIL` → company email
+- `a/ADDRESS` → company location
+- `d/DATE` → date when you applied
+- `r/ROLE` → job position applied for
+- `s/STATUS` → application progress
+- `t/TAGS` → optional fields
 
 ### Examples:
 * `editmode 1` or `editmode n/Google r/Software Engineer`
-* `a/Mapletree Business City II, Pasir Panjang area`
+* `a/Mapletree Business City II, Pasir Panjang area t/High Priority`
 * `exitedit`
 
 ### Expected outcome:
