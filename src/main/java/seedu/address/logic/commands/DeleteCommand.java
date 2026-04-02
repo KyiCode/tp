@@ -15,7 +15,7 @@ import seedu.address.model.person.Role;
 import seedu.address.model.person.SameCompanySameRolePredicate;
 
 /**
- * Deletes a person identified using it's displayed index from the address book.
+ * Deletes an application identified using it's displayed index from the address book.
  */
 public class DeleteCommand extends Command {
 

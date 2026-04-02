@@ -23,13 +23,12 @@ import seedu.address.model.person.Status;
 import seedu.address.model.tag.Tag;
 
 /**
- * Command Class to remove reminder of the specified Applciation.
+ * Removes reminder of the specified Application.
  */
 public class RemoveReminderCommand extends Command {
 
     public static final String COMMAND_WORD = "rmr";
-    public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ":\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
             + "Remove Reminder via INDEX (Remove the reminder of the Application identified "
             + "by the index number in the displayed application list)\n"
             + "Remove Reminder via Name and Role (Deletes the reminder of Application with the exact Name and Role) \n"
@@ -37,7 +36,6 @@ public class RemoveReminderCommand extends Command {
             + "Example: " + COMMAND_WORD + " 1\n"
             + "Parameters: Name (String), Role (String with no numbers) \n"
             + "Example: " + COMMAND_WORD + " n/Google r/CEO";
-
 
     public static final String MESSAGE_REMOVE_REMINDER_SUCCESS = "Removed Reminder: %1$s";
 
@@ -47,8 +45,8 @@ public class RemoveReminderCommand extends Command {
     private final Role role;
 
     /**
-     * Constructor for a Delete via Index command.
-     * @param targetIndex
+     * Constructs a Remove Reminder via Index Command.
+     * @param targetIndex List Index of targeted Application.
      */
     public RemoveReminderCommand(Index targetIndex) {
         this.targetIndex = targetIndex;
@@ -58,10 +56,9 @@ public class RemoveReminderCommand extends Command {
     }
 
     /**
-     * Constructor for a Delete via Application command.
-     *
-     * @param name
-     * @param role
+     * Constructs a Remove Reminder via Reference Command.
+     * @param name Company Name of Application.
+     * @param role Role of Application.
      */
     public RemoveReminderCommand(Name name, Role role) {
         this.targetIndex = null;
@@ -88,12 +85,11 @@ public class RemoveReminderCommand extends Command {
 
     /**
      * Creates and returns a {@code Person} with the details of {@code personToEdit}
-     * edited with {@code editPersonDescriptor}.
+     * edited with {@code editPersonDescriptor} without reminder.
      */
     private static Application createEditedPerson(Application personToEdit,
                                                   EditCommand.EditPersonDescriptor editPersonDescriptor) {
         assert personToEdit != null;
-
         Name updatedName = editPersonDescriptor.getName().orElse(personToEdit.getName());
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
@@ -109,16 +105,17 @@ public class RemoveReminderCommand extends Command {
 
 
     /**
-     * Execute a delete via Index command.
+     * Returns Application via specified index.
      *
-     * @param model current model.
-     * @return result of the command execution.
-     * @throws CommandException if command is invalid.
+     * @param model Current model.
+     * @return Application of specified index in the current filtered list.
+     * @throws CommandException If specified Application Index do not exist or is invalid.
      */
-    public Application getTargetApplicationByIndex(Model model) throws CommandException {
+    private Application getTargetApplicationByIndex(Model model) throws CommandException {
         requireNonNull(model);
         List<Application> lastShownList = model.getFilteredPersonList();
 
+        assert targetIndex != null;
         if (targetIndex.getZeroBased() >= lastShownList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_APPLICATION_DISPLAYED_INDEX);
         }
@@ -126,13 +123,12 @@ public class RemoveReminderCommand extends Command {
     }
 
     /**
-     * Execute a delete via Application command.
+     * Returns Application via specified Name and Role.
      *
-     * @param model current model.
-     * @return result of the command execution.
-     * @throws CommandException if command is invalid.
+     * @param model Current model.
+     * @throws CommandException If specified Application cannot be found or is invalid.
      */
-    public Application getTargetApplicationByApplication(Model model) throws CommandException {
+    private Application getTargetApplicationByApplication(Model model) throws CommandException {
         requireNonNull(model);
         List<Application> lastShownList = model.getFilteredPersonList();
         SameCompanySameRolePredicate predicate = new SameCompanySameRolePredicate(name, role);
