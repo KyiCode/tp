@@ -35,6 +35,7 @@ import seedu.address.model.tag.Tag;
 public class AddCommandParser implements Parser<AddCommand> {
 
     private static final Logger logger = LogsCenter.getLogger(AddCommandParser.class);
+    private static final Status DEFAULT_STATUS = new Status("");
 
     /**
      * Parses the given {@code String} of arguments in the context of the AddCommand
@@ -51,13 +52,13 @@ public class AddCommandParser implements Parser<AddCommand> {
     private Application buildApplication(ArgumentMultimap argMultimap) throws ParseException {
         Name name = parseRequiredField(argMultimap, PREFIX_NAME, ParserUtil::parseName);
         Role role = parseRequiredField(argMultimap, PREFIX_ROLE, ParserUtil::parseRole);
-        Set<Tag> tagList = parseTags(argMultimap);
-        Phone phone = parseOptionalField(argMultimap, PREFIX_PHONE, ParserUtil::parsePhone);
-        Email email = parseOptionalField(argMultimap, PREFIX_EMAIL, ParserUtil::parseEmail);
-        Address address = parseOptionalField(argMultimap, PREFIX_ADDRESS, ParserUtil::parseAddress);
-        Date date = parseDate(argMultimap);
-        Status status = parseStatus(argMultimap);
-        Reminder reminder = parseReminder(argMultimap);
+        Set<Tag> tagList = parseOptionalTags(argMultimap);
+        Phone phone = parseIfPresent(argMultimap, PREFIX_PHONE, ParserUtil::parsePhone);
+        Email email = parseIfPresent(argMultimap, PREFIX_EMAIL, ParserUtil::parseEmail);
+        Address address = parseIfPresent(argMultimap, PREFIX_ADDRESS, ParserUtil::parseAddress);
+        Date date = parseIfPresent(argMultimap, PREFIX_DATE, ParserUtil::parseDate);
+        Status status = parseStatusIfPresent(argMultimap);
+        Reminder reminder = parseReminderIfPresent(argMultimap);
 
         assert name != null : "company name should not be null";
         assert role != null : "role should not be null";
@@ -106,24 +107,8 @@ public class AddCommandParser implements Parser<AddCommand> {
      * Creates a functional interface for parser that throw ParseException.
      */
     @FunctionalInterface
-    private interface ParserFunction<T, R> {
-        R parse(T t) throws ParseException;
-    }
-
-    /**
-     * Parses required field (name and role)
-     *
-     * @param <T> the type of the field to parse
-     * @param argMultimap the ArgumentMultimap containing the parsed arguments
-     * @param prefix the prefix of the field
-     * @param parser a function used to parse the field
-     * @return the parsed field
-     * @throws ParseException
-     */
-    private <T> T parseRequiredField(ArgumentMultimap argMultimap, Prefix prefix, ParserFunction<String, T> parser)
-            throws ParseException {
-        logger.info(prefix + ": " + argMultimap.getValue(prefix).get());
-        return parser.parse(argMultimap.getValue(prefix).get());
+    private interface ParserFunction<T> {
+        T parse(String value) throws ParseException;
     }
 
     /**
@@ -136,8 +121,11 @@ public class AddCommandParser implements Parser<AddCommand> {
      * @return the parsed field if prefix present, else null
      * @throws ParseException
      */
-    private <T> T parseOptionalField(ArgumentMultimap argMultimap, Prefix prefix, ParserFunction<String, T> parser)
-            throws ParseException {
+    private <T> T parseIfPresent(ArgumentMultimap argMultimap, Prefix prefix,
+            ParserFunction<T> parser) throws ParseException {
+        assert prefix != null : "prefix cannot be null";
+        assert parser != null : "parser function cannot be null";
+
         if (arePrefixesPresent(argMultimap, prefix)) {
             logger.info(prefix + ": " + argMultimap.getValue(prefix).get());
             return parser.parse(argMultimap.getValue(prefix).get());
@@ -146,47 +134,34 @@ public class AddCommandParser implements Parser<AddCommand> {
     }
 
     /**
-     * Parses status if present else return null
+     * Parses required field (name and role)
      *
+     * @param <T> the type of the field to parse
      * @param argMultimap the ArgumentMultimap containing the parsed arguments
-     * @return a Status object
+     * @param prefix the prefix of the field
+     * @param parser a function used to parse the field
+     * @return the parsed field
      * @throws ParseException
      */
-    private Status parseStatus(ArgumentMultimap argMultimap) throws ParseException {
-        if (arePrefixesPresent(argMultimap, PREFIX_STATUS)) {
-            String statusValue = argMultimap.getValue(PREFIX_STATUS).get();
-            logger.info("status: " + statusValue);
-            if (statusValue == null || statusValue.trim().isEmpty()) {
-                return new Status("");
-            }
-            return ParserUtil.parseStatus(statusValue);
-        }
-        return new Status("");
+    private <T> T parseRequiredField(ArgumentMultimap argMultimap, Prefix prefix,
+            ParserFunction<T> parser) throws ParseException {
+        logger.info(prefix + ": " + argMultimap.getValue(prefix).get());
+        return parser.parse(argMultimap.getValue(prefix).get());
     }
 
     /**
-     * Parses date if present else return null
-     *
-     * @param argMultimap the ArgumentMultimap containing the parsed arguments
-     * @return a Date object if present, else null
-     * @throws ParseException if the date format is invalid or if the date is in the future
-     */
-    private Date parseDate(ArgumentMultimap argMultimap) throws ParseException {
-        if (!arePrefixesPresent(argMultimap, PREFIX_DATE)) {
-            return null;
+    * Parses status if present or set to default
+    *
+    * @param argMultimap the ArgumentMultimap containing the parsed arguments
+    * @return a Status object
+    * @throws ParseException
+    */
+    private Status parseStatusIfPresent(ArgumentMultimap argMultimap) throws ParseException {
+        if (arePrefixesPresent(argMultimap, PREFIX_STATUS)) {
+            logger.info("status: " + argMultimap.getValue(PREFIX_STATUS).get());
+            return ParserUtil.parseStatus(argMultimap.getValue(PREFIX_STATUS).get());
         }
-        String dateString = argMultimap.getValue(PREFIX_DATE).get();
-        logger.info("date: " + dateString);
-
-        try {
-            Date date = ParserUtil.parseDate(dateString);
-            if (!date.checkNotFutureDate()) {
-                throw new ParseException(Date.MESSAGE_FUTURE_DATE);
-            }
-            return date;
-        } catch (IllegalArgumentException e) {
-            throw new ParseException(Date.MESSAGE_CONSTRAINTS);
-        }
+        return DEFAULT_STATUS;
     }
 
     /**
@@ -196,43 +171,21 @@ public class AddCommandParser implements Parser<AddCommand> {
      * @return a Reminder object if present, else null
      * @throws ParseException if only reminder name or date is provided
      */
-    private Reminder parseReminder(ArgumentMultimap argMultimap) throws ParseException {
-        boolean hasReminderName = arePrefixesPresent(argMultimap, PREFIX_REMINDER);
+    private Reminder parseReminderIfPresent(ArgumentMultimap argMultimap) throws ParseException {
+        boolean hasReminder = arePrefixesPresent(argMultimap, PREFIX_REMINDER);
         boolean hasReminderDate = arePrefixesPresent(argMultimap, PREFIX_REMINDER_DATE);
-        if (hasReminderName && hasReminderDate) {
-            String reminderName = argMultimap.getValue(PREFIX_REMINDER).get();
-            String reminderDate = argMultimap.getValue(PREFIX_REMINDER_DATE).get();
-            logger.info("reminder: " + reminderName);
-            logger.info("reminder date: " + reminderDate);
 
-            validateReminderFields(reminderName, reminderDate);
-            logger.info("reminder: " + reminderName + ", reminder date: " + reminderDate);
-            return ParserUtil.parseReminder(reminderName, reminderDate);
+        if (hasReminder && hasReminderDate) {
+            logger.info("reminder: " + argMultimap.getValue(PREFIX_REMINDER).get()
+                    + ", date: " + argMultimap.getValue(PREFIX_REMINDER_DATE).get());
+
+            return ParserUtil.parseReminder(argMultimap.getValue(PREFIX_REMINDER).get(),
+                    argMultimap.getValue(PREFIX_REMINDER_DATE).get());
         }
-
-        if (hasReminderName || hasReminderDate) {
-            throw new ParseException(
-                    "Both reminder (u/) and reminder date (ud/) must be provided to add a reminder");
+        if (hasReminder || hasReminderDate) {
+            throw new ParseException("Both reminder (u/) and reminder date (ud/) must be provided together.");
         }
         return null;
-    }
-
-    /**
-     * Checks both reminder name and date is present
-     *
-     * @param reminderName name of the reminder
-     * @param reminderDate date of the reminder
-     * @throws ParseException if reminder name or date is missing
-     */
-    private void validateReminderFields(String reminderName, String reminderDate) throws ParseException {
-        if (reminderName == null || reminderName.isEmpty()) {
-            throw new ParseException("Reminder name cannot be empty, both reminder name and "
-                    + "valid date must be provided");
-        }
-        if (reminderDate == null || reminderDate.isEmpty()) {
-            throw new ParseException("Reminder date cannot be empty, both reminder name and "
-                    + "valid date must be provided");
-        }
     }
 
     /**
@@ -242,7 +195,7 @@ public class AddCommandParser implements Parser<AddCommand> {
      * @return a Set of Tag objects if present
      * @throws ParseException
      */
-    private Set<Tag> parseTags(ArgumentMultimap argMultimap) throws ParseException {
+    private Set<Tag> parseOptionalTags(ArgumentMultimap argMultimap) throws ParseException {
         return ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
     }
 }
