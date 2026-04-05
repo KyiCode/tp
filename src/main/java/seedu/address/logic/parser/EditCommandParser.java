@@ -68,9 +68,9 @@ public class EditCommandParser implements Parser<EditCommand> {
             editPersonDescriptor.setStatus(ParserUtil.parseStatus(argMultimap.getValue(PREFIX_STATUS).get()));
         }
         if (arePrefixesPresent(argMultimap, PREFIX_REMINDER, PREFIX_REMINDER_DATE)) {
-            String remminderReminderString = argMultimap.getValue(PREFIX_REMINDER).get();
+            String reminderReminderString = argMultimap.getValue(PREFIX_REMINDER).get();
             String reminderDateString = argMultimap.getValue(PREFIX_REMINDER_DATE).get();
-            editPersonDescriptor.setReminder(ParserUtil.parseReminder(remminderReminderString, reminderDateString));
+            editPersonDescriptor.setReminder(ParserUtil.parseReminder(reminderReminderString, reminderDateString));
         }
 
         parseTagsForEdit(argMultimap.getAllValues(PREFIX_TAG)).ifPresent(editPersonDescriptor::setTags);

@@ -12,7 +12,7 @@ import java.util.Set;
 public class Status {
 
     public static final String MESSAGE_CONSTRAINTS = "Valid Statuses are Interested -> Applied ->"
-            + " Interview -> Offered or Rejected -> Accepted";
+            + " Interview -> Pending -> Offered or Rejected -> Accepted";
 
     private static final Set<String> VALID_STATUSES = Set.of("interested", "applied",
             "pending", "interview", "offered", "rejected", "accepted", "");
