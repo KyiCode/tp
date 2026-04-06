@@ -14,7 +14,8 @@ public class Messages {
 
     public static final String MESSAGE_UNKNOWN_COMMAND = "Unknown command";
     public static final String MESSAGE_INVALID_COMMAND_FORMAT = "Invalid command format! \n%1$s";
-    public static final String MESSAGE_INVALID_PERSON_DISPLAYED_INDEX = "The person index provided is invalid";
+    public static final String MESSAGE_INVALID_APPLICATION_DISPLAYED_INDEX =
+            "The application index provided is invalid";
     public static final String MESSAGE_INVALID_APPLICATION_IDENTIFIER =
             "The application name and role provided is invalid";
     public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d persons listed!";
@@ -45,8 +46,17 @@ public class Messages {
                 .append(person.getEmail())
                 .append("; Address: ")
                 .append(person.getAddress())
+                .append("; Role: ")
+                .append(person.getRole())
+                .append("; Date: ")
+                .append(person.getDate())
+                .append("; Status: ")
+                .append(person.getStatus())
                 .append("; Tags: ");
         person.getTags().forEach(builder::append);
+
+        builder.append("; Reminder: ")
+                .append(person.getReminder());
         return builder.toString();
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.person.exceptions.DuplicateApplicationException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 /**
@@ -43,7 +43,8 @@ public class UniquePersonList implements Iterable<Application> {
     public void add(Application toAdd) {
         requireNonNull(toAdd);
         if (contains(toAdd)) {
-            throw new DuplicatePersonException();
+            throw new DuplicateApplicationException(
+                    "This application already exists. Use overwrite to replace existing application");
         }
         internalList.add(toAdd);
     }
@@ -62,7 +63,8 @@ public class UniquePersonList implements Iterable<Application> {
         }
 
         if (!target.isSameApplication(editedPerson) && contains(editedPerson)) {
-            throw new DuplicatePersonException();
+            throw new DuplicateApplicationException(
+                    "This application already exists. Use overwrite to replace existing application");
         }
 
         internalList.set(index, editedPerson);
@@ -91,7 +93,8 @@ public class UniquePersonList implements Iterable<Application> {
     public void setPersons(List<Application> persons) {
         requireAllNonNull(persons);
         if (!personsAreUnique(persons)) {
-            throw new DuplicatePersonException();
+            throw new DuplicateApplicationException(
+                    "This application already exists. Use overwrite to replace existing application");
         }
 
         internalList.setAll(persons);

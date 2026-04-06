@@ -8,16 +8,21 @@ import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
+import static seedu.address.testutil.TypicalPersons.AMY;
+import static seedu.address.testutil.TypicalPersons.BOB;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Application;
+import seedu.address.model.person.Name;
+import seedu.address.model.person.Role;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for
@@ -32,7 +37,7 @@ public class DeleteCommandTest {
         Application personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON);
 
-        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS,
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_APPLICATION_SUCCESS,
                 Messages.format(personToDelete));
 
         ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
@@ -46,7 +51,7 @@ public class DeleteCommandTest {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
         DeleteCommand deleteCommand = new DeleteCommand(outOfBoundIndex);
 
-        assertCommandFailure(deleteCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertCommandFailure(deleteCommand, model, Messages.MESSAGE_INVALID_APPLICATION_DISPLAYED_INDEX);
     }
 
     @Test
@@ -56,12 +61,14 @@ public class DeleteCommandTest {
         Application personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON);
 
-        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS,
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_APPLICATION_SUCCESS,
                 Messages.format(personToDelete));
 
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
         expectedModel.deletePerson(personToDelete);
         showNoPerson(expectedModel);
+        System.out.println(model);
+        System.out.println(expectedModel);
 
         assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
     }
@@ -76,29 +83,59 @@ public class DeleteCommandTest {
 
         DeleteCommand deleteCommand = new DeleteCommand(outOfBoundIndex);
 
-        assertCommandFailure(deleteCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertCommandFailure(deleteCommand, model, Messages.MESSAGE_INVALID_APPLICATION_DISPLAYED_INDEX);
+    }
+
+    // Non indexed Deletion Testcases
+    @Test
+    public void execute_validNormalDeleteCommand_success() throws CommandException {
+        Application deleteTarget = BOB;
+        model.addPerson(BOB);
+        DeleteCommand deleteCommand = new DeleteCommand(deleteTarget.getName(), deleteTarget.getRole());
+
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_APPLICATION_SUCCESS,
+                Messages.format(deleteTarget));
+
+        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.deletePerson(deleteTarget);
+        assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_normalDeleteNoTarget_throwsCommandException() {
+        DeleteCommand deleteCommand = new DeleteCommand(new Name("NonExistentName"), new Role("Engineer"));
+        assertCommandFailure(deleteCommand, model, Messages.MESSAGE_INVALID_APPLICATION_IDENTIFIER);
     }
 
     @Test
     public void equals() {
-        DeleteCommand deleteFirstCommand = new DeleteCommand(INDEX_FIRST_PERSON);
-        DeleteCommand deleteSecondCommand = new DeleteCommand(INDEX_SECOND_PERSON);
+        DeleteCommand deleteFirstCommandIndex = new DeleteCommand(INDEX_FIRST_PERSON);
+        DeleteCommand deleteSecondCommandIndex = new DeleteCommand(INDEX_SECOND_PERSON);
+        DeleteCommand deleteFirstCommandApp = new DeleteCommand(BOB.getName(), BOB.getRole());
+        DeleteCommand deleteSecondCommandApp = new DeleteCommand(AMY.getName(), AMY.getRole());
 
         // same object -> returns true
-        assertTrue(deleteFirstCommand.equals(deleteFirstCommand));
+        assertTrue(deleteFirstCommandIndex.equals(deleteFirstCommandIndex));
 
         // same values -> returns true
-        DeleteCommand deleteFirstCommandCopy = new DeleteCommand(INDEX_FIRST_PERSON);
-        assertTrue(deleteFirstCommand.equals(deleteFirstCommandCopy));
+        DeleteCommand deleteFirstCommandIndexCopy = new DeleteCommand(INDEX_FIRST_PERSON);
+        assertTrue(deleteFirstCommandIndex.equals(deleteFirstCommandIndexCopy));
 
         // different types -> returns false
-        assertFalse(deleteFirstCommand.equals(1));
+        assertFalse(deleteFirstCommandIndex.equals(1));
 
         // null -> returns false
-        assertFalse(deleteFirstCommand.equals(null));
+        assertFalse(deleteFirstCommandIndex.equals(null));
 
         // different person -> returns false
-        assertFalse(deleteFirstCommand.equals(deleteSecondCommand));
+        assertFalse(deleteFirstCommandIndex.equals(deleteSecondCommandIndex));
+
+        DeleteCommand deleteFirstCommandAppCopy = new DeleteCommand(BOB.getName(), BOB.getRole());
+        assertTrue(deleteFirstCommandApp.equals(deleteFirstCommandApp));
+        assertTrue(deleteFirstCommandApp.equals(deleteFirstCommandAppCopy));
+        assertFalse(deleteFirstCommandApp.equals(1));
+        assertFalse(deleteFirstCommandApp.equals(null));
+        assertFalse(deleteFirstCommandApp.equals(deleteSecondCommandApp));
     }
 
     @Test

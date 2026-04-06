@@ -343,7 +343,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 1. User requests to edit a particular company application
 2. OfferFlow shows the company's current application details
-3. User edits application details such as adding upcoming interviews and/or update application date
+3. User edits application details such as adding reminder interviews and/or update application date
 4. User confirms all changes made to the application
 5. OfferFlow updates the application details to reflect the new changes if any
 
