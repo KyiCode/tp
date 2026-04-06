@@ -18,7 +18,7 @@ public class Messages {
             "The application index provided is invalid";
     public static final String MESSAGE_INVALID_APPLICATION_IDENTIFIER =
             "The application name and role provided is invalid";
-    public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d persons listed!";
+    public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d applications listed!";
     public static final String MESSAGE_DUPLICATE_FIELDS =
                 "Multiple values specified for the following single-valued field(s): ";
 
