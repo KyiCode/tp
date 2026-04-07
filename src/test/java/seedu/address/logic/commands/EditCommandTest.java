@@ -10,11 +10,11 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
-import static seedu.address.testutil.TypicalPersons.BENSON_WITH_REMINDER_INTERVIEW;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.logic.commands.CommandTestUtil.showApplicationAtIndex;
+import static seedu.address.testutil.TypicalApplications.BENSON_WITH_REMINDER_INTERVIEW;
+import static seedu.address.testutil.TypicalApplications.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_APPLICATION;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_APPLICATION;
 
 import java.time.LocalDate;
 
@@ -22,16 +22,16 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
-import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.logic.commands.EditCommand.EditApplicationDescriptor;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.person.Application;
-import seedu.address.model.person.SameCompanySameRolePredicate;
-import seedu.address.testutil.EditPersonDescriptorBuilder;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.model.application.Application;
+import seedu.address.model.application.SameCompanySameRolePredicate;
+import seedu.address.testutil.ApplicationBuilder;
+import seedu.address.testutil.EditApplicationDescriptorBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for EditCommand.
@@ -42,174 +42,191 @@ public class EditCommandTest {
 
     @Test
     public void execute_allFieldsSpecifiedUnfilteredList_success() {
-        Application editedPerson = new PersonBuilder().withDate(LocalDate.now().minusDays(1).toString()).build();
-        Application originalPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedPerson).build();
+        Application editedApplication = new ApplicationBuilder().withDate(LocalDate.now().minusDays(1).toString())
+                                        .build();
+        Application originalApplication = model.getFilteredApplicationList()
+                                        .get(INDEX_FIRST_APPLICATION.getZeroBased());
+        EditApplicationDescriptor descriptor = new EditApplicationDescriptorBuilder(editedApplication).build();
 
         EditCommand editCommand = new EditCommand(descriptor);
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_APPLICATION_SUCCESS,
+                                        Messages.format(editedApplication));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.setPerson(originalPerson, editedPerson);
+        expectedModel.setApplication(originalApplication, editedApplication);
 
-        originalPerson.setBeingEdited(true);
+        originalApplication.setBeingEdited(true);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
-        originalPerson.setBeingEdited(false);
-        editedPerson.setBeingEdited(false);
+        originalApplication.setBeingEdited(false);
+        editedApplication.setBeingEdited(false);
     }
 
     @Test
     public void execute_someFieldsSpecifiedUnfilteredList_success() {
         // Why is this here? Because for some ungodly reason I cannot fathom
-        // the first person does not have its editing status reset no matter
+        // the first application does not have its editing status reset no
+        // matter
         // what I do in the previous test and breaks the editing flow.
-        // Why does it do this? Good question, I don't know, and I'm not paid at all
+        // Why does it do this? Good question, I don't know, and I'm not paid at
+        // all
         // so I'm going to implement this very shitty quick fix and go to bed.
-        model.getFilteredPersonList().get(0).setBeingEdited(false);
+        model.getFilteredApplicationList().get(0).setBeingEdited(false);
 
-        Index indexLastPerson = Index.fromOneBased(model.getFilteredPersonList().size());
-        Application lastPerson = model.getFilteredPersonList().get(indexLastPerson.getZeroBased());
-        PersonBuilder personInList = new PersonBuilder(lastPerson);
-        Application editedPerson = personInList.withName(VALID_NAME_BOB).withPhone(VALID_PHONE_BOB)
-                .withTags(VALID_TAG_HUSBAND).build();
+        Index indexLastApplication = Index.fromOneBased(model.getFilteredApplicationList().size());
+        Application lastApplication = model.getFilteredApplicationList().get(indexLastApplication.getZeroBased());
+        ApplicationBuilder applicationInList = new ApplicationBuilder(lastApplication);
+        Application editedApplication = applicationInList.withName(VALID_NAME_BOB).withPhone(VALID_PHONE_BOB)
+                                        .withTags(VALID_TAG_HUSBAND).build();
 
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB)
-                .withPhone(VALID_PHONE_BOB).withTags(VALID_TAG_HUSBAND).build();
+        EditApplicationDescriptor descriptor = new EditApplicationDescriptorBuilder().withName(VALID_NAME_BOB)
+                                        .withPhone(VALID_PHONE_BOB).withTags(VALID_TAG_HUSBAND).build();
         EditCommand editCommand = new EditCommand(descriptor);
 
-
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_APPLICATION_SUCCESS,
+                                        Messages.format(editedApplication));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.setPerson(lastPerson, editedPerson);
+        expectedModel.setApplication(lastApplication, editedApplication);
 
-        lastPerson.setBeingEdited(true);
+        lastApplication.setBeingEdited(true);
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
-        editedPerson.setBeingEdited(false);
+        editedApplication.setBeingEdited(false);
     }
 
     @Test
     public void execute_noFieldSpecifiedUnfilteredList_success() {
-        EditCommand editCommand = new EditCommand(new EditPersonDescriptor());
-        Application editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        editedPerson.setBeingEdited(true);
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+        EditCommand editCommand = new EditCommand(new EditApplicationDescriptor());
+        Application editedApplication = model.getFilteredApplicationList().get(INDEX_FIRST_APPLICATION.getZeroBased());
+        editedApplication.setBeingEdited(true);
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_APPLICATION_SUCCESS,
+                                        Messages.format(editedApplication));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
-        editedPerson.setBeingEdited(false);
+        editedApplication.setBeingEdited(false);
     }
 
     @Test
     public void execute_filteredList_success() {
-        showPersonAtIndex(model, INDEX_FIRST_PERSON);
+        showApplicationAtIndex(model, INDEX_FIRST_APPLICATION);
 
-        Application personInFilteredList = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        personInFilteredList.setBeingEdited(true);
-        Application editedPerson = new PersonBuilder(personInFilteredList).withName(VALID_NAME_BOB).build();
-        EditCommand editCommand = new EditCommand(new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB).build());
+        Application applicationInFilteredList = model.getFilteredApplicationList()
+                                        .get(INDEX_FIRST_APPLICATION.getZeroBased());
+        applicationInFilteredList.setBeingEdited(true);
+        Application editedApplication = new ApplicationBuilder(applicationInFilteredList).withName(VALID_NAME_BOB)
+                                        .build();
+        EditCommand editCommand = new EditCommand(
+                                        new EditApplicationDescriptorBuilder().withName(VALID_NAME_BOB).build());
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_APPLICATION_SUCCESS,
+                                        Messages.format(editedApplication));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.setPerson(model.getFilteredPersonList().get(0), editedPerson);
+        expectedModel.setApplication(model.getFilteredApplicationList().get(0), editedApplication);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
-        editedPerson.setBeingEdited(false);
+        editedApplication.setBeingEdited(false);
     }
 
     @Test
-    public void execute_duplicatePersonUnfilteredList_failure() {
-        Application firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Application otherApplicant = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
+    public void execute_duplicateApplicationUnfilteredList_failure() {
+        Application firstApplication = model.getFilteredApplicationList().get(INDEX_FIRST_APPLICATION.getZeroBased());
+        Application otherApplicant = model.getFilteredApplicationList()
+                .get(INDEX_SECOND_APPLICATION.getZeroBased());
         otherApplicant.setBeingEdited(true);
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(firstPerson).build();
+        EditApplicationDescriptor descriptor = new EditApplicationDescriptorBuilder(firstApplication).build();
         EditCommand editCommand = new EditCommand(descriptor);
 
-        assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_PERSON);
+        assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_APPLICATION);
         otherApplicant.setBeingEdited(false);
     }
 
     @Test
-    public void execute_duplicatePersonFilteredList_failure() {
-        showPersonAtIndex(model, INDEX_FIRST_PERSON);
+    public void execute_duplicateApplicationFilteredList_failure() {
+        showApplicationAtIndex(model, INDEX_FIRST_APPLICATION);
 
-        // edit person in filtered list into a duplicate in address book
-        Application personInList = model.getAddressBook().getPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
-        Application otherApplicant = model.getAddressBook().getPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        // edit application in filtered list into a duplicate in address book
+        Application applicationInList = model.getAddressBook().getApplicationList()
+                                        .get(INDEX_SECOND_APPLICATION.getZeroBased());
+        Application otherApplicant = model.getAddressBook().getApplicationList()
+                                        .get(INDEX_FIRST_APPLICATION.getZeroBased());
         otherApplicant.setBeingEdited(true);
-        EditCommand editCommand = new EditCommand(new EditPersonDescriptorBuilder(personInList).build());
+        EditCommand editCommand = new EditCommand(new EditApplicationDescriptorBuilder(applicationInList).build());
 
-        assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_PERSON);
+        assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_APPLICATION);
         otherApplicant.setBeingEdited(false);
     }
 
     @Test
     public void execute_futureDate_failure() {
-        Application editedPerson = new PersonBuilder().withDate(LocalDate.now().plusDays(1).toString()).build();
-        Application originalPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedPerson).build();
+        Application editedApplication = new ApplicationBuilder().withDate(LocalDate.now().plusDays(1).toString())
+                                        .build();
+        Application originalApplication = model.getFilteredApplicationList()
+                                        .get(INDEX_FIRST_APPLICATION.getZeroBased());
+        EditApplicationDescriptor descriptor = new EditApplicationDescriptorBuilder(editedApplication).build();
 
         EditCommand editCommand = new EditCommand(descriptor);
 
-        originalPerson.setBeingEdited(true);
+        originalApplication.setBeingEdited(true);
 
         assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DATE_NOT_ALLOWED);
 
-        originalPerson.setBeingEdited(false);
-        editedPerson.setBeingEdited(false);
+        originalApplication.setBeingEdited(false);
+        editedApplication.setBeingEdited(false);
     }
 
     @Test
     public void execute_setReminderEvent_success() {
-        Application personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        personToEdit.setBeingEdited(true);
+        Application applicationToEdit = model.getFilteredApplicationList()
+                .get(INDEX_FIRST_APPLICATION.getZeroBased());
+        applicationToEdit.setBeingEdited(true);
 
-        Application editedPerson = new PersonBuilder(personToEdit)
-                .withReminder("Technical Interview", "2024-06-01")
-                .buildWithReminder();
+        Application editedApplication = new ApplicationBuilder(applicationToEdit)
+                                        .withReminder("Technical Interview", "2024-06-01").buildWithReminder();
 
-        EditCommand editCommand = new EditCommand(new EditPersonDescriptorBuilder()
-                .withReminder("Technical Interview", "2024-06-01")
-                .build());
+        EditCommand editCommand = new EditCommand(new EditApplicationDescriptorBuilder()
+                                        .withReminder("Technical Interview", "2024-06-01").build());
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_APPLICATION_SUCCESS,
+                                        Messages.format(editedApplication));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.setPerson(personToEdit, editedPerson);
+        expectedModel.setApplication(applicationToEdit, editedApplication);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
-        personToEdit.setBeingEdited(false);
+        applicationToEdit.setBeingEdited(false);
     }
 
     @Test
     public void execute_editReminderEvent_success() throws CommandException {
         SameCompanySameRolePredicate predicate = new SameCompanySameRolePredicate(
-                BENSON_WITH_REMINDER_INTERVIEW.getName(), BENSON_WITH_REMINDER_INTERVIEW.getRole());
+                                        BENSON_WITH_REMINDER_INTERVIEW.getName(),
+                                        BENSON_WITH_REMINDER_INTERVIEW.getRole());
 
-        Application personToEdit = model.getFilteredPersonList().stream().filter(predicate).findFirst()
+        Application applicationToEdit = model.getFilteredApplicationList().stream()
+                .filter(predicate)
+                .findFirst()
                 .orElseThrow(() -> new CommandException(Messages.MESSAGE_INVALID_APPLICATION_IDENTIFIER));
 
-        personToEdit.setBeingEdited(true);
+        applicationToEdit.setBeingEdited(true);
 
-        Application editedPerson = new PersonBuilder(personToEdit)
-                .withReminder("Accept Offer", "2024-12-01")
-                .buildWithReminder();
+        Application editedApplication = new ApplicationBuilder(applicationToEdit)
+                                        .withReminder("Accept Offer", "2024-12-01").buildWithReminder();
 
-        EditCommand editCommand = new EditCommand(new EditPersonDescriptorBuilder()
-                .withReminder("Accept Offer", "2024-12-01")
-                .build());
+        EditCommand editCommand = new EditCommand(new EditApplicationDescriptorBuilder()
+                                        .withReminder("Accept Offer", "2024-12-01").build());
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_APPLICATION_SUCCESS,
+                                        Messages.format(editedApplication));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.setPerson(personToEdit, editedPerson);
+        expectedModel.setApplication(applicationToEdit, editedApplication);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
-        personToEdit.setBeingEdited(false);
+        applicationToEdit.setBeingEdited(false);
     }
 
     @Test
@@ -217,7 +234,7 @@ public class EditCommandTest {
         final EditCommand standardCommand = new EditCommand(DESC_AMY);
 
         // same values -> returns true
-        EditPersonDescriptor copyDescriptor = new EditPersonDescriptor(DESC_AMY);
+        EditApplicationDescriptor copyDescriptor = new EditApplicationDescriptor(DESC_AMY);
         EditCommand commandWithSameValues = new EditCommand(copyDescriptor);
         assertTrue(standardCommand.equals(commandWithSameValues));
 
@@ -237,10 +254,10 @@ public class EditCommandTest {
     @Test
     public void toStringMethod() {
         Index index = Index.fromOneBased(1);
-        EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
-        EditCommand editCommand = new EditCommand(editPersonDescriptor);
-        String expected = EditCommand.class.getCanonicalName() + "{editPersonDescriptor="
-                + editPersonDescriptor + "}";
+        EditApplicationDescriptor editApplicationDescriptor = new EditApplicationDescriptor();
+        EditCommand editCommand = new EditCommand(editApplicationDescriptor);
+        String expected = EditCommand.class.getCanonicalName() + "{editApplicationDescriptor="
+                                        + editApplicationDescriptor + "}";
         assertEquals(expected, editCommand.toString());
     }
 

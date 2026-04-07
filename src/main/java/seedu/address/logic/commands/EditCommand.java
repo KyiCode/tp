@@ -8,7 +8,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_REMINDER;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_REMINDER_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_APPLICATIONS;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,105 +23,100 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.ParserMode;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Application;
-import seedu.address.model.person.Date;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.IsBeingEditedPredicate;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Phone;
-import seedu.address.model.person.Reminder;
-import seedu.address.model.person.Role;
-import seedu.address.model.person.Status;
+import seedu.address.model.application.Address;
+import seedu.address.model.application.Application;
+import seedu.address.model.application.Date;
+import seedu.address.model.application.Email;
+import seedu.address.model.application.IsBeingEditedPredicate;
+import seedu.address.model.application.Name;
+import seedu.address.model.application.Phone;
+import seedu.address.model.application.Reminder;
+import seedu.address.model.application.Role;
+import seedu.address.model.application.Status;
 import seedu.address.model.tag.Tag;
 
 /**
- * Edits the details of an existing person in the address book.
+ * Edits the details of an existing application in the address book.
  */
 public class EditCommand extends Command {
 
     public static final String MESSAGE_USAGE = "Edits the details of the application identified "
-            + "by the index number used in the displayed application list / combination of Company Name and Job Role. "
-            + "Existing values will be overwritten by the input values.\n"
-            + "Parameters: [" + PREFIX_NAME + "NAME] "
-            + "[" + PREFIX_PHONE + "PHONE] "
-            + "[" + PREFIX_EMAIL + "EMAIL] "
-            + "[" + PREFIX_ADDRESS + "ADDRESS] "
-            + "[" + PREFIX_TAG + "TAG]...\n"
-            + "Note that [" + PREFIX_REMINDER + " REMINDER] must be paired with "
-            + "[" + PREFIX_REMINDER_DATE + " REMINDER_DATE]. \n"
-            + "Example: "
-            + PREFIX_PHONE + "91234567 "
-            + PREFIX_EMAIL + "johndoe@example.com";
+            + "by the index number used in the displayed application list / combination of "
+            + "Company Name and Job Role. Existing values will be overwritten by the input values.\n"
+            + "Parameters: [" + PREFIX_NAME + "NAME] [" + PREFIX_PHONE + "PHONE] ["
+            + PREFIX_EMAIL + "EMAIL] [" + PREFIX_ADDRESS + "ADDRESS] [" + PREFIX_TAG + "TAG]...\n"
+            + "Note that [" + PREFIX_REMINDER + " REMINDER] must be paired with ["
+            + PREFIX_REMINDER_DATE + " REMINDER_DATE]. \n"
+            + "Example: " + PREFIX_PHONE + "91234567 " + PREFIX_EMAIL + "johndoe@example.com";
 
-    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Application: %1$s. To exit editing mode, "
-            + "enter \"editexit\".";
+    public static final String MESSAGE_EDIT_APPLICATION_SUCCESS = "Edited Application: %1$s. To exit editing mode, "
+                                    + "enter \"editexit\".";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided. Note only edit "
-            + "commands are allowed in editing mode. To exit editing mode, enter \"editexit\".";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This application already exists in the address book."
-            + "To exit editing mode, enter \"editexit\".";
+                                    + "commands are allowed in editing mode. To exit editing mode, enter \"editexit\".";
+    public static final String MESSAGE_DUPLICATE_APPLICATION = "This application already exists in the address book."
+                                    + "To exit editing mode, enter \"editexit\".";
     public static final String MESSAGE_NO_APPLICATION_EDITED = "No application is marked for editing "
-            + "- this is likely due to an internal error.";
+                                    + "- this is likely due to an internal error.";
     public static final String MESSAGE_DATE_NOT_ALLOWED = "Date cannot be a date later than today. To exit editing "
-            + "mode, enter \"editexit\"";
+                                    + "mode, enter \"editexit\"";
 
-    private final EditPersonDescriptor editPersonDescriptor;
+    private final EditApplicationDescriptor editApplicationDescriptor;
 
     /**
-     * @param editPersonDescriptor details to edit the person with
+     * @param editApplicationDescriptor details to edit the application with
      */
-    public EditCommand(EditPersonDescriptor editPersonDescriptor) {
-        requireNonNull(editPersonDescriptor);
+    public EditCommand(EditApplicationDescriptor editApplicationDescriptor) {
+        requireNonNull(editApplicationDescriptor);
 
-        this.editPersonDescriptor = new EditPersonDescriptor(editPersonDescriptor);
+        this.editApplicationDescriptor = new EditApplicationDescriptor(editApplicationDescriptor);
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        List<Application> lastShownList = model.getFilteredPersonList();
+        List<Application> lastShownList = model.getFilteredApplicationList();
 
         IsBeingEditedPredicate predicate = new IsBeingEditedPredicate();
         Application applicationToEdit = lastShownList.stream().filter(predicate).findFirst()
-                .orElseThrow(() -> new CommandException(MESSAGE_NO_APPLICATION_EDITED));
+                                        .orElseThrow(() -> new CommandException(MESSAGE_NO_APPLICATION_EDITED));
 
-        Application editedPerson = createEditedPerson(applicationToEdit, editPersonDescriptor);
-        editedPerson.setBeingEdited(true);
+        Application editedApplication = createEditedApplication(applicationToEdit, editApplicationDescriptor);
+        editedApplication.setBeingEdited(true);
 
-        if (!applicationToEdit.isSameApplication(editedPerson) && model.hasPerson(editedPerson)) {
-            throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+        if (!applicationToEdit.isSameApplication(editedApplication) && model.hasApplication(editedApplication)) {
+            throw new CommandException(MESSAGE_DUPLICATE_APPLICATION);
         }
 
-        model.setPerson(applicationToEdit, editedPerson);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)),
-                false, ParserMode.EDITING, false);
+        model.setApplication(applicationToEdit, editedApplication);
+        model.updateFilteredApplicationList(PREDICATE_SHOW_ALL_APPLICATIONS);
+        return new CommandResult(String.format(MESSAGE_EDIT_APPLICATION_SUCCESS, Messages.format(editedApplication)),
+                                        false, ParserMode.EDITING, false);
     }
 
     /**
-     * Creates and returns a {@code Person} with the details of {@code personToEdit}
-     * edited with {@code editPersonDescriptor}.
+     * Creates and returns a {@code Application} with the details of {@code applicationToEdit}
+     * edited with {@code editApplicationDescriptor}.
      */
-    private static Application createEditedPerson(Application personToEdit,
-                                                  EditPersonDescriptor editPersonDescriptor) throws CommandException {
-        assert personToEdit != null;
-        boolean isFutureDate = editPersonDescriptor.getDate().map(x -> !x.checkNotFutureDate()).orElse(false);
+    private static Application createEditedApplication(Application applicationToEdit,
+                                    EditApplicationDescriptor editApplicationDescriptor) throws CommandException {
+        assert applicationToEdit != null;
+        boolean isFutureDate = editApplicationDescriptor.getDate().map(x -> !x.checkNotFutureDate()).orElse(false);
         if (isFutureDate) {
             throw new CommandException(MESSAGE_DATE_NOT_ALLOWED);
         }
 
-        Date updatedDate = editPersonDescriptor.getDate().orElse(personToEdit.getDate());
-        Name updatedName = editPersonDescriptor.getName().orElse(personToEdit.getName());
-        Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
-        Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
-        Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
-        Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
-        Role updatedRole = editPersonDescriptor.getRole().orElse(personToEdit.getRole());
-        Status updatedStatus = editPersonDescriptor.getStatus().orElse(personToEdit.getStatus());
-        Reminder updateReminder = editPersonDescriptor.getReminder().orElse(personToEdit.getReminder());
+        Date updatedDate = editApplicationDescriptor.getDate().orElse(applicationToEdit.getDate());
+        Name updatedName = editApplicationDescriptor.getName().orElse(applicationToEdit.getName());
+        Phone updatedPhone = editApplicationDescriptor.getPhone().orElse(applicationToEdit.getPhone());
+        Email updatedEmail = editApplicationDescriptor.getEmail().orElse(applicationToEdit.getEmail());
+        Address updatedAddress = editApplicationDescriptor.getAddress().orElse(applicationToEdit.getAddress());
+        Set<Tag> updatedTags = editApplicationDescriptor.getTags().orElse(applicationToEdit.getTags());
+        Role updatedRole = editApplicationDescriptor.getRole().orElse(applicationToEdit.getRole());
+        Status updatedStatus = editApplicationDescriptor.getStatus().orElse(applicationToEdit.getStatus());
+        Reminder updateReminder = editApplicationDescriptor.getReminder().orElse(applicationToEdit.getReminder());
 
-        return new Application(updatedName, updatedPhone, updatedEmail, updatedAddress,
-                updatedTags, updatedDate, updatedRole, updatedStatus, updateReminder);
+        return new Application(updatedName, updatedPhone, updatedEmail, updatedAddress, updatedTags, updatedDate,
+                                        updatedRole, updatedStatus, updateReminder);
     }
 
     @Override
@@ -136,21 +131,19 @@ public class EditCommand extends Command {
         }
 
         EditCommand otherEditCommand = (EditCommand) other;
-        return editPersonDescriptor.equals(otherEditCommand.editPersonDescriptor);
+        return editApplicationDescriptor.equals(otherEditCommand.editApplicationDescriptor);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .add("editPersonDescriptor", editPersonDescriptor)
-                .toString();
+        return new ToStringBuilder(this).add("editApplicationDescriptor", editApplicationDescriptor).toString();
     }
 
     /**
-     * Stores the details to edit the person with. Each non-empty field value will replace the
-     * corresponding field value of the person.
+     * Stores the details to edit the application with. Each non-empty field value will replace the
+     * corresponding field value of the application.
      */
-    public static class EditPersonDescriptor {
+    public static class EditApplicationDescriptor {
         private Name name;
         private Phone phone;
         private Email email;
@@ -161,13 +154,14 @@ public class EditCommand extends Command {
         private Status status;
         private Reminder reminder;
 
-        public EditPersonDescriptor() {}
+        public EditApplicationDescriptor() {
+        }
 
         /**
          * Copy constructor.
          * A defensive copy of {@code tags} is used internally.
          */
-        public EditPersonDescriptor(EditPersonDescriptor toCopy) {
+        public EditApplicationDescriptor(EditApplicationDescriptor toCopy) {
             setName(toCopy.name);
             setPhone(toCopy.phone);
             setEmail(toCopy.email);
@@ -274,33 +268,26 @@ public class EditCommand extends Command {
             }
 
             // instanceof handles nulls
-            if (!(other instanceof EditPersonDescriptor)) {
+            if (!(other instanceof EditApplicationDescriptor)) {
                 return false;
             }
 
-            EditPersonDescriptor otherEditPersonDescriptor = (EditPersonDescriptor) other;
-            return Objects.equals(name, otherEditPersonDescriptor.name)
-                    && Objects.equals(phone, otherEditPersonDescriptor.phone)
-                    && Objects.equals(email, otherEditPersonDescriptor.email)
-                    && Objects.equals(address, otherEditPersonDescriptor.address)
-                    && Objects.equals(tags, otherEditPersonDescriptor.tags)
-                    && Objects.equals(status, otherEditPersonDescriptor.status)
-                    && Objects.equals(date, otherEditPersonDescriptor.date)
-                    && Objects.equals(role, otherEditPersonDescriptor.role);
+            EditApplicationDescriptor otherEditApplicationDescriptor = (EditApplicationDescriptor) other;
+            return Objects.equals(name, otherEditApplicationDescriptor.name)
+                                            && Objects.equals(phone, otherEditApplicationDescriptor.phone)
+                                            && Objects.equals(email, otherEditApplicationDescriptor.email)
+                                            && Objects.equals(address, otherEditApplicationDescriptor.address)
+                                            && Objects.equals(tags, otherEditApplicationDescriptor.tags)
+                                            && Objects.equals(status, otherEditApplicationDescriptor.status)
+                                            && Objects.equals(date, otherEditApplicationDescriptor.date)
+                                            && Objects.equals(role, otherEditApplicationDescriptor.role);
         }
 
         @Override
         public String toString() {
-            return new ToStringBuilder(this)
-                    .add("name", name)
-                    .add("phone", phone)
-                    .add("email", email)
-                    .add("address", address)
-                    .add("tags", tags)
-                    .add("status", status)
-                    .add("date", date)
-                    .add("role", role)
-                    .toString();
+            return new ToStringBuilder(this).add("name", name).add("phone", phone).add("email", email)
+                                            .add("address", address).add("tags", tags).add("status", status)
+                                            .add("date", date).add("role", role).toString();
         }
     }
 }

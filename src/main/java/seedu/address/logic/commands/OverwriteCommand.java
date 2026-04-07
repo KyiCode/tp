@@ -7,10 +7,9 @@ import java.util.List;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Application;
-import seedu.address.model.person.DuplicateApplicationStore;
-import seedu.address.model.person.exceptions.DuplicateApplicationException;
-
+import seedu.address.model.application.Application;
+import seedu.address.model.application.DuplicateApplicationStore;
+import seedu.address.model.application.exceptions.DuplicateApplicationException;
 
 /**
  * Overwrites the last duplicate application.
@@ -76,12 +75,10 @@ public class OverwriteCommand extends Command {
      */
     private Application findExistingApplication(Model model, Application newApplication) {
         assert newApplication != null : "new application should not be null";
-        List<Application> currentList = model.getFilteredPersonList();
+        List<Application> currentList = model.getFilteredApplicationList();
 
-        return currentList.stream()
-                .filter(application -> application.isSameApplication(newApplication))
-                .findAny()
-                .orElse(null);
+        return currentList.stream().filter(application -> application.isSameApplication(newApplication)).findAny()
+                                        .orElse(null);
     }
 
     /**
@@ -103,8 +100,8 @@ public class OverwriteCommand extends Command {
      * @param newApplication the new application to overwrite with
      */
     private void overwriteApplication(Model model, Application oldApplication, Application newApplication) {
-        model.deletePerson(oldApplication);
-        model.addPerson(newApplication);
+        model.deleteApplication(oldApplication);
+        model.addApplication(newApplication);
         DuplicateApplicationStore.clear();
     }
 

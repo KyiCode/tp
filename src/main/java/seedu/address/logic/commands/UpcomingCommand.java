@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.Model;
-import seedu.address.model.person.ReminderWithinOffsetPredicate;
+import seedu.address.model.application.ReminderWithinOffsetPredicate;
 
 /**
  * Filters applications by a supported field and updates the current filtered list.
@@ -17,14 +17,13 @@ public class UpcomingCommand extends Command {
     public static final String COMMAND_WORD = "upcoming";
     public static final String COMMAND_WORD_WITH_SLASH = "/upcoming";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD_WITH_SLASH + ": Sets reminder to display all applications "
-            + "within the specified number of days from the current date, then displays one such notifcation. \n"
-            + "Parameters: [DAYS_OFFSET]...\n"
-            + "Example: " + COMMAND_WORD_WITH_SLASH + " 9";
+    public static final String MESSAGE_USAGE = COMMAND_WORD_WITH_SLASH + ": Sets reminder to display all "
+            + "applications within the specified number of days from the current date, then displays one "
+            + "such notifcation. \nParameters: [DAYS_OFFSET]...\nExample: " + COMMAND_WORD_WITH_SLASH + " 9";
     public static final String MESSAGE_NO_MATCHES = "No upcoming applications in %d days";
     public static final String MESSAGE_MATCHES_FOUND = "There are %d application(s) due in %d days.";
-    public static final String MESSAGE_INVALID_ARGS = "Days parameter must be an "
-            + "an integer between " + MIN_OFFSET + " and " + MAX_OFFSET + " inclusive in digit form, e.g 5.";
+    public static final String MESSAGE_INVALID_ARGS = "Days parameter must be an " + "an integer between " + MIN_OFFSET
+                                    + " and " + MAX_OFFSET + " inclusive in digit form, e.g 5.";
 
     private final int daysOffset;
     private final ReminderWithinOffsetPredicate predicate;
@@ -43,8 +42,8 @@ public class UpcomingCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
-        model.updateFilteredPersonList(predicate);
-        int matchCount = model.getFilteredPersonList().size();
+        model.updateFilteredApplicationList(predicate);
+        int matchCount = model.getFilteredApplicationList().size();
         model.setReminderOffset(daysOffset);
         if (matchCount == 0) {
             return new CommandResult(String.format(MESSAGE_NO_MATCHES, daysOffset));
@@ -64,14 +63,11 @@ public class UpcomingCommand extends Command {
 
         UpcomingCommand otherUpcomingCommand = (UpcomingCommand) other;
         return (otherUpcomingCommand.daysOffset == this.daysOffset)
-                && (otherUpcomingCommand.predicate.equals(this.predicate));
+                                        && (otherUpcomingCommand.predicate.equals(this.predicate));
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .add("days offset", daysOffset)
-                .add("predicate", predicate)
-                .toString();
+        return new ToStringBuilder(this).add("days offset", daysOffset).add("predicate", predicate).toString();
     }
 }

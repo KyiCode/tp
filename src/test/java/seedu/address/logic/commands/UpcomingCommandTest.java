@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.address.testutil.TypicalPersons.HENSON_WITH_REMINDER_INTERVIEW_TODAY;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalApplications.HENSON_WITH_REMINDER_INTERVIEW_TODAY;
+import static seedu.address.testutil.TypicalApplications.getTypicalAddressBook;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.person.Date;
-import seedu.address.model.person.ReminderWithinOffsetPredicate;
+import seedu.address.model.application.Date;
+import seedu.address.model.application.ReminderWithinOffsetPredicate;
 
 /**
  * Contains integration tests for {@code UpcomingCommand}.
@@ -45,21 +45,21 @@ public class UpcomingCommandTest {
 
     @Test
     public void execute_singleMatchFound() {
-        expectedModel.addPerson(HENSON_WITH_REMINDER_INTERVIEW_TODAY);
-        model.addPerson(HENSON_WITH_REMINDER_INTERVIEW_TODAY);
+        expectedModel.addApplication(HENSON_WITH_REMINDER_INTERVIEW_TODAY);
+        model.addApplication(HENSON_WITH_REMINDER_INTERVIEW_TODAY);
         int daysOffset = 4;
         Date firstSampleDate = new Date(LocalDate.now().plusDays(daysOffset));
         ReminderWithinOffsetPredicate predicate = new ReminderWithinOffsetPredicate(firstSampleDate);
         UpcomingCommand command = new UpcomingCommand(predicate, daysOffset);
         expectedModel.setReminderOffset(daysOffset);
 
-
-        expectedModel.updateFilteredPersonList(predicate);
-        assertCommandSuccess(command, model,
-                String.format(UpcomingCommand.MESSAGE_MATCHES_FOUND, 1, daysOffset), expectedModel);
-        assertEquals(Collections.singletonList(HENSON_WITH_REMINDER_INTERVIEW_TODAY), model.getFilteredPersonList());
-        expectedModel.deletePerson(HENSON_WITH_REMINDER_INTERVIEW_TODAY);
-        model.deletePerson(HENSON_WITH_REMINDER_INTERVIEW_TODAY);
+        expectedModel.updateFilteredApplicationList(predicate);
+        assertCommandSuccess(command, model, String.format(UpcomingCommand.MESSAGE_MATCHES_FOUND, 1, daysOffset),
+                                        expectedModel);
+        assertEquals(Collections.singletonList(HENSON_WITH_REMINDER_INTERVIEW_TODAY),
+                                        model.getFilteredApplicationList());
+        expectedModel.deleteApplication(HENSON_WITH_REMINDER_INTERVIEW_TODAY);
+        model.deleteApplication(HENSON_WITH_REMINDER_INTERVIEW_TODAY);
     }
 
     @Test
@@ -70,9 +70,9 @@ public class UpcomingCommandTest {
         UpcomingCommand command = new UpcomingCommand(predicate, daysOffset);
         expectedModel.setReminderOffset(4);
 
-        expectedModel.updateFilteredPersonList(predicate);
+        expectedModel.updateFilteredApplicationList(predicate);
         assertCommandSuccess(command, model, String.format(UpcomingCommand.MESSAGE_NO_MATCHES, 4), expectedModel);
-        assertEquals(Collections.emptyList(), model.getFilteredPersonList());
+        assertEquals(Collections.emptyList(), model.getFilteredApplicationList());
     }
 
     @Test
@@ -81,8 +81,8 @@ public class UpcomingCommandTest {
         Date firstSampleDate = new Date(LocalDate.of(2024, 2, 18));
         ReminderWithinOffsetPredicate predicate = new ReminderWithinOffsetPredicate(firstSampleDate);
         UpcomingCommand command = new UpcomingCommand(predicate, daysOffset);
-        String expected = UpcomingCommand.class.getCanonicalName() + "{days offset=" + daysOffset
-                + ", predicate=" + predicate + "}";
+        String expected = UpcomingCommand.class.getCanonicalName() + "{days offset=" + daysOffset + ", predicate="
+                                        + predicate + "}";
         assertEquals(expected, command.toString());
     }
 

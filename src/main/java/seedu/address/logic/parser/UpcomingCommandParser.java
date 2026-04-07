@@ -7,8 +7,8 @@ import java.time.LocalDate;
 
 import seedu.address.logic.commands.UpcomingCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Date;
-import seedu.address.model.person.ReminderWithinOffsetPredicate;
+import seedu.address.model.application.Date;
+import seedu.address.model.application.ReminderWithinOffsetPredicate;
 
 /**
  * Parses input arguments and creates a new UpcomingCommand object
@@ -26,12 +26,11 @@ public class UpcomingCommandParser implements Parser<UpcomingCommand> {
     public UpcomingCommand parse(String args) throws ParseException {
         String trimmedArgs = args.trim();
         if (trimmedArgs.isEmpty()) {
-            throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpcomingCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpcomingCommand.MESSAGE_USAGE));
         }
         if (!isValidInteger(trimmedArgs)) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    UpcomingCommand.MESSAGE_INVALID_ARGS));
+                                            UpcomingCommand.MESSAGE_INVALID_ARGS));
         }
         long daysOffset = Long.parseLong(trimmedArgs);
         Date date = new Date(LocalDate.now().plusDays(daysOffset));

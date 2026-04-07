@@ -14,21 +14,24 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Application;
-import seedu.address.model.person.Date;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Phone;
-import seedu.address.model.person.Reminder;
-import seedu.address.model.person.Role;
-import seedu.address.model.person.Status;
+import seedu.address.model.application.Address;
+import seedu.address.model.application.Application;
+import seedu.address.model.application.Date;
+import seedu.address.model.application.Email;
+import seedu.address.model.application.Name;
+import seedu.address.model.application.Phone;
+import seedu.address.model.application.Reminder;
+import seedu.address.model.application.Role;
+import seedu.address.model.application.Status;
 import seedu.address.model.tag.Tag;
+
 /**
  * Parses input arguments and creates a new AddCommand object
  */
@@ -36,13 +39,19 @@ public class AddCommandParser implements Parser<AddCommand> {
 
     private static final Logger logger = LogsCenter.getLogger(AddCommandParser.class);
     private static final Status DEFAULT_STATUS = new Status("");
+    private static final Set<String> VALID_PREFIX = Set.of("n/", "r/", "p/", "a/", "u/", "ud/",
+            "e/", "d/", "s/", "t/");
 
     /**
      * Parses the given {@code String} of arguments in the context of the AddCommand
      * and returns an AddCommand object for execution.
+     *
      * @throws ParseException if the user input does not conform the expected format
      */
     public AddCommand parse(String args) throws ParseException {
+        if (hasInvalidPrefix(args)) {
+            throw new ParseException("Invalid prefix(es):\n " + AddCommand.MESSAGE_USAGE);
+        }
         ArgumentMultimap argMultimap = tokenizeArguments(args);
         validatePrefixes(argMultimap);
         Application application = buildApplication(argMultimap);
@@ -74,13 +83,32 @@ public class AddCommandParser implements Parser<AddCommand> {
      *          or if there is an unexpected preamble
      */
     private void validatePrefixes(ArgumentMultimap argMultimap) throws ParseException {
-        if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_ROLE)
-                || !argMultimap.getPreamble().isEmpty()) {
+        if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_ROLE) || !argMultimap.getPreamble().isEmpty()) {
             logger.warning("Missing required prefixes or unexpected preamble");
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
         }
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL,
-                PREFIX_ADDRESS, PREFIX_DATE, PREFIX_ROLE, PREFIX_STATUS, PREFIX_REMINDER, PREFIX_REMINDER_DATE);
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_DATE,
+                                        PREFIX_ROLE, PREFIX_STATUS, PREFIX_REMINDER, PREFIX_REMINDER_DATE);
+    }
+
+    /**
+     * Checks if there is any invalid prefix
+     *
+     * @return true if there is invalid prefix, else return false
+     */
+    // Solution below adapted from our tp section of
+    // FilterCommandParser::containsUnsupportedPrefix
+    private boolean hasInvalidPrefix(String args) {
+        Pattern pattern = Pattern.compile("(?<=\\s|^)(\\S+/)");
+        Matcher matcher = pattern.matcher(args);
+
+        while (matcher.find()) {
+            String check = matcher.group(1);
+            if (!VALID_PREFIX.contains(check)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -91,8 +119,8 @@ public class AddCommandParser implements Parser<AddCommand> {
      */
     private ArgumentMultimap tokenizeArguments(String args) {
         assert args != null : "argument string should not be null";
-        return ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS,
-                        PREFIX_TAG, PREFIX_ROLE, PREFIX_STATUS, PREFIX_DATE, PREFIX_REMINDER, PREFIX_REMINDER_DATE);
+        return ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_TAG,
+                                        PREFIX_ROLE, PREFIX_STATUS, PREFIX_DATE, PREFIX_REMINDER, PREFIX_REMINDER_DATE);
     }
 
     /**
@@ -121,8 +149,8 @@ public class AddCommandParser implements Parser<AddCommand> {
      * @return the parsed field if prefix present, else null
      * @throws ParseException
      */
-    private <T> T parseIfPresent(ArgumentMultimap argMultimap, Prefix prefix,
-            ParserFunction<T> parser) throws ParseException {
+    private <T> T parseIfPresent(ArgumentMultimap argMultimap, Prefix prefix, ParserFunction<T> parser)
+                                    throws ParseException {
         assert prefix != null : "prefix cannot be null";
         assert parser != null : "parser function cannot be null";
 
@@ -143,8 +171,8 @@ public class AddCommandParser implements Parser<AddCommand> {
      * @return the parsed field
      * @throws ParseException
      */
-    private <T> T parseRequiredField(ArgumentMultimap argMultimap, Prefix prefix,
-            ParserFunction<T> parser) throws ParseException {
+    private <T> T parseRequiredField(ArgumentMultimap argMultimap, Prefix prefix, ParserFunction<T> parser)
+                                    throws ParseException {
         logger.info(prefix + ": " + argMultimap.getValue(prefix).get());
         return parser.parse(argMultimap.getValue(prefix).get());
     }
@@ -176,11 +204,11 @@ public class AddCommandParser implements Parser<AddCommand> {
         boolean hasReminderDate = arePrefixesPresent(argMultimap, PREFIX_REMINDER_DATE);
 
         if (hasReminder && hasReminderDate) {
-            logger.info("reminder: " + argMultimap.getValue(PREFIX_REMINDER).get()
-                    + ", date: " + argMultimap.getValue(PREFIX_REMINDER_DATE).get());
+            logger.info("reminder: " + argMultimap.getValue(PREFIX_REMINDER).get() + ", date: "
+                                            + argMultimap.getValue(PREFIX_REMINDER_DATE).get());
 
             return ParserUtil.parseReminder(argMultimap.getValue(PREFIX_REMINDER).get(),
-                    argMultimap.getValue(PREFIX_REMINDER_DATE).get());
+                                            argMultimap.getValue(PREFIX_REMINDER_DATE).get());
         }
         if (hasReminder || hasReminderDate) {
             throw new ParseException("Both reminder (u/) and reminder date (ud/) must be provided together.");

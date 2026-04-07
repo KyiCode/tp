@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalApplications.ALICE;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -22,45 +22,45 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
-import seedu.address.model.person.Application;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.model.application.Application;
+import seedu.address.testutil.ApplicationBuilder;
 
 public class AddCommandTest {
 
     @Test
-    public void constructor_nullPerson_throwsNullPointerException() {
+    public void constructor_nullApplication_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new AddCommand(null));
     }
 
     @Test
-    public void execute_personAcceptedByModel_addSuccessful() throws Exception {
-        ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
-        Application validPerson = new PersonBuilder().build();
+    public void execute_applicationAcceptedByModel_addSuccessful() throws Exception {
+        ModelStubAcceptingApplicationAdded modelStub = new ModelStubAcceptingApplicationAdded();
+        Application validApplication = new ApplicationBuilder().build();
 
-        CommandResult commandResult = new AddCommand(validPerson).execute(modelStub);
+        CommandResult commandResult = new AddCommand(validApplication).execute(modelStub);
 
-        assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(validPerson)),
-                commandResult.getFeedbackToUser());
-        assertEquals(Arrays.asList(validPerson), modelStub.personsAdded);
+        assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(validApplication)),
+                                        commandResult.getFeedbackToUser());
+        assertEquals(Arrays.asList(validApplication), modelStub.applicationsAdded);
     }
 
     @Test
-    public void execute_duplicatePerson_throwsCommandException() {
-        Application validPerson = new PersonBuilder().build();
-        AddCommand addCommand = new AddCommand(validPerson);
-        ModelStub modelStub = new ModelStubWithPerson(validPerson);
+    public void execute_duplicateApplication_throwsCommandException() {
+        Application validApplication = new ApplicationBuilder().build();
+        AddCommand addCommand = new AddCommand(validApplication);
+        ModelStub modelStub = new ModelStubWithApplication(validApplication);
 
         CommandException exception = assertThrows(CommandException.class, () -> addCommand.execute(modelStub));
 
         assertTrue(exception.getMessage().contains("This application already exists"));
-        assertTrue(exception.getMessage().contains(validPerson.getName().fullName));
-        assertTrue(exception.getMessage().contains(validPerson.getRole().value));
+        assertTrue(exception.getMessage().contains(validApplication.getName().fullName));
+        assertTrue(exception.getMessage().contains(validApplication.getRole().value));
     }
 
     @Test
     public void equals() {
-        Application alice = new PersonBuilder().withName("Alice").build();
-        Application bob = new PersonBuilder().withName("Bob").build();
+        Application alice = new ApplicationBuilder().withName("Alice").build();
+        Application bob = new ApplicationBuilder().withName("Bob").build();
         AddCommand addAliceCommand = new AddCommand(alice);
         AddCommand addBobCommand = new AddCommand(bob);
 
@@ -77,7 +77,7 @@ public class AddCommandTest {
         // null -> returns false
         assertFalse(addAliceCommand.equals(null));
 
-        // different person -> returns false
+        // different application -> returns false
         assertFalse(addAliceCommand.equals(addBobCommand));
     }
 
@@ -133,7 +133,7 @@ public class AddCommandTest {
         }
 
         @Override
-        public void addPerson(Application person) {
+        public void addApplication(Application application) {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -148,72 +148,72 @@ public class AddCommandTest {
         }
 
         @Override
-        public boolean hasPerson(Application person) {
+        public boolean hasApplication(Application application) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void deletePerson(Application target) {
+        public void deleteApplication(Application target) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void setPerson(Application target, Application editedPerson) {
+        public void setApplication(Application target, Application editedApplication) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public ObservableList<Application> getFilteredPersonList() {
+        public ObservableList<Application> getFilteredApplicationList() {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void updateFilteredPersonList(Predicate<Application> predicate) {
+        public void updateFilteredApplicationList(Predicate<Application> predicate) {
             throw new AssertionError("This method should not be called.");
         }
     }
 
     /**
-     * A Model stub that contains a single person.
+     * A Model stub that contains a single application.
      */
-    private class ModelStubWithPerson extends ModelStub {
-        private final Application person;
+    private class ModelStubWithApplication extends ModelStub {
+        private final Application application;
 
-        ModelStubWithPerson(Application person) {
-            requireNonNull(person);
-            this.person = person;
+        ModelStubWithApplication(Application application) {
+            requireNonNull(application);
+            this.application = application;
         }
 
         @Override
-        public boolean hasPerson(Application person) {
-            requireNonNull(person);
-            return this.person.isSameApplication(person);
+        public boolean hasApplication(Application application) {
+            requireNonNull(application);
+            return this.application.isSameApplication(application);
         }
 
         @Override
-        public ObservableList<Application> getFilteredPersonList() {
+        public ObservableList<Application> getFilteredApplicationList() {
             ArrayList<Application> list = new ArrayList<>();
-            list.add(person);
+            list.add(application);
             return javafx.collections.FXCollections.observableArrayList(list);
         }
     }
 
     /**
-     * A Model stub that always accept the person being added.
+     * A Model stub that always accept the application being added.
      */
-    private class ModelStubAcceptingPersonAdded extends ModelStub {
-        final ArrayList<Application> personsAdded = new ArrayList<>();
+    private class ModelStubAcceptingApplicationAdded extends ModelStub {
+        final ArrayList<Application> applicationsAdded = new ArrayList<>();
 
         @Override
-        public boolean hasPerson(Application person) {
-            requireNonNull(person);
-            return personsAdded.stream().anyMatch(person::isSameApplication);
+        public boolean hasApplication(Application application) {
+            requireNonNull(application);
+            return applicationsAdded.stream().anyMatch(application::isSameApplication);
         }
 
         @Override
-        public void addPerson(Application person) {
-            requireNonNull(person);
-            personsAdded.add(person);
+        public void addApplication(Application application) {
+            requireNonNull(application);
+            applicationsAdded.add(application);
         }
 
         @Override
@@ -222,8 +222,8 @@ public class AddCommandTest {
         }
 
         @Override
-        public ObservableList<Application> getFilteredPersonList() {
-            return javafx.collections.FXCollections.observableArrayList(personsAdded);
+        public ObservableList<Application> getFilteredApplicationList() {
+            return javafx.collections.FXCollections.observableArrayList(applicationsAdded);
         }
     }
 

@@ -16,7 +16,7 @@ import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.exceptions.DuplicateApplicationException;
+import seedu.address.model.application.exceptions.DuplicateApplicationException;
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -32,7 +32,7 @@ public class MainWindow extends UiPart<Stage> {
     private Logic logic;
 
     // Independent Ui parts residing in this Ui container
-    private PersonListPanel personListPanel;
+    private ApplicationListPanel applicationListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
     private StatusBarFooter statusBarFooter;
@@ -44,7 +44,7 @@ public class MainWindow extends UiPart<Stage> {
     private MenuItem helpMenuItem;
 
     @FXML
-    private StackPane personListPanelPlaceholder;
+    private StackPane applicationListPanelPlaceholder;
 
     @FXML
     private StackPane resultDisplayPlaceholder;
@@ -87,18 +87,18 @@ public class MainWindow extends UiPart<Stage> {
 
         /*
          * TODO: the code below can be removed once the bug reported here
-         * https://bugs.openjdk.java.net/browse/JDK-8131666
-         * is fixed in later version of SDK.
+         * https://bugs.openjdk.java.net/browse/JDK-8131666 is fixed in later
+         * version of SDK.
          *
-         * According to the bug report, TextInputControl (TextField, TextArea) will
-         * consume function-key events. Because CommandBox contains a TextField, and
-         * ResultDisplay contains a TextArea, thus some accelerators (e.g F1) will
-         * not work when the focus is in them because the key event is consumed by
-         * the TextInputControl(s).
+         * According to the bug report, TextInputControl (TextField, TextArea)
+         * will consume function-key events. Because CommandBox contains a
+         * TextField, and ResultDisplay contains a TextArea, thus some
+         * accelerators (e.g F1) will not work when the focus is in them because
+         * the key event is consumed by the TextInputControl(s).
          *
-         * For now, we add following event filter to capture such key events and open
-         * help window purposely so to support accelerators even when focus is
-         * in CommandBox or ResultDisplay.
+         * For now, we add following event filter to capture such key events and
+         * open help window purposely so to support accelerators even when focus
+         * is in CommandBox or ResultDisplay.
          */
         getRoot().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (event.getTarget() instanceof TextInputControl && keyCombination.match(event)) {
@@ -112,8 +112,8 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
-        personListPanel = new PersonListPanel(logic.getFilteredPersonList());
-        personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
+        applicationListPanel = new ApplicationListPanel(logic.getFilteredApplicationList());
+        applicationListPanelPlaceholder.getChildren().add(applicationListPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -159,14 +159,14 @@ public class MainWindow extends UiPart<Stage> {
     @FXML
     private void handleExit() {
         GuiSettings guiSettings = new GuiSettings(primaryStage.getWidth(), primaryStage.getHeight(),
-                (int) primaryStage.getX(), (int) primaryStage.getY());
+                                        (int) primaryStage.getX(), (int) primaryStage.getY());
         logic.setGuiSettings(guiSettings);
         helpWindow.hide();
         primaryStage.hide();
     }
 
-    public PersonListPanel getPersonListPanel() {
-        return personListPanel;
+    public ApplicationListPanel getApplicationListPanel() {
+        return applicationListPanel;
     }
 
     /**

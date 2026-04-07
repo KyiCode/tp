@@ -11,7 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
-import seedu.address.model.person.Application;
+import seedu.address.model.application.Application;
 
 /**
  * Represents the in-memory model of the address book data.
@@ -21,7 +21,7 @@ public class ModelManager implements Model {
 
     private final AddressBook addressBook;
     private final UserPrefs userPrefs;
-    private final FilteredList<Application> filteredPersons;
+    private final FilteredList<Application> filteredApplications;
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -33,14 +33,15 @@ public class ModelManager implements Model {
 
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
-        filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
+        filteredApplications = new FilteredList<>(this.addressBook.getApplicationList());
     }
 
     public ModelManager() {
         this(new AddressBook(), new UserPrefs());
     }
 
-    //=========== UserPrefs ==================================================================================
+    // =========== UserPrefs
+    // ==================================================================================
 
     @Override
     public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
@@ -85,7 +86,8 @@ public class ModelManager implements Model {
         userPrefs.setAddressBookFilePath(addressBookFilePath);
     }
 
-    //=========== AddressBook ================================================================================
+    // =========== AddressBook
+    // ================================================================================
 
     @Override
     public void setAddressBook(ReadOnlyAddressBook addressBook) {
@@ -98,44 +100,45 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public boolean hasPerson(Application person) {
-        requireNonNull(person);
-        return addressBook.hasPerson(person);
+    public boolean hasApplication(Application application) {
+        requireNonNull(application);
+        return addressBook.hasApplication(application);
     }
 
     @Override
-    public void deletePerson(Application target) {
-        addressBook.removePerson(target);
+    public void deleteApplication(Application target) {
+        addressBook.removeApplication(target);
     }
 
     @Override
-    public void addPerson(Application person) {
-        addressBook.addPerson(person);
-        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+    public void addApplication(Application application) {
+        addressBook.addApplication(application);
+        updateFilteredApplicationList(PREDICATE_SHOW_ALL_APPLICATIONS);
     }
 
     @Override
-    public void setPerson(Application target, Application editedPerson) {
-        requireAllNonNull(target, editedPerson);
+    public void setApplication(Application target, Application editedApplication) {
+        requireAllNonNull(target, editedApplication);
 
-        addressBook.setPerson(target, editedPerson);
+        addressBook.setApplication(target, editedApplication);
     }
 
-    //=========== Filtered Person List Accessors =============================================================
+    // =========== Filtered Application List Accessors
+    // =============================================================
 
     /**
-     * Returns an unmodifiable view of the list of {@code Person} backed by the internal list of
+     * Returns an unmodifiable view of the list of {@code Application} backed by the internal list of
      * {@code versionedAddressBook}
      */
     @Override
-    public ObservableList<Application> getFilteredPersonList() {
-        return filteredPersons;
+    public ObservableList<Application> getFilteredApplicationList() {
+        return filteredApplications;
     }
 
     @Override
-    public void updateFilteredPersonList(Predicate<Application> predicate) {
+    public void updateFilteredApplicationList(Predicate<Application> predicate) {
         requireNonNull(predicate);
-        filteredPersons.setPredicate(predicate);
+        filteredApplications.setPredicate(predicate);
     }
 
     @Override
@@ -150,9 +153,8 @@ public class ModelManager implements Model {
         }
 
         ModelManager otherModelManager = (ModelManager) other;
-        return addressBook.equals(otherModelManager.addressBook)
-                && userPrefs.equals(otherModelManager.userPrefs)
-                && filteredPersons.equals(otherModelManager.filteredPersons);
+        return addressBook.equals(otherModelManager.addressBook) && userPrefs.equals(otherModelManager.userPrefs)
+                                        && filteredApplications.equals(otherModelManager.filteredApplications);
     }
 
 }

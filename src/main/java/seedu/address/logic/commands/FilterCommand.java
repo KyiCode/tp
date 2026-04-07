@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.Model;
-import seedu.address.model.person.Application;
+import seedu.address.model.application.Application;
 
 /**
  * Filters applications by a supported field and update the current filtered list.
@@ -17,12 +17,9 @@ public class FilterCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Filters applications by one or more fields.\n"
                                     + "Parameters: [n/KEYWORD] [d/YYYY-MM-DD] [r/ROLE] [s/STATUS] [t/TAG]\n"
-                                    + "Examples:\n"
-                                    + COMMAND_WORD + " n/Google\n"
-                                    + COMMAND_WORD + " d/2024-12-12\n"
-                                    + COMMAND_WORD + " r/Software Engineer\n"
-                                    + COMMAND_WORD + " s/applied d/2024-12-12\n"
-                                    + COMMAND_WORD + " n/Google t/internship";
+                                    + "Examples:\n" + COMMAND_WORD + " n/Google\n" + COMMAND_WORD + " d/2024-12-12\n"
+                                    + COMMAND_WORD + " r/Software Engineer\n" + COMMAND_WORD
+                                    + " s/applied d/2024-12-12\n" + COMMAND_WORD + " n/Google t/internship";
     public static final String MESSAGE_NO_MATCHES = "No matching applications found.";
     public static final String MESSAGE_MATCHES_FOUND = "Found %d matching application(s)";
 
@@ -35,8 +32,8 @@ public class FilterCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
-        model.updateFilteredPersonList(predicate);
-        int matchCount = model.getFilteredPersonList().size();
+        model.updateFilteredApplicationList(predicate);
+        int matchCount = model.getFilteredApplicationList().size();
         if (matchCount == 0) {
             return new CommandResult(MESSAGE_NO_MATCHES);
         }

@@ -46,221 +46,201 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_ROLE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_STATUS;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
-import static seedu.address.testutil.TypicalPersons.AMY;
-import static seedu.address.testutil.TypicalPersons.BOB;
+import static seedu.address.testutil.TypicalApplications.AMY;
+import static seedu.address.testutil.TypicalApplications.BOB;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.AddCommand;
-import seedu.address.model.person.Application;
-import seedu.address.model.person.Date;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Phone;
-import seedu.address.model.person.Role;
+import seedu.address.model.application.Application;
+import seedu.address.model.application.Date;
+import seedu.address.model.application.Email;
+import seedu.address.model.application.Name;
+import seedu.address.model.application.Phone;
+import seedu.address.model.application.Role;
 import seedu.address.model.tag.Tag;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.ApplicationBuilder;
 
 public class AddCommandParserTest {
     private AddCommandParser parser = new AddCommandParser();
 
     @Test
     public void parse_allFieldsPresent_success() {
-        Application expectedPerson = new PersonBuilder(BOB).withTags(VALID_TAG_FRIEND).build();
+        Application expectedApplication = new ApplicationBuilder(BOB).withTags(VALID_TAG_FRIEND).build();
 
-        // whitespace only preamble
-        assertParseSuccess(parser, PREAMBLE_WHITESPACE + NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
-                + ADDRESS_DESC_BOB + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB + TAG_DESC_FRIEND,
-                new AddCommand(expectedPerson));
+        assertParseSuccess(
+                parser,
+                PREAMBLE_WHITESPACE + NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
+                        + ADDRESS_DESC_BOB + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB
+                        + TAG_DESC_FRIEND,
+                new AddCommand(expectedApplication));
 
-        // multiple tags - all accepted
-        Application expectedPersonMultipleTags = new PersonBuilder(BOB).withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
+        Application expectedApplicationMultipleTags = new ApplicationBuilder(BOB)
+                .withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
                 .build();
-        assertParseSuccess(parser,
+        assertParseSuccess(
+                parser,
                 NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
-                + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB
-                + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
-                new AddCommand(expectedPersonMultipleTags));
+                        + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB
+                        + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
+                new AddCommand(expectedApplicationMultipleTags));
     }
 
     @Test
     public void parse_repeatedNonTagValue_failure() {
-        String validExpectedPersonString = NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
-                + ADDRESS_DESC_BOB + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB + TAG_DESC_FRIEND;
+        String validExpectedApplicationString =
+                NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
+                        + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB + TAG_DESC_FRIEND;
 
-        // multiple names
-        assertParseFailure(parser, NAME_DESC_AMY + validExpectedPersonString,
+        assertParseFailure(parser, NAME_DESC_AMY + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_NAME));
-
-        // multiple phones
-        assertParseFailure(parser, PHONE_DESC_AMY + validExpectedPersonString,
+        assertParseFailure(parser, PHONE_DESC_AMY + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_PHONE));
-
-        // multiple emails
-        assertParseFailure(parser, EMAIL_DESC_AMY + validExpectedPersonString,
+        assertParseFailure(parser, EMAIL_DESC_AMY + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_EMAIL));
-
-        // multiple addresses
-        assertParseFailure(parser, ADDRESS_DESC_AMY + validExpectedPersonString,
+        assertParseFailure(parser, ADDRESS_DESC_AMY + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_ADDRESS));
-
-        // multiple dates
-        assertParseFailure(parser, DATE_DESC_AMY + validExpectedPersonString,
+        assertParseFailure(parser, DATE_DESC_AMY + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_DATE));
-
-        // multiple roles
-        assertParseFailure(parser, ROLE_DESC_AMY + validExpectedPersonString,
+        assertParseFailure(parser, ROLE_DESC_AMY + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_ROLE));
-
-        // multiple statuses
-        assertParseFailure(parser, STATUS_DESC_AMY + validExpectedPersonString,
+        assertParseFailure(parser, STATUS_DESC_AMY + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_STATUS));
 
-        // multiple fields repeated
-        assertParseFailure(parser,
-                validExpectedPersonString + PHONE_DESC_AMY + EMAIL_DESC_AMY + NAME_DESC_AMY + ADDRESS_DESC_AMY
-                + DATE_DESC_AMY + ROLE_DESC_AMY + STATUS_DESC_AMY + validExpectedPersonString,
-                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_NAME, PREFIX_ADDRESS, PREFIX_EMAIL,
-                PREFIX_PHONE, PREFIX_DATE, PREFIX_ROLE, PREFIX_STATUS));
+        assertParseFailure(
+                parser,
+                validExpectedApplicationString + PHONE_DESC_AMY + EMAIL_DESC_AMY + NAME_DESC_AMY
+                        + ADDRESS_DESC_AMY + DATE_DESC_AMY + ROLE_DESC_AMY + STATUS_DESC_AMY
+                        + validExpectedApplicationString,
+                Messages.getErrorMessageForDuplicatePrefixes(
+                        PREFIX_NAME,
+                        PREFIX_ADDRESS,
+                        PREFIX_EMAIL,
+                        PREFIX_PHONE,
+                        PREFIX_DATE,
+                        PREFIX_ROLE,
+                        PREFIX_STATUS));
 
-        // invalid value followed by valid value
-
-        // invalid name
-        assertParseFailure(parser, INVALID_NAME_DESC + validExpectedPersonString,
+        assertParseFailure(parser, INVALID_NAME_DESC + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_NAME));
-
-        // invalid email
-        assertParseFailure(parser, INVALID_EMAIL_DESC + validExpectedPersonString,
+        assertParseFailure(parser, INVALID_EMAIL_DESC + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_EMAIL));
-
-        // invalid phone
-        assertParseFailure(parser, INVALID_PHONE_DESC + validExpectedPersonString,
+        assertParseFailure(parser, INVALID_PHONE_DESC + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_PHONE));
-
-        // invalid address
-        assertParseFailure(parser, INVALID_ADDRESS_DESC + validExpectedPersonString,
+        assertParseFailure(parser, INVALID_ADDRESS_DESC + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_ADDRESS));
-
-        // invalid date
-        assertParseFailure(parser, INVALID_DATE_DESC + validExpectedPersonString,
+        assertParseFailure(parser, INVALID_DATE_DESC + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_DATE));
-
-        // invalid role
-        assertParseFailure(parser, INVALID_ROLE_DESC + validExpectedPersonString,
+        assertParseFailure(parser, INVALID_ROLE_DESC + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_ROLE));
-
-        // invalid status
-        assertParseFailure(parser, INVALID_STATUS_DESC + validExpectedPersonString,
+        assertParseFailure(parser, INVALID_STATUS_DESC + validExpectedApplicationString,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_STATUS));
 
-        // valid value followed by invalid value
-
-        // invalid name
-        assertParseFailure(parser, validExpectedPersonString + INVALID_NAME_DESC,
+        assertParseFailure(parser, validExpectedApplicationString + INVALID_NAME_DESC,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_NAME));
-
-        // invalid email
-        assertParseFailure(parser, validExpectedPersonString + INVALID_EMAIL_DESC,
+        assertParseFailure(parser, validExpectedApplicationString + INVALID_EMAIL_DESC,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_EMAIL));
-
-        // invalid phone
-        assertParseFailure(parser, validExpectedPersonString + INVALID_PHONE_DESC,
+        assertParseFailure(parser, validExpectedApplicationString + INVALID_PHONE_DESC,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_PHONE));
-
-        // invalid address
-        assertParseFailure(parser, validExpectedPersonString + INVALID_ADDRESS_DESC,
+        assertParseFailure(parser, validExpectedApplicationString + INVALID_ADDRESS_DESC,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_ADDRESS));
-
-        // invalid date
-        assertParseFailure(parser, validExpectedPersonString + INVALID_DATE_DESC,
+        assertParseFailure(parser, validExpectedApplicationString + INVALID_DATE_DESC,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_DATE));
-
-        // invalid role
-        assertParseFailure(parser, validExpectedPersonString + INVALID_ROLE_DESC,
+        assertParseFailure(parser, validExpectedApplicationString + INVALID_ROLE_DESC,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_ROLE));
-
-        // invalid status
-        assertParseFailure(parser, validExpectedPersonString + INVALID_STATUS_DESC,
+        assertParseFailure(parser, validExpectedApplicationString + INVALID_STATUS_DESC,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_STATUS));
     }
 
     @Test
     public void parse_optionalFieldsMissing_success() {
-        // zero tags
-        Application expectedPerson = new PersonBuilder(AMY).withTags().build();
-        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + ADDRESS_DESC_AMY
-                + DATE_DESC_AMY + ROLE_DESC_AMY + STATUS_DESC_AMY,
-                new AddCommand(expectedPerson));
+        Application expectedApplication = new ApplicationBuilder(AMY).withTags().build();
+        assertParseSuccess(
+                parser,
+                NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + ADDRESS_DESC_AMY
+                        + DATE_DESC_AMY + ROLE_DESC_AMY + STATUS_DESC_AMY,
+                new AddCommand(expectedApplication));
     }
 
     @Test
     public void parse_compulsoryFieldMissing_failure() {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE);
 
-        // missing name prefix
-        assertParseFailure(parser, VALID_NAME_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
-                + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB, expectedMessage);
+        assertParseFailure(
+                parser,
+                VALID_NAME_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
+                        + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB,
+                expectedMessage);
 
-        // missing role prefix
-        assertParseFailure(parser, NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
-                + DATE_DESC_BOB + VALID_ROLE_BOB + STATUS_DESC_BOB, expectedMessage);
+        assertParseFailure(
+                parser,
+                NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
+                        + DATE_DESC_BOB + VALID_ROLE_BOB + STATUS_DESC_BOB,
+                expectedMessage);
 
-        // All prefixes other than name and role is optional.
-
-        // all prefixes missing
-        assertParseFailure(parser, VALID_NAME_BOB + VALID_PHONE_BOB + VALID_EMAIL_BOB + VALID_ADDRESS_BOB
-                + VALID_DATE_BOB + VALID_ROLE_BOB + VALID_STATUS_BOB, expectedMessage);
+        assertParseFailure(
+                parser,
+                VALID_NAME_BOB + VALID_PHONE_BOB + VALID_EMAIL_BOB + VALID_ADDRESS_BOB
+                        + VALID_DATE_BOB + VALID_ROLE_BOB + VALID_STATUS_BOB,
+                expectedMessage);
     }
 
     @Test
     public void parse_invalidValue_failure() {
-        // invalid name
-        assertParseFailure(parser, INVALID_NAME_DESC + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
-                + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
+        assertParseFailure(
+                parser,
+                INVALID_NAME_DESC + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
+                        + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB
+                        + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 Name.MESSAGE_CONSTRAINTS);
 
-        // invalid phone
-        assertParseFailure(parser, NAME_DESC_BOB + INVALID_PHONE_DESC + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
-                + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
+        assertParseFailure(
+                parser,
+                NAME_DESC_BOB + INVALID_PHONE_DESC + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
+                        + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB
+                        + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 Phone.MESSAGE_CONSTRAINTS);
 
-        // invalid email
-        assertParseFailure(parser, NAME_DESC_BOB + PHONE_DESC_BOB + INVALID_EMAIL_DESC + ADDRESS_DESC_BOB
-                + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
+        assertParseFailure(
+                parser,
+                NAME_DESC_BOB + PHONE_DESC_BOB + INVALID_EMAIL_DESC + ADDRESS_DESC_BOB
+                        + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB
+                        + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 Email.MESSAGE_CONSTRAINTS);
 
-        // no invalid address
-
-        // invalid date
-        assertParseFailure(parser, NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
-                + INVALID_FUTUREDATE_DESC + ROLE_DESC_BOB + STATUS_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
+        assertParseFailure(
+                parser,
+                NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
+                        + INVALID_FUTUREDATE_DESC + ROLE_DESC_BOB + STATUS_DESC_BOB
+                        + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 Date.MESSAGE_FUTURE_DATE);
 
-        // invalid role
-        assertParseFailure(parser, NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
-                + DATE_DESC_BOB + INVALID_ROLE_DESC + STATUS_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
+        assertParseFailure(
+                parser,
+                NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
+                        + DATE_DESC_BOB + INVALID_ROLE_DESC + STATUS_DESC_BOB
+                        + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 Role.MESSAGE_CONSTRAINTS);
 
-        // invalid status
-        //assertParseFailure(parser, NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
-        //                + DATE_DESC_BOB + ROLE_DESC_BOB + INVALID_STATUS_DESC + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
-        //                Status.MESSAGE_CONSTRAINTS);
-
-        // invalid tag
-        assertParseFailure(parser, NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
-                + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB + INVALID_TAG_DESC + VALID_TAG_FRIEND,
+        assertParseFailure(
+                parser,
+                NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
+                        + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB
+                        + INVALID_TAG_DESC + VALID_TAG_FRIEND,
                 Tag.MESSAGE_CONSTRAINTS);
 
-        // two invalid values, only first invalid value reported
-        assertParseFailure(parser, INVALID_NAME_DESC + PHONE_DESC_BOB + EMAIL_DESC_BOB + INVALID_ADDRESS_DESC
-                + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB,
+        assertParseFailure(
+                parser,
+                INVALID_NAME_DESC + PHONE_DESC_BOB + EMAIL_DESC_BOB + INVALID_ADDRESS_DESC
+                        + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB,
                 Name.MESSAGE_CONSTRAINTS);
 
-        // non-empty preamble
-        assertParseFailure(parser, PREAMBLE_NON_EMPTY + NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
-                + ADDRESS_DESC_BOB + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB
-                + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
+        assertParseFailure(
+                parser,
+                PREAMBLE_NON_EMPTY + NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
+                        + ADDRESS_DESC_BOB + DATE_DESC_BOB + ROLE_DESC_BOB + STATUS_DESC_BOB
+                        + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
     }
 }

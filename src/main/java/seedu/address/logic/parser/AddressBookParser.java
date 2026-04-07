@@ -27,7 +27,7 @@ import seedu.address.logic.commands.StatusCommand;
 import seedu.address.logic.commands.ToggleCommand;
 import seedu.address.logic.commands.UpcomingCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.DuplicateApplicationStore;
+import seedu.address.model.application.DuplicateApplicationStore;
 
 /**
  * Parses user input.

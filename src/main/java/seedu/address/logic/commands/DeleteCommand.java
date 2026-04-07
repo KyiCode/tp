@@ -9,26 +9,25 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Application;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Role;
-import seedu.address.model.person.SameCompanySameRolePredicate;
+import seedu.address.model.application.Application;
+import seedu.address.model.application.Name;
+import seedu.address.model.application.Role;
+import seedu.address.model.application.SameCompanySameRolePredicate;
 
 /**
- * Deletes an Application via it's displayed index in the address book or via it's Company Name and Role.
+ * Deletes an Application via its displayed index in the address book or via its Company Name and Role.
  */
 public class DeleteCommand extends Command {
 
     public static final String COMMAND_WORD = "delete";
-    public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ":\n"
-            + "Delete via INDEX (Deletes the Application identified by the index number in the displayed person list)\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
+            + "Delete via INDEX (Deletes the Application identified by the index number "
+            + "in the displayed application list)\n"
             + "Delete via Name and Role (Deletes the Application with the exact Name and Role) \n"
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1\n"
             + "Parameters: Name (String), Role (String with no numbers) \n"
             + "Example: " + COMMAND_WORD + " n/Goog r/CEO";
-
 
     public static final String MESSAGE_DELETE_APPLICATION_SUCCESS = "Deleted Application: %1$s";
 
@@ -80,14 +79,15 @@ public class DeleteCommand extends Command {
      */
     public CommandResult executeDeleteByIndex(Model model) throws CommandException {
         requireNonNull(model);
-        List<Application> lastShownList = model.getFilteredPersonList();
+        List<Application> lastShownList = model.getFilteredApplicationList();
 
         if (targetIndex.getZeroBased() >= lastShownList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_APPLICATION_DISPLAYED_INDEX);
         }
-        Application personToDelete = lastShownList.get(targetIndex.getZeroBased());
-        model.deletePerson(personToDelete);
-        return new CommandResult(String.format(MESSAGE_DELETE_APPLICATION_SUCCESS, Messages.format(personToDelete)));
+        Application applicationToDelete = lastShownList.get(targetIndex.getZeroBased());
+        model.deleteApplication(applicationToDelete);
+        return new CommandResult(String.format(MESSAGE_DELETE_APPLICATION_SUCCESS,
+                                        Messages.format(applicationToDelete)));
     }
 
     /**
@@ -99,13 +99,16 @@ public class DeleteCommand extends Command {
      */
     public CommandResult executeDeleteByApplication(Model model) throws CommandException {
         requireNonNull(model);
-        List<Application> lastShownList = model.getFilteredPersonList();
+        List<Application> lastShownList = model.getFilteredApplicationList();
         SameCompanySameRolePredicate predicate = new SameCompanySameRolePredicate(name, role);
-        Application personToDelete = lastShownList.stream().filter(predicate).findFirst()
+        Application applicationToDelete = lastShownList.stream()
+                .filter(predicate)
+                .findFirst()
                 .orElseThrow(() -> new CommandException(Messages.MESSAGE_INVALID_APPLICATION_IDENTIFIER));
 
-        model.deletePerson(personToDelete);
-        return new CommandResult(String.format(MESSAGE_DELETE_APPLICATION_SUCCESS, Messages.format(personToDelete)));
+        model.deleteApplication(applicationToDelete);
+        return new CommandResult(String.format(MESSAGE_DELETE_APPLICATION_SUCCESS,
+                                        Messages.format(applicationToDelete)));
     }
 
     @Override
@@ -128,22 +131,16 @@ public class DeleteCommand extends Command {
         if (isIndexDelete) {
             return targetIndex.equals(otherDeleteCommand.targetIndex);
         } else {
-            return name.equals(otherDeleteCommand.name)
-                    && role.equals(otherDeleteCommand.role);
+            return name.equals(otherDeleteCommand.name) && role.equals(otherDeleteCommand.role);
         }
     }
 
     @Override
     public String toString() {
         if (isIndexDelete) {
-            return new ToStringBuilder(this)
-                    .add("targetIndex", targetIndex)
-                    .toString();
+            return new ToStringBuilder(this).add("targetIndex", targetIndex).toString();
         } else {
-            return new ToStringBuilder(this)
-                    .add("targetName", name)
-                    .add("targetRole", role)
-                    .toString();
+            return new ToStringBuilder(this).add("targetName", name).add("targetRole", role).toString();
         }
     }
 }

@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.StatusCommand;
-import seedu.address.model.person.Status;
+import seedu.address.model.application.Status;
 
 public class StatusCommandParserTest {
 
@@ -37,7 +37,8 @@ public class StatusCommandParserTest {
 
     @Test
     public void parse_randomPrefixOrder_success() {
-        StatusCommand expectedCommand = new StatusCommand("Amy Bee", "Software Engineer", new Status("pending"));
+        StatusCommand expectedCommand =
+                new StatusCommand("Amy Bee", "Software Engineer", new Status("pending"));
 
         assertParseSuccess(parser, STATUS_DESC_AMY + NAME_DESC_AMY + ROLE_DESC_AMY, expectedCommand);
         assertParseSuccess(parser, ROLE_DESC_AMY + STATUS_DESC_AMY + NAME_DESC_AMY, expectedCommand);
@@ -47,17 +48,25 @@ public class StatusCommandParserTest {
     public void parse_repeatedPrefix_failure() {
         String validArguments = NAME_DESC_AMY + ROLE_DESC_AMY + STATUS_DESC_AMY;
 
-        assertParseFailure(parser, validArguments + " s/tptptp",
+        assertParseFailure(
+                parser,
+                validArguments + " s/tptptp",
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_STATUS));
-        assertParseFailure(parser, validArguments + " r/Another Role",
+        assertParseFailure(
+                parser,
+                validArguments + " r/Another Role",
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_ROLE));
-        assertParseFailure(parser, validArguments + INVALID_STATUS_DESC,
+        assertParseFailure(
+                parser,
+                validArguments + INVALID_STATUS_DESC,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_STATUS));
     }
 
     @Test
     public void parse_missingPrefix_failure() {
-        assertParseFailure(parser, NAME_DESC_AMY + ROLE_DESC_AMY,
+        assertParseFailure(
+                parser,
+                NAME_DESC_AMY + ROLE_DESC_AMY,
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, StatusCommand.MESSAGE_USAGE));
     }
 
@@ -65,23 +74,32 @@ public class StatusCommandParserTest {
     public void parse_datePrefixPresent_failure() {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, StatusCommand.MESSAGE_USAGE);
 
-        assertParseFailure(parser, NAME_DESC_AMY + ROLE_DESC_AMY + DATE_DESC_AMY + STATUS_DESC_AMY,
+        assertParseFailure(
+                parser,
+                NAME_DESC_AMY + ROLE_DESC_AMY + DATE_DESC_AMY + STATUS_DESC_AMY,
                 expectedMessage);
-        assertParseFailure(parser, NAME_DESC_AMY + ROLE_DESC_AMY + " d/" + STATUS_DESC_AMY,
-                expectedMessage);
+        assertParseFailure(parser, NAME_DESC_AMY + ROLE_DESC_AMY + " d/" + STATUS_DESC_AMY, expectedMessage);
     }
 
     @Test
     public void parse_otherUnsupportedPrefixesPresent_failure() {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, StatusCommand.MESSAGE_USAGE);
 
-        assertParseFailure(parser, NAME_DESC_AMY + ROLE_DESC_AMY + PHONE_DESC_AMY + STATUS_DESC_AMY,
+        assertParseFailure(
+                parser,
+                NAME_DESC_AMY + ROLE_DESC_AMY + PHONE_DESC_AMY + STATUS_DESC_AMY,
                 expectedMessage);
-        assertParseFailure(parser, NAME_DESC_AMY + ROLE_DESC_AMY + EMAIL_DESC_AMY + STATUS_DESC_AMY,
+        assertParseFailure(
+                parser,
+                NAME_DESC_AMY + ROLE_DESC_AMY + EMAIL_DESC_AMY + STATUS_DESC_AMY,
                 expectedMessage);
-        assertParseFailure(parser, NAME_DESC_AMY + ROLE_DESC_AMY + ADDRESS_DESC_AMY + STATUS_DESC_AMY,
+        assertParseFailure(
+                parser,
+                NAME_DESC_AMY + ROLE_DESC_AMY + ADDRESS_DESC_AMY + STATUS_DESC_AMY,
                 expectedMessage);
-        assertParseFailure(parser, NAME_DESC_AMY + ROLE_DESC_AMY + TAG_DESC_FRIEND + STATUS_DESC_AMY,
+        assertParseFailure(
+                parser,
+                NAME_DESC_AMY + ROLE_DESC_AMY + TAG_DESC_FRIEND + STATUS_DESC_AMY,
                 expectedMessage);
     }
 }

@@ -10,13 +10,13 @@ Class Reminder {
     reminderDate: Date
 }
 
-AddressBook *-right-> "1" UniquePersonList
+AddressBook *-right-> "1" UniqueApplicationList
 AddressBook *-right-> "1" UniqueTagList
-UniqueTagList -[hidden]down- UniquePersonList
-UniqueTagList -[hidden]down- UniquePersonList
+UniqueTagList -[hidden]down- UniqueApplicationList
+UniqueTagList -[hidden]down- UniqueApplicationList
 
 UniqueTagList -right-> "*" Tag
-UniquePersonList -right-> Application
+UniqueApplicationList -right-> Application
 
 Application -up-> "*" Tag
 

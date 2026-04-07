@@ -20,7 +20,7 @@ import seedu.address.logic.parser.UpcomingCommandParser;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
-import seedu.address.model.person.Application;
+import seedu.address.model.application.Application;
 import seedu.address.storage.Storage;
 
 /**
@@ -29,8 +29,8 @@ import seedu.address.storage.Storage;
 public class LogicManager implements Logic {
     public static final String FILE_OPS_ERROR_FORMAT = "Could not save data due to the following error: %s";
 
-    public static final String FILE_OPS_PERMISSION_ERROR_FORMAT =
-            "Could not save data to file %s due to insufficient permissions to write to the file or the folder.";
+    public static final String FILE_OPS_PERMISSION_ERROR_FORMAT = "Could not save data to file %s due to "
+            + "insufficient permissions to write to the file or the folder.";
 
     private final Logger logger = LogsCenter.getLogger(LogicManager.class);
 
@@ -50,8 +50,10 @@ public class LogicManager implements Logic {
         editingParser = new AddressBookEditingParser();
         currentParser = normalParser;
 
-        /* This is for the purposes of forcing application to send a reminder on start-up.
-          Not *perfect*, but I'm not sure how to reduce coupling. */
+        /*
+         * This is for the purposes of forcing application to send a reminder on
+         * start-up. Not *perfect*, but I'm not sure how to reduce coupling.
+         */
         try {
             new UpcomingCommandParser().parse(Integer.toString(model.getReminderOffset())).execute(model);
         } catch (ParseException e) {
@@ -78,9 +80,8 @@ public class LogicManager implements Logic {
     /** Queries storage for available folders and returns a formatted {@code CommandResult}. */
     private CommandResult buildFolderListResult() {
         List<String> folders = storage.getAvailableFolders();
-        String message = folders.isEmpty()
-                ? ListFolderCommand.MESSAGE_NO_FOLDERS
-                : ListFolderCommand.MESSAGE_FOLDERS_LISTED + String.join("\n", folders);
+        String message = folders.isEmpty() ? ListFolderCommand.MESSAGE_NO_FOLDERS
+                                        : ListFolderCommand.MESSAGE_FOLDERS_LISTED + String.join("\n", folders);
         return new CommandResult(message);
     }
 
@@ -123,8 +124,8 @@ public class LogicManager implements Logic {
     }
 
     @Override
-    public ObservableList<Application> getFilteredPersonList() {
-        return model.getFilteredPersonList();
+    public ObservableList<Application> getFilteredApplicationList() {
+        return model.getFilteredApplicationList();
     }
 
     @Override

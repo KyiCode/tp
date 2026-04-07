@@ -1,17 +1,16 @@
 package seedu.address.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_APPLICATION;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.EditCommand;
-import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
-import seedu.address.model.person.Application;
-import seedu.address.testutil.EditPersonDescriptorBuilder;
-import seedu.address.testutil.PersonBuilder;
-import seedu.address.testutil.PersonUtil;
-
+import seedu.address.logic.commands.EditCommand.EditApplicationDescriptor;
+import seedu.address.model.application.Application;
+import seedu.address.testutil.ApplicationBuilder;
+import seedu.address.testutil.ApplicationUtil;
+import seedu.address.testutil.EditApplicationDescriptorBuilder;
 
 public class AddressBookEditingParserTest {
 
@@ -19,10 +18,10 @@ public class AddressBookEditingParserTest {
 
     @Test
     public void parseCommand_edit() throws Exception {
-        Application person = new PersonBuilder().build();
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(person).build();
-        EditCommand command = (EditCommand) parser.parseCommand(INDEX_FIRST_PERSON.getOneBased() + " "
-                + PersonUtil.getEditPersonDescriptorDetails(descriptor));
+        Application application = new ApplicationBuilder().build();
+        EditApplicationDescriptor descriptor = new EditApplicationDescriptorBuilder(application).build();
+        EditCommand command = (EditCommand) parser.parseCommand(INDEX_FIRST_APPLICATION.getOneBased() + " "
+                                        + ApplicationUtil.getEditApplicationDescriptorDetails(descriptor));
         assertEquals(new EditCommand(descriptor), command);
     }
 }

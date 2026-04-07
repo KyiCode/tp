@@ -9,22 +9,21 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.ParserMode;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Application;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Role;
-import seedu.address.model.person.SameCompanySameRolePredicate;
+import seedu.address.model.application.Application;
+import seedu.address.model.application.Name;
+import seedu.address.model.application.Role;
+import seedu.address.model.application.SameCompanySameRolePredicate;
 
 /** Command to enter editing mode. */
 public class EditEnterCommand extends Command {
 
     public static final String COMMAND_WORD = "editmode";
     public static final String MESSAGE_ENTER_EDITING_MODE_ACKNOWLEDGEMENT = "Entering editing mode for"
-            + " application: %1$s";
+                                    + " application: %1$s";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ":\n"
-            + "Edit via INDEX (Enter editing mode for the Application identified by the index number in "
-            + "the displayed application list)\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
+            + "Edit via INDEX (Enter editing mode for the Application identified by the index number "
+            + "in the displayed application list)\n"
             + "Edit via Name and Role (Enter editing mode for the Application with the exact Name and Role) \n"
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1\n"
@@ -62,11 +61,10 @@ public class EditEnterCommand extends Command {
         this.isIndex = false;
     }
 
-
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        List<Application> lastShownList = model.getFilteredPersonList();
+        List<Application> lastShownList = model.getFilteredApplicationList();
 
         Application applicationToEdit;
 
@@ -77,15 +75,16 @@ public class EditEnterCommand extends Command {
             applicationToEdit = lastShownList.get(targetIndex.getZeroBased());
         } else {
             SameCompanySameRolePredicate predicate = new SameCompanySameRolePredicate(name, role);
-            applicationToEdit = lastShownList.stream().filter(predicate).findFirst()
+            applicationToEdit = lastShownList.stream()
+                    .filter(predicate)
+                    .findFirst()
                     .orElseThrow(() -> new CommandException(Messages.MESSAGE_INVALID_APPLICATION_IDENTIFIER));
         }
 
         applicationToEdit.setBeingEdited(true);
         String resultMessage = String.format(MESSAGE_ENTER_EDITING_MODE_ACKNOWLEDGEMENT,
-                Messages.format(applicationToEdit));
+                                        Messages.format(applicationToEdit));
         return new CommandResult(resultMessage, false, ParserMode.EDITING, false);
     }
-
 
 }

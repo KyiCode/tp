@@ -1,7 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_APPLICATIONS;
 
 import java.util.List;
 import java.util.Set;
@@ -11,15 +11,15 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Application;
-import seedu.address.model.person.Date;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Phone;
-import seedu.address.model.person.Role;
-import seedu.address.model.person.SameCompanySameRolePredicate;
-import seedu.address.model.person.Status;
+import seedu.address.model.application.Address;
+import seedu.address.model.application.Application;
+import seedu.address.model.application.Date;
+import seedu.address.model.application.Email;
+import seedu.address.model.application.Name;
+import seedu.address.model.application.Phone;
+import seedu.address.model.application.Role;
+import seedu.address.model.application.SameCompanySameRolePredicate;
+import seedu.address.model.application.Status;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -77,34 +77,32 @@ public class RemoveReminderCommand extends Command {
         } else {
             applicationToEdit = getTargetApplicationByApplication(model);
         }
-        EditCommand.EditPersonDescriptor editPersonDescriptor = new EditCommand.EditPersonDescriptor();
-        Application removedReminder = createEditedPerson(applicationToEdit, editPersonDescriptor);
-        model.setPerson(applicationToEdit, removedReminder);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        EditCommand.EditApplicationDescriptor editApplicationDescriptor = new EditCommand.EditApplicationDescriptor();
+        Application removedReminder = createEditedApplication(applicationToEdit, editApplicationDescriptor);
+        model.setApplication(applicationToEdit, removedReminder);
+        model.updateFilteredApplicationList(PREDICATE_SHOW_ALL_APPLICATIONS);
         return new CommandResult(String.format(MESSAGE_REMOVE_REMINDER_SUCCESS, Messages.format(removedReminder)));
     }
 
-
     /**
-     * Creates and returns a {@code Person} with the details of {@code personToEdit}
-     * edited with {@code editPersonDescriptor} without reminder.
+     * Creates and returns a {@code Application} with the details of {@code applicationToEdit}
+     * edited with {@code editApplicationDescriptor} without reminder.
      */
-    private static Application createEditedPerson(Application personToEdit,
-                                                  EditCommand.EditPersonDescriptor editPersonDescriptor) {
-        assert personToEdit != null;
-        Name updatedName = editPersonDescriptor.getName().orElse(personToEdit.getName());
-        Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
-        Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
-        Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
-        Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
-        Date updatedDate = editPersonDescriptor.getDate().orElse(personToEdit.getDate());
-        Role updatedRole = editPersonDescriptor.getRole().orElse(personToEdit.getRole());
-        Status updatedStatus = editPersonDescriptor.getStatus().orElse(personToEdit.getStatus());
+    private static Application createEditedApplication(Application applicationToEdit,
+                                    EditCommand.EditApplicationDescriptor editApplicationDescriptor) {
+        assert applicationToEdit != null;
+        Name updatedName = editApplicationDescriptor.getName().orElse(applicationToEdit.getName());
+        Phone updatedPhone = editApplicationDescriptor.getPhone().orElse(applicationToEdit.getPhone());
+        Email updatedEmail = editApplicationDescriptor.getEmail().orElse(applicationToEdit.getEmail());
+        Address updatedAddress = editApplicationDescriptor.getAddress().orElse(applicationToEdit.getAddress());
+        Set<Tag> updatedTags = editApplicationDescriptor.getTags().orElse(applicationToEdit.getTags());
+        Date updatedDate = editApplicationDescriptor.getDate().orElse(applicationToEdit.getDate());
+        Role updatedRole = editApplicationDescriptor.getRole().orElse(applicationToEdit.getRole());
+        Status updatedStatus = editApplicationDescriptor.getStatus().orElse(applicationToEdit.getStatus());
 
-        return new Application(updatedName, updatedPhone, updatedEmail, updatedAddress,
-                updatedTags, updatedDate, updatedRole, updatedStatus);
+        return new Application(updatedName, updatedPhone, updatedEmail, updatedAddress, updatedTags, updatedDate,
+                                        updatedRole, updatedStatus);
     }
-
 
     /**
      * Returns Application via specified index.
@@ -115,7 +113,7 @@ public class RemoveReminderCommand extends Command {
      */
     private Application getTargetApplicationByIndex(Model model) throws CommandException {
         requireNonNull(model);
-        List<Application> lastShownList = model.getFilteredPersonList();
+        List<Application> lastShownList = model.getFilteredApplicationList();
 
         assert targetIndex != null;
         if (targetIndex.getZeroBased() >= lastShownList.size()) {
@@ -132,10 +130,12 @@ public class RemoveReminderCommand extends Command {
      */
     private Application getTargetApplicationByApplication(Model model) throws CommandException {
         requireNonNull(model);
-        List<Application> lastShownList = model.getFilteredPersonList();
+        List<Application> lastShownList = model.getFilteredApplicationList();
         SameCompanySameRolePredicate predicate = new SameCompanySameRolePredicate(name, role);
 
-        return lastShownList.stream().filter(predicate).findFirst()
+        return lastShownList.stream()
+                .filter(predicate)
+                .findFirst()
                 .orElseThrow(() -> new CommandException(Messages.MESSAGE_INVALID_APPLICATION_IDENTIFIER));
     }
 
@@ -159,22 +159,16 @@ public class RemoveReminderCommand extends Command {
         if (isIndexDelete) {
             return targetIndex.equals(otherRemovalCommand.targetIndex);
         } else {
-            return name.equals(otherRemovalCommand.name)
-                    && role.equals(otherRemovalCommand.role);
+            return name.equals(otherRemovalCommand.name) && role.equals(otherRemovalCommand.role);
         }
     }
 
     @Override
     public String toString() {
         if (isIndexDelete) {
-            return new ToStringBuilder(this)
-                    .add("targetIndex", targetIndex)
-                    .toString();
+            return new ToStringBuilder(this).add("targetIndex", targetIndex).toString();
         } else {
-            return new ToStringBuilder(this)
-                    .add("targetName", name)
-                    .add("targetRole", role)
-                    .toString();
+            return new ToStringBuilder(this).add("targetName", name).add("targetRole", role).toString();
         }
     }
 }

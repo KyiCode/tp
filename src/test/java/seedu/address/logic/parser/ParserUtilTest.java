@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.address.testutil.Assert.assertThrows;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_APPLICATION;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,13 +14,13 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Date;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Phone;
-import seedu.address.model.person.Role;
-import seedu.address.model.person.Status;
+import seedu.address.model.application.Address;
+import seedu.address.model.application.Date;
+import seedu.address.model.application.Email;
+import seedu.address.model.application.Name;
+import seedu.address.model.application.Phone;
+import seedu.address.model.application.Role;
+import seedu.address.model.application.Status;
 import seedu.address.model.tag.Tag;
 
 public class ParserUtilTest {
@@ -52,17 +52,17 @@ public class ParserUtilTest {
 
     @Test
     public void parseIndex_outOfRangeInput_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () ->
-                ParserUtil.parseIndex(Long.toString(Integer.MAX_VALUE + 1)));
+        assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () -> ParserUtil.parseIndex(
+                Long.toString(Integer.MAX_VALUE + 1)));
     }
 
     @Test
     public void parseIndex_validInput_success() throws Exception {
         // No whitespaces
-        assertEquals(INDEX_FIRST_PERSON, ParserUtil.parseIndex("1"));
+        assertEquals(INDEX_FIRST_APPLICATION, ParserUtil.parseIndex("1"));
 
         // Leading and trailing whitespaces
-        assertEquals(INDEX_FIRST_PERSON, ParserUtil.parseIndex("  1  "));
+        assertEquals(INDEX_FIRST_APPLICATION, ParserUtil.parseIndex("  1  "));
     }
 
     @Test
@@ -198,10 +198,11 @@ public class ParserUtilTest {
         assertEquals(expectedRole, ParserUtil.parseRole(roleWithWhitespace));
     }
 
-    //    @Test
-    //    public void parseStatus_invalidValue_throwsParseException() {
-    //        assertThrows(ParseException.class, () -> ParserUtil.parseStatus(INVALID_STATUS));
-    //    }
+    // @Test
+    // public void parseStatus_invalidValue_throwsParseException() {
+    // assertThrows(ParseException.class, () ->
+    // ParserUtil.parseStatus(INVALID_STATUS));
+    // }
 
     @Test
     public void parseStatus_validValueWithoutWhitespace_returnsStatus() throws Exception {

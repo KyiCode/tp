@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import seedu.address.logic.parser.Prefix;
-import seedu.address.model.person.Application;
+import seedu.address.model.application.Application;
 
 /**
  * Container for user visible messages.
@@ -18,9 +18,9 @@ public class Messages {
             "The application index provided is invalid";
     public static final String MESSAGE_INVALID_APPLICATION_IDENTIFIER =
             "The application name and role provided is invalid";
-    public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d applications listed!";
+    public static final String MESSAGE_APPLICATIONS_LISTED_OVERVIEW = "%1$d applications listed!";
     public static final String MESSAGE_DUPLICATE_FIELDS =
-                "Multiple values specified for the following single-valued field(s): ";
+            "Multiple values specified for the following single-valued field(s): ";
 
     /**
      * Returns an error message indicating the duplicate prefixes.
@@ -28,36 +28,29 @@ public class Messages {
     public static String getErrorMessageForDuplicatePrefixes(Prefix... duplicatePrefixes) {
         assert duplicatePrefixes.length > 0;
 
-        Set<String> duplicateFields =
-                Stream.of(duplicatePrefixes).map(Prefix::toString).collect(Collectors.toSet());
+        Set<String> duplicateFields = Stream.of(duplicatePrefixes)
+                .map(Prefix::toString)
+                .collect(Collectors.toSet());
 
         return MESSAGE_DUPLICATE_FIELDS + String.join(" ", duplicateFields);
     }
 
     /**
-     * Formats the {@code person} for display to the user.
+     * Formats the {@code application} for display to the user.
      */
-    public static String format(Application person) {
+    public static String format(Application application) {
         final StringBuilder builder = new StringBuilder();
-        builder.append(person.getName())
-                .append("; Phone: ")
-                .append(person.getPhone())
-                .append("; Email: ")
-                .append(person.getEmail())
-                .append("; Address: ")
-                .append(person.getAddress())
-                .append("; Role: ")
-                .append(person.getRole())
-                .append("; Date: ")
-                .append(person.getDate())
-                .append("; Status: ")
-                .append(person.getStatus())
+        builder.append(application.getName())
+                .append("; Phone: ").append(application.getPhone())
+                .append("; Email: ").append(application.getEmail())
+                .append("; Address: ").append(application.getAddress())
+                .append("; Role: ").append(application.getRole())
+                .append("; Date: ").append(application.getDate())
+                .append("; Status: ").append(application.getStatus())
                 .append("; Tags: ");
-        person.getTags().forEach(builder::append);
+        application.getTags().forEach(builder::append);
 
-        builder.append("; Reminder: ")
-                .append(person.getReminder());
+        builder.append("; Reminder: ").append(application.getReminder());
         return builder.toString();
     }
-
 }

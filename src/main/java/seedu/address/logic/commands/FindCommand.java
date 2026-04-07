@@ -5,10 +5,10 @@ import static java.util.Objects.requireNonNull;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.model.Model;
-import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.application.NameContainsKeywordsPredicate;
 
 /**
- * Finds and lists all persons in address book whose name contains any of the argument keywords.
+ * Finds and lists all applications in address book whose name contains any of the argument keywords.
  * Keyword matching is case insensitive.
  */
 public class FindCommand extends Command {
@@ -16,8 +16,8 @@ public class FindCommand extends Command {
     public static final String COMMAND_WORD = "find";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds all applications whose "
-            + "company names contain any of "
-            + "the specified keywords (case-insensitive) and displays them as a list with index numbers.\n"
+            + "company names contain any of the specified keywords (case-insensitive) and displays "
+            + "them as a list with index numbers.\n"
             + "Parameters: KEYWORD [MORE_KEYWORDS]...\n"
             + "Example: " + COMMAND_WORD + " Google Meta Amazon";
 
@@ -36,9 +36,9 @@ public class FindCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
-        model.updateFilteredPersonList(predicate);
-        return new CommandResult(
-                String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, model.getFilteredPersonList().size()));
+        model.updateFilteredApplicationList(predicate);
+        return new CommandResult(String.format(Messages.MESSAGE_APPLICATIONS_LISTED_OVERVIEW,
+                                        model.getFilteredApplicationList().size()));
     }
 
     @Override
@@ -58,8 +58,6 @@ public class FindCommand extends Command {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .add("predicate", predicate)
-                .toString();
+        return new ToStringBuilder(this).add("predicate", predicate).toString();
     }
 }

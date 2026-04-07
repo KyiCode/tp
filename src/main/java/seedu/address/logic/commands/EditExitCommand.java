@@ -7,9 +7,8 @@ import java.util.List;
 import seedu.address.logic.ParserMode;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Application;
-import seedu.address.model.person.IsBeingEditedPredicate;
-
+import seedu.address.model.application.Application;
+import seedu.address.model.application.IsBeingEditedPredicate;
 
 /** Command to exit editing mode. */
 public class EditExitCommand extends Command {
@@ -20,7 +19,7 @@ public class EditExitCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        List<Application> lastShownList = model.getFilteredPersonList();
+        List<Application> lastShownList = model.getFilteredApplicationList();
         IsBeingEditedPredicate predicate = new IsBeingEditedPredicate();
         lastShownList.stream().filter(predicate).findFirst().ifPresent((i) -> i.setBeingEdited(false));
         return new CommandResult(MESSAGE_EXIT_EDITING_MODE_ACKNOWLEDGEMENT, false, ParserMode.NORMAL, false);

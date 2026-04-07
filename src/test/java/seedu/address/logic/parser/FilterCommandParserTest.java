@@ -9,13 +9,13 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.FilterCommand;
-import seedu.address.model.person.ApplicationMatchesAllPredicate;
-import seedu.address.model.person.CompanyContainsKeywordPredicate;
-import seedu.address.model.person.DateMatchesPredicate;
-import seedu.address.model.person.Role;
-import seedu.address.model.person.RoleMatchesPredicate;
-import seedu.address.model.person.StatusMatchesPredicate;
-import seedu.address.model.person.TagMatchesPredicate;
+import seedu.address.model.application.ApplicationMatchesAllPredicate;
+import seedu.address.model.application.CompanyContainsKeywordPredicate;
+import seedu.address.model.application.DateMatchesPredicate;
+import seedu.address.model.application.Role;
+import seedu.address.model.application.RoleMatchesPredicate;
+import seedu.address.model.application.StatusMatchesPredicate;
+import seedu.address.model.application.TagMatchesPredicate;
 import seedu.address.model.tag.Tag;
 
 public class FilterCommandParserTest {
@@ -24,46 +24,41 @@ public class FilterCommandParserTest {
 
     @Test
     public void parse_companyFilter_success() {
-        assertParseSuccess(parser, " n/Google ",
-                new FilterCommand(new ApplicationMatchesAllPredicate(List.of(
-                        new CompanyContainsKeywordPredicate("Google")))));
+        assertParseSuccess(parser, " n/Google ", new FilterCommand(new ApplicationMatchesAllPredicate(
+                                        List.of(new CompanyContainsKeywordPredicate("Google")))));
     }
 
     @Test
     public void parse_appliedFilter_success() {
-        assertParseSuccess(parser, " d/2025-11-11 ",
-                new FilterCommand(new ApplicationMatchesAllPredicate(List.of(
-                        new DateMatchesPredicate("2025-11-11")))));
+        assertParseSuccess(parser, " d/2025-11-11 ", new FilterCommand(new ApplicationMatchesAllPredicate(
+                                        List.of(new DateMatchesPredicate("2025-11-11")))));
     }
 
     @Test
     public void parse_statusFilter_success() {
-        assertParseSuccess(parser, " s/Applied ",
-                new FilterCommand(new ApplicationMatchesAllPredicate(List.of(
-                        new StatusMatchesPredicate("Applied")))));
+        assertParseSuccess(parser, " s/Applied ", new FilterCommand(new ApplicationMatchesAllPredicate(
+                                        List.of(new StatusMatchesPredicate("Applied")))));
     }
 
     @Test
     public void parse_roleFilter_success() {
-        assertParseSuccess(parser, " r/Software Engineer ",
-                new FilterCommand(new ApplicationMatchesAllPredicate(List.of(
-                        new RoleMatchesPredicate("Software Engineer")))));
+        assertParseSuccess(parser, " r/Software Engineer ", new FilterCommand(new ApplicationMatchesAllPredicate(
+                                        List.of(new RoleMatchesPredicate("Software Engineer")))));
     }
 
     @Test
     public void parse_tagFilter_success() {
-        assertParseSuccess(parser, " t/friends ",
-                new FilterCommand(new ApplicationMatchesAllPredicate(List.of(
-                        new TagMatchesPredicate("friends")))));
+        assertParseSuccess(parser, " t/friends ", new FilterCommand(new ApplicationMatchesAllPredicate(
+                                        List.of(new TagMatchesPredicate("friends")))));
     }
 
     @Test
     public void parse_multipleDifferentFilters_success() {
         assertParseSuccess(parser, " r/Software Engineer s/applied d/2024-12-12",
-                new FilterCommand(new ApplicationMatchesAllPredicate(List.of(
-                        new RoleMatchesPredicate("Software Engineer"),
-                        new StatusMatchesPredicate("applied"),
-                        new DateMatchesPredicate("2024-12-12")))));
+                                        new FilterCommand(new ApplicationMatchesAllPredicate(List.of(
+                                                                        new RoleMatchesPredicate("Software Engineer"),
+                                                                        new StatusMatchesPredicate("applied"),
+                                                                        new DateMatchesPredicate("2024-12-12")))));
     }
 
     @Test
@@ -74,13 +69,13 @@ public class FilterCommandParserTest {
     @Test
     public void parse_wrongPrefix_failure() {
         assertParseFailure(parser, " x/test",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+                                        String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_unknownPrefixAfterValidPrefix_failure() {
         assertParseFailure(parser, " n/test j/ywteyu",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+                                        String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
     }
 
     @Test
@@ -146,7 +141,7 @@ public class FilterCommandParserTest {
     @Test
     public void parse_duplicateRolePrefix_failure() {
         assertParseFailure(parser, " r/Software Engineer r/Product Manager ",
-                FilterCommandParser.MESSAGE_MULTIPLE_ROLES);
+                                        FilterCommandParser.MESSAGE_MULTIPLE_ROLES);
     }
 
     @Test

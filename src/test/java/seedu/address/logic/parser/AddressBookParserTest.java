@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.testutil.Assert.assertThrows;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_APPLICATION;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,15 +25,15 @@ import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.OverwriteCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Application;
-import seedu.address.model.person.ApplicationMatchesAllPredicate;
-import seedu.address.model.person.CompanyContainsKeywordPredicate;
-import seedu.address.model.person.DuplicateApplicationStore;
-import seedu.address.model.person.NameContainsKeywordsPredicate;
-import seedu.address.model.person.RoleMatchesPredicate;
-import seedu.address.model.person.StatusMatchesPredicate;
-import seedu.address.testutil.PersonBuilder;
-import seedu.address.testutil.PersonUtil;
+import seedu.address.model.application.Application;
+import seedu.address.model.application.ApplicationMatchesAllPredicate;
+import seedu.address.model.application.CompanyContainsKeywordPredicate;
+import seedu.address.model.application.DuplicateApplicationStore;
+import seedu.address.model.application.NameContainsKeywordsPredicate;
+import seedu.address.model.application.RoleMatchesPredicate;
+import seedu.address.model.application.StatusMatchesPredicate;
+import seedu.address.testutil.ApplicationBuilder;
+import seedu.address.testutil.ApplicationUtil;
 
 public class AddressBookParserTest {
 
@@ -46,9 +46,9 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_add() throws Exception {
-        Application person = new PersonBuilder().build();
-        AddCommand command = (AddCommand) parser.parseCommand(PersonUtil.getAddCommand(person));
-        assertEquals(new AddCommand(person), command);
+        Application application = new ApplicationBuilder().build();
+        AddCommand command = (AddCommand) parser.parseCommand(ApplicationUtil.getAddCommand(application));
+        assertEquals(new AddCommand(application), command);
     }
 
     @Test
@@ -60,8 +60,8 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_delete() throws Exception {
         DeleteCommand command = (DeleteCommand) parser.parseCommand(
-                                        DeleteCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
-        assertEquals(new DeleteCommand(INDEX_FIRST_PERSON), command);
+                                        DeleteCommand.COMMAND_WORD + " " + INDEX_FIRST_APPLICATION.getOneBased());
+        assertEquals(new DeleteCommand(INDEX_FIRST_APPLICATION), command);
     }
 
     @Test
@@ -82,11 +82,11 @@ public class AddressBookParserTest {
     public void parseCommand_filter() throws Exception {
         FilterCommand command = (FilterCommand) parser.parseCommand("FILTER n/Amy r/Software Engineer s/applied");
         assertEquals(new FilterCommand(new ApplicationMatchesAllPredicate(
-                                        List.of(new CompanyContainsKeywordPredicate("Amy"),
-                                                                        new RoleMatchesPredicate(
-                                                                                "Software Engineer"),
-                                                                        new StatusMatchesPredicate("applied")))),
-                                        command);
+                List.of(
+                        new CompanyContainsKeywordPredicate("Amy"),
+                        new RoleMatchesPredicate("Software Engineer"),
+                        new StatusMatchesPredicate("applied")))),
+                command);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_notOverwriteCommand_clearDuplicateStore() throws Exception {
-        Application application = new PersonBuilder().build();
+        Application application = new ApplicationBuilder().build();
         AddCommand addCommand = new AddCommand(application);
         DuplicateApplicationStore.setLastDuplicateApplication(addCommand);
 
@@ -139,23 +139,17 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_allNonOverwriteCommand_clearDuplicateStore() throws Exception {
-        Application application = new PersonBuilder().build();
+        Application application = new ApplicationBuilder().build();
         AddCommand addCommand = new AddCommand(application);
 
-        String possibleAddCommand =
-                "add n/Meta p/6505434800 e/facebook.careers@meta.com "
-                + "a/1 Hacker Way, Menlo Park, CA d/2024-03-19 "
-                + "r/Frontend Engineer s/interview t/tech";
+        String possibleAddCommand = "add n/Meta p/6505434800 e/facebook.careers@meta.com "
+                                        + "a/1 Hacker Way, Menlo Park, CA d/2024-03-19 "
+                                        + "r/Frontend Engineer s/interview t/tech";
 
         String[] nonOverwriteCommand = {
-            ListCommand.COMMAND_WORD,
-            ClearCommand.COMMAND_WORD,
-            ExitCommand.COMMAND_WORD,
-            HelpCommand.COMMAND_WORD,
-            FindCommand.COMMAND_WORD + " test",
-            FilterCommand.COMMAND_WORD + " n/test",
-            DeleteCommand.COMMAND_WORD + " 1",
-            possibleAddCommand
+            ListCommand.COMMAND_WORD, ClearCommand.COMMAND_WORD, ExitCommand.COMMAND_WORD,
+            HelpCommand.COMMAND_WORD, FindCommand.COMMAND_WORD + " test", FilterCommand.COMMAND_WORD + " n/test",
+            DeleteCommand.COMMAND_WORD + " 1", possibleAddCommand
         };
 
         for (int i = 0; i < nonOverwriteCommand.length; i++) {

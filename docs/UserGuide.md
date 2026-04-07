@@ -25,7 +25,7 @@ If you can type fast, OfferFlow will manage your internship pipeline faster than
 
 ## Quick start
 
-1. Ensure you have Java `17` or above installed in your Computer.`<br>`
+1. Ensure you have Java `17` or above installed in your Computer.<br>
    **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 
 1. Download the latest `.jar` file from [here](https://github.com/AY2526S2-CS2103T-F10-4/tp/releases).
@@ -36,7 +36,7 @@ If you can type fast, OfferFlow will manage your internship pipeline faster than
    A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
 
    ![Ui](images/Ui.png)
-5. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.`<br>`
+5. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
    Some example commands you can try:
 
    * `list` : Lists all internship applications.
@@ -52,20 +52,20 @@ If you can type fast, OfferFlow will manage your internship pipeline faster than
 
 <box type="info" seamless>
 
-**Notes about the command format:**`<br>`
+**Notes about the command format:**<br>
 
-* Words in `UPPER_CASE` are the parameters to be supplied by the user.`<br>`
+* Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/Google`.
-* Items in square brackets are optional.`<br>`
+* Items in square brackets are optional.<br>
   e.g `n/NAME [t/TAG]` can be used as `n/Google t/java` or as `n/Google`.
-* Items with `…` after them can be used multiple times including zero times.`<br>`
+* Items with `…` after them can be used multiple times including zero times.<br>
   e.g. `[t/TAG]…` can be used as ` ` (i.e. 0 times), `t/java`, `t/java t/React` etc.
-* Parameters can be in any order.`<br>`
+* Parameters can be in any order.`<br>
   e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
-* Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit`, `clear` and `overwrite`) will be ignored.`<br>`
+* Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit`, `clear` and `overwrite`) will be ignored.<br>
   e.g. if the command specifies `help 123`, it will be interpreted as `help`.
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
-  `</box>`
+  </box>
 
 ### Viewing help : `help`
 
@@ -77,7 +77,7 @@ Format: `help`
 
 ### Application
 
-An internship application must include a company name and the role applied for. All other fields are optional.  
+An internship application must include a company name and the role applied for. All other fields are optional.
 Each application supports the following parameters:
 
 #### Parameters
@@ -98,14 +98,15 @@ Adds the internship application you have applied for, to help track all your app
 <box type="warning" seamless>
 
 **Caution:**
-OfferFlow does not allow duplicate application with same name and role. Hence, if you choose to add application with duplicate name and role, you can choose whether or not to [overwrite](#overwrite-duplicate-application--overwrite) it (ie: replace the pre-existing application with the new application)
+OfferFlow by default does not allow duplicate application with same name and role. Hence, if you choose to add application with duplicate name and role, you can choose whether or not to overwrite it (ie: replace the pre-existing application with the new application)
 </box>
 
 Format: `add n/NAME r/ROLE ...`
 
 <box type="tip" seamless>
 
-**Tip:** Application can be added with only name and role, other fields are optional
+**Tip:** Application can be added with only the `n/NAME` and `r/ROLE` fields, other fields are optional
+
 </box>
 
 Notes:
@@ -114,7 +115,7 @@ Notes:
 * Emails should be of the format `local-part@domain`
 * Applied dates must use `YYYY-MM-DD` and cannot be a future date
 * Reminder can only be added if both reminder name (`u/`) and reminder date (`ud/`) is provided
-* Only the `n/NAME` and `r/ROLE` fields are compulsory, other fields are optional
+* Reminder due today or earlier will be displayed in red, others will be displayed in orange
 
 #### Examples:
 * `add n/Meta r/ML engineer`
@@ -128,12 +129,6 @@ Notes:
 
 
 ### Overwrite duplicate application : `overwrite`
-
-<box type="warning" seamless>
-
-**Caution:**
-OfferFlow by default does not allow duplicate application with same name and role. Hence, if you choose to add application with duplicate name and role, you can choose whether or not to overwrite it (ie: replace the pre-existing application with the new application)
-</box>
 
 Overwrites pre-existing application in OfferFlow that has the same name and role, with the new application when you try to add an application with the same name and role as another already existing application
 
@@ -168,12 +163,12 @@ Format:
 3. `exitedit` to finish editing and exit the editing mode
 
 Notes:
-* Enters editing mode for the application at the specified `INDEX` or with the specified `NAME` and `ROLE`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …
+* Enters editing mode for the application at the specified `INDEX` or with the specified `NAME` and `ROLE`. The index refers to the index number shown in the displayed application list. The index **must be a positive integer** 1, 2, 3, …
 * Once editing mode is entered, *all commands* except for *editexit* and *editing commands* will be disabled.
 * Edit the application in edit mode by typing in at least one of the optional fields.
 * Existing values will be updated to the input values.
-* When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
-* You can remove all the person’s tags by typing `t/` without
+* When editing tags, the existing tags of the application will be removed i.e adding of tags is not cumulative.
+* You can remove all the application’s tags by typing `t/` without
   specifying any tags after it.
 
 #### Parameters
@@ -191,11 +186,7 @@ Notes:
 * `editmode 1` or `editmode n/Google r/Software Engineer`
 * `a/Mapletree Business City II, Pasir Panjang area t/java`
 * `d/2025-12-11`
-* `exitedit`
-
-⚠️ Note:
-* Extraneous parameters/words will be ignored
-* eg: **edit 2** `n/Tiktok`
+* `editexit`
 
 #### Expected outcome:
 
@@ -207,10 +198,18 @@ Use `editmode` command to modify or create new Reminders.
 
 Format: `u/DESCRIPTION ud/DATE`
 
+#### Parameters
+- `u/DESCRIPTION` → name of the reminder
+- `ud/DATE` → deadline of the reminder
+
+⚠️ Note:
+* both `u/DESCRIPTION ud/DATE` must be provided to modify/create reminders
+* reminder allows past dates as well
+
 #### Example:
 * `editmode 2`
 * `u/upcoming interview ud/2026-12-12`
-* `exitedit`
+* `editexit`
 
 #### expected outcome:
 
@@ -227,11 +226,11 @@ Format: `rmr INDEX` or `rmr n/NAME r/ROLE`
 * `n/NAME r/ROLE`: represents an Application to `NAME` for `ROLE`.
 
 #### Example:
-* `rmr 2` or `rmr n/Meta r/ML engineer`
+* `rmr 2` or `rmr n/Tiktok r/data analyst`
 
 #### expected outcome:
 
-  ![Remove](images/remove.png)
+  ![Remove](images/Remove.png)
 
 ### Updating application status: `status`
 
@@ -327,7 +326,7 @@ Format: `upcoming DAYS`
 
 #### Expected Outcome:
 
-  ![result for 'upcoming 3'](images/Upcoming.png)
+  ![result for 'upcoming 7'](images/Upcoming.png)
 
 
 ### Filtering applications: `filter`
@@ -348,7 +347,7 @@ Format:
 - `s/STATUS` → application progress
 - `t/TAG` → tag in the application
 
-Notes:
+⚠️ Note:
 * Filter matching is case-insensitive.
 * Leading and trailing spaces are ignored.
 * Internal spacing still matters.
@@ -377,6 +376,7 @@ Format: `delete INDEX` or `delete n/NAME r/ROLE`
 
 #### Parameters
 - `INDEX` → the index number shown in the displayed application list
+
 <box type="warning" seamless>
 
 **Caution:**
@@ -391,14 +391,14 @@ application for Google as QA engineer
 
   ![Delete_ref](images/Delete_ref.png)
 
-### Creating a new address book : `folder`
+### Creating a new OfferFlow folder : `folder`
 
-Creates a new empty address book saved under `data/FOLDER_NAME.json` and switches to it.
+Creates a new empty OfferFlow folder saved under `data/FOLDER_NAME.json` and switches to it.
 
 Format: `folder FOLDER_NAME`
 
 #### Parameters
-- `FOLDER_NAME` → Name for the new address book (letters, numbers, underscores, and hyphens only)
+- `FOLDER_NAME` → Name for the new OfferFlow folder (letters, numbers, underscores, and hyphens only)
 
 <box type="warning" seamless>
 
@@ -409,27 +409,27 @@ Format: `folder FOLDER_NAME`
 </box>
 
 #### Examples
-* `folder Y1S2` creates and switches to a new address book at `data/Y1S2.json`
+* `folder Y1S2` creates and switches to the new OfferFlow folder at `data/Y1S2.json`
 * `folder internships-2025` creates and switches to `data/internships-2025.json`
 
 #### Expected Outcome:
-- A new empty address book is created and you are switched to it immediately.
+- A new empty OfferFlow folder is created and you are switched to it immediately.
 - The status bar at the bottom of the window updates to show the current file path (e.g. `./data/Y1S2.json`).
 
   ![folder](images/folder.png)
 
 
-### Switching to an existing address book : `toggle`
+### Switching to an existing OfferFlow folder : `toggle`
 
 ⚠️ Note:
 The default folder is called `addressbook`
 
-Switches to an existing address book saved under `data/FOLDER_NAME.json`.
+Switches to an existing OfferFlow folder saved under `data/FOLDER_NAME.json`.
 
 Format: `toggle FOLDER_NAME`
 
 #### Parameters
-- `FOLDER_NAME` → Name of the existing address book to switch to
+- `FOLDER_NAME` → Name of the existing OfferFlow folder to switch to
 
 <box type="warning" seamless>
 
@@ -437,15 +437,16 @@ Format: `toggle FOLDER_NAME`
 - Folder name cannot be empty
 - Folder name cannot contain spaces or special characters
 - The address book file must already exist at `data/FOLDER_NAME.json`
+- Folder names are case insensitive
 </box>
 
 #### Examples
 * `toggle addressbook` switches to the default starting folder at `data/addressbook.json`
-* `toggle Y1S2` switches to the address book at `data/Y1S2.json`
+* `toggle Y1S2` switches to the OfferFlow folder at `data/Y1S2.json`
 * `toggle internships-2025` switches to `data/internships-2025.json`
 
 #### Expected Outcome:
-- You are switched to the specified address book and its applications are loaded.
+- You are switched to the OfferFlow folder and its applications are loaded if any.
 - The status bar at the bottom of the window updates to show the current file path (e.g. `./data/addressbook.json`).
 
   ![toggle](images/toggle.png)
@@ -453,13 +454,13 @@ Format: `toggle FOLDER_NAME`
 
 ### Listing all address books : `folders`
 
-Lists all existing address books saved in the `data` directory.
+Lists all existing OfferFlow folders saved in the `data` directory.
 
 Format: `folders`
 
 #### Expected Outcome:
-- All available address book names are displayed (one per line), sorted alphabetically.
-- If no address books exist yet, a message is shown indicating the data directory is empty.
+- All available OfferFlow folder names are displayed (one per line), sorted alphabetically.
+- By default, the OfferFlow folder named `addressbook` always exists
 
   ![folders](images/folders.png)
 
@@ -522,10 +523,10 @@ Furthermore, certain edits can cause OfferFlow to behave in unexpected ways (e.g
 | **Overwrite** | `overwrite` | `overwrite` |
 | **Clear** | `clear` | `clear` |
 | **Delete** | `delete INDEX` or `delete n/NAME r/ROLE` | `delete 3` or `delete n/Google r/Backend Developer` |
-| **Edit** | `editmode INDEX` or `editmode n/NAME r/ROLE` | `editmode 1` then `a/Mapletree Business City II, Pasir Panjang area` then `exitedit`  |
+| **Edit** | `editmode INDEX` or `editmode n/NAME r/ROLE` | `editmode 1` then `a/Mapletree Business City II, Pasir Panjang area` then `editexit`  |
 | **Status** | `status n/COMPANY r/ROLE s/STATUS` | `status n/Tiktok r/Data Analyst s/Rejected` |
 | **Find** | `find KEYWORD [MORE_KEYWORDS]` | `find James Jake` |
-| **Filter** | `filter n/NAME` or `filter d/YYYY-MM-DD` or `filter s/STATUS` or `filter t/TAG` | `filter n/Tiktok` or `filter d/2024-06-18` or `filter s/Rejected` or `filter t/java` |
+| **Filter** | `filter n/NAME` or `filter r/ROLE` or `filter d/YYYY-MM-DD` or `filter s/STATUS` or `filter t/TAG` | `filter n/Tiktok` or `filter r/Software Engineer` or `filter d/2024-06-18` or `filter s/Rejected` or `filter t/java` |
 | **Folder** | `folder FOLDER_NAME` | `folder Y1S2` |
 | **Toggle** | `toggle FOLDER_NAME` | `toggle Y1S2` |
 | **List Folders** | `folders` | `folders` |

@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.EditCommand;
-import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.logic.commands.EditCommand.EditApplicationDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.tag.Tag;
 
@@ -39,48 +39,48 @@ public class EditCommandParser implements Parser<EditCommand> {
     public EditCommand parse(String args) throws ParseException {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL,
-                PREFIX_ADDRESS,
-                PREFIX_TAG, PREFIX_DATE, PREFIX_ROLE, PREFIX_STATUS, PREFIX_REMINDER, PREFIX_REMINDER_DATE);
+                                        PREFIX_ADDRESS, PREFIX_TAG, PREFIX_DATE, PREFIX_ROLE, PREFIX_STATUS,
+                                        PREFIX_REMINDER, PREFIX_REMINDER_DATE);
 
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS,
-                PREFIX_DATE, PREFIX_ROLE, PREFIX_STATUS, PREFIX_REMINDER, PREFIX_REMINDER_DATE);
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_DATE,
+                                        PREFIX_ROLE, PREFIX_STATUS, PREFIX_REMINDER, PREFIX_REMINDER_DATE);
 
-        EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
+        EditApplicationDescriptor editApplicationDescriptor = new EditApplicationDescriptor();
 
         if (argMultimap.getValue(PREFIX_NAME).isPresent()) {
-            editPersonDescriptor.setName(ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get()));
+            editApplicationDescriptor.setName(ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get()));
         }
         if (argMultimap.getValue(PREFIX_PHONE).isPresent()) {
-            editPersonDescriptor.setPhone(ParserUtil.parsePhone(argMultimap.getValue(PREFIX_PHONE).get()));
+            editApplicationDescriptor.setPhone(ParserUtil.parsePhone(argMultimap.getValue(PREFIX_PHONE).get()));
         }
         if (argMultimap.getValue(PREFIX_EMAIL).isPresent()) {
-            editPersonDescriptor.setEmail(ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get()));
+            editApplicationDescriptor.setEmail(ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get()));
         }
         if (argMultimap.getValue(PREFIX_ADDRESS).isPresent()) {
-            editPersonDescriptor.setAddress(ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get()));
+            editApplicationDescriptor.setAddress(ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get()));
         }
         if (argMultimap.getValue(PREFIX_DATE).isPresent()) {
-            editPersonDescriptor.setDate(ParserUtil.parseDate(argMultimap.getValue(PREFIX_DATE).get()));
+            editApplicationDescriptor.setDate(ParserUtil.parseDate(argMultimap.getValue(PREFIX_DATE).get()));
         }
         if (argMultimap.getValue(PREFIX_ROLE).isPresent()) {
-            editPersonDescriptor.setRole(ParserUtil.parseRole(argMultimap.getValue(PREFIX_ROLE).get()));
+            editApplicationDescriptor.setRole(ParserUtil.parseRole(argMultimap.getValue(PREFIX_ROLE).get()));
         }
         if (argMultimap.getValue(PREFIX_STATUS).isPresent()) {
-            editPersonDescriptor.setStatus(ParserUtil.parseStatus(argMultimap.getValue(PREFIX_STATUS).get()));
+            editApplicationDescriptor.setStatus(ParserUtil.parseStatus(argMultimap.getValue(PREFIX_STATUS).get()));
         }
         if (arePrefixesPresent(argMultimap, PREFIX_REMINDER, PREFIX_REMINDER_DATE)) {
             String reminderReminderString = argMultimap.getValue(PREFIX_REMINDER).get();
             String reminderDateString = argMultimap.getValue(PREFIX_REMINDER_DATE).get();
-            editPersonDescriptor.setReminder(ParserUtil.parseReminder(reminderReminderString, reminderDateString));
+            editApplicationDescriptor.setReminder(ParserUtil.parseReminder(reminderReminderString, reminderDateString));
         }
 
-        parseTagsForEdit(argMultimap.getAllValues(PREFIX_TAG)).ifPresent(editPersonDescriptor::setTags);
+        parseTagsForEdit(argMultimap.getAllValues(PREFIX_TAG)).ifPresent(editApplicationDescriptor::setTags);
 
-        if (!editPersonDescriptor.isAnyFieldEdited()) {
+        if (!editApplicationDescriptor.isAnyFieldEdited()) {
             throw new ParseException(String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
         }
 
-        return new EditCommand(editPersonDescriptor);
+        return new EditCommand(editApplicationDescriptor);
     }
 
     /**

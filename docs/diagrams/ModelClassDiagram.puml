@@ -13,7 +13,7 @@ Class AddressBook
 Class ModelManager
 Class UserPrefs
 
-Class UniquePersonList
+Class UniqueApplicationList
 Class Application
 Class Address
 Class Email
@@ -43,8 +43,8 @@ ModelManager -left-> "1" AddressBook
 ModelManager -right-> "1" UserPrefs
 UserPrefs .up.|> ReadOnlyUserPrefs
 
-AddressBook *--> "1" UniquePersonList
-UniquePersonList --> "~* all" Application
+AddressBook *--> "1" UniqueApplicationList
+UniqueApplicationList --> "~* all" Application
 Application *--> "1" Name
 Application *--> "1" Role
 Application *--> "0...1" Phone
@@ -56,7 +56,7 @@ Application *--> "*" Tag
 Application *--> "0...1" Reminder
 
 Application -[hidden]up--> I
-UniquePersonList -[hidden]right-> I
+UniqueApplicationList -[hidden]right-> I
 
 Name -[hidden]right-> Phone
 Phone -[hidden]right-> Address

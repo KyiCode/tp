@@ -18,14 +18,14 @@ import java.util.regex.Pattern;
 
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Application;
-import seedu.address.model.person.ApplicationMatchesAllPredicate;
-import seedu.address.model.person.CompanyContainsKeywordPredicate;
-import seedu.address.model.person.Date;
-import seedu.address.model.person.DateMatchesPredicate;
-import seedu.address.model.person.RoleMatchesPredicate;
-import seedu.address.model.person.StatusMatchesPredicate;
-import seedu.address.model.person.TagMatchesPredicate;
+import seedu.address.model.application.Application;
+import seedu.address.model.application.ApplicationMatchesAllPredicate;
+import seedu.address.model.application.CompanyContainsKeywordPredicate;
+import seedu.address.model.application.Date;
+import seedu.address.model.application.DateMatchesPredicate;
+import seedu.address.model.application.RoleMatchesPredicate;
+import seedu.address.model.application.StatusMatchesPredicate;
+import seedu.address.model.application.TagMatchesPredicate;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -39,22 +39,14 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             "OOPS! Invalid format, use format: filter n/<keyword>";
     public static final String MESSAGE_INVALID_APPLIED_FORMAT =
             "OOPS! Invalid format, use format: filter d/<YYYY-MM-DD>";
-    public static final String MESSAGE_INVALID_ROLE_FORMAT =
-            "OOPS! Invalid format, use format: filter r/<role>";
-    public static final String MESSAGE_INVALID_STATUS_FORMAT =
-            "OOPS! Invalid format, use format: filter s/<status>";
-    public static final String MESSAGE_INVALID_TAG_FORMAT =
-            "OOPS! Invalid format, use format: filter t/<tag>";
-    public static final String MESSAGE_MULTIPLE_COMPANY_KEYWORDS =
-            "Please filter by only 1 company name.";
-    public static final String MESSAGE_MULTIPLE_DATES =
-            "Please filter by only 1 date.";
-    public static final String MESSAGE_MULTIPLE_ROLES =
-            "Please filter by only 1 role.";
-    public static final String MESSAGE_MULTIPLE_STATUSES =
-            "Please filter by only 1 status.";
-    public static final String MESSAGE_MULTIPLE_TAGS =
-            "Please filter by only 1 tag.";
+    public static final String MESSAGE_INVALID_ROLE_FORMAT = "OOPS! Invalid format, use format: filter r/<role>";
+    public static final String MESSAGE_INVALID_STATUS_FORMAT = "OOPS! Invalid format, use format: filter s/<status>";
+    public static final String MESSAGE_INVALID_TAG_FORMAT = "OOPS! Invalid format, use format: filter t/<tag>";
+    public static final String MESSAGE_MULTIPLE_COMPANY_KEYWORDS = "Please filter by only 1 company name.";
+    public static final String MESSAGE_MULTIPLE_DATES = "Please filter by only 1 date.";
+    public static final String MESSAGE_MULTIPLE_ROLES = "Please filter by only 1 role.";
+    public static final String MESSAGE_MULTIPLE_STATUSES = "Please filter by only 1 status.";
+    public static final String MESSAGE_MULTIPLE_TAGS = "Please filter by only 1 tag.";
     private static final String DATE_SHAPE_REGEX = "^\\d{4}-\\d{2}-\\d{2}$";
     private static final Pattern PREFIX_LIKE_PATTERN = Pattern.compile("(^|\\s)([A-Za-z])/");
     private static final Set<String> SUPPORTED_PREFIXES = Set.of("n", "d", "r", "s", "t");
@@ -62,8 +54,8 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     @Override
     public FilterCommand parse(String args) throws ParseException {
         requireNonNull(args);
-        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(
-                args, PREFIX_NAME, PREFIX_DATE, PREFIX_ROLE, PREFIX_STATUS, PREFIX_TAG);
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_DATE, PREFIX_ROLE,
+                                        PREFIX_STATUS, PREFIX_TAG);
 
         validateArguments(args, argMultimap);
 
@@ -106,7 +98,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     }
 
     private void addCompanyPredicate(ArgumentMultimap argMultimap, List<Predicate<Application>> predicates)
-            throws ParseException {
+                                    throws ParseException {
         if (argMultimap.getValue(PREFIX_NAME).isEmpty()) {
             return;
         }
@@ -119,7 +111,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     }
 
     private void addDatePredicate(ArgumentMultimap argMultimap, List<Predicate<Application>> predicates)
-            throws ParseException {
+                                    throws ParseException {
         if (argMultimap.getValue(PREFIX_DATE).isEmpty()) {
             return;
         }
@@ -138,7 +130,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     }
 
     private void addRolePredicate(ArgumentMultimap argMultimap, List<Predicate<Application>> predicates)
-            throws ParseException {
+                                    throws ParseException {
         if (argMultimap.getValue(PREFIX_ROLE).isEmpty()) {
             return;
         }
@@ -151,7 +143,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     }
 
     private void addStatusPredicate(ArgumentMultimap argMultimap, List<Predicate<Application>> predicates)
-            throws ParseException {
+                                    throws ParseException {
         if (argMultimap.getValue(PREFIX_STATUS).isEmpty()) {
             return;
         }
@@ -164,7 +156,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     }
 
     private void addTagPredicate(ArgumentMultimap argMultimap, List<Predicate<Application>> predicates)
-            throws ParseException {
+                                    throws ParseException {
         if (argMultimap.getValue(PREFIX_TAG).isEmpty()) {
             return;
         }
@@ -183,11 +175,10 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     }
 
     private boolean hasAnySupportedPrefix(ArgumentMultimap argMultimap) {
-        return argMultimap.getValue(PREFIX_NAME).isPresent()
-                || argMultimap.getValue(PREFIX_DATE).isPresent()
-                || argMultimap.getValue(PREFIX_ROLE).isPresent()
-                || argMultimap.getValue(PREFIX_STATUS).isPresent()
-                || argMultimap.getValue(PREFIX_TAG).isPresent();
+        return argMultimap.getValue(PREFIX_NAME).isPresent() || argMultimap.getValue(PREFIX_DATE).isPresent()
+                                        || argMultimap.getValue(PREFIX_ROLE).isPresent()
+                                        || argMultimap.getValue(PREFIX_STATUS).isPresent()
+                                        || argMultimap.getValue(PREFIX_TAG).isPresent();
     }
 
     private boolean containsUnsupportedPrefix(String args) {

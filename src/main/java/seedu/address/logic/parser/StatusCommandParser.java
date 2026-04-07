@@ -15,9 +15,9 @@ import java.util.stream.Stream;
 
 import seedu.address.logic.commands.StatusCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Role;
-import seedu.address.model.person.Status;
+import seedu.address.model.application.Name;
+import seedu.address.model.application.Role;
+import seedu.address.model.application.Status;
 
 /**
  * Parses input arguments and creates a new StatusCommand object.
@@ -32,13 +32,12 @@ public class StatusCommandParser implements Parser<StatusCommand> {
         requireNonNull(args);
 
         try {
-            ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args,
-                    PREFIX_NAME, PREFIX_ROLE, PREFIX_STATUS,
-                    PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_TAG, PREFIX_DATE);
+            ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_ROLE, PREFIX_STATUS,
+                                            PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_TAG, PREFIX_DATE);
 
             if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_ROLE, PREFIX_STATUS)
-                    || !argMultimap.getPreamble().isEmpty()
-                    || containsUnsupportedPrefixes(argMultimap)) {
+                                            || !argMultimap.getPreamble().isEmpty()
+                                            || containsUnsupportedPrefixes(argMultimap)) {
                 throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, StatusCommand.MESSAGE_USAGE));
             }
 
@@ -67,6 +66,6 @@ public class StatusCommandParser implements Parser<StatusCommand> {
      */
     private static boolean containsUnsupportedPrefixes(ArgumentMultimap argumentMultimap) {
         return Stream.of(PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_TAG, PREFIX_DATE)
-                .anyMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
+                                        .anyMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
 }

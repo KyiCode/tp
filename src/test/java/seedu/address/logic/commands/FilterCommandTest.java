@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.address.testutil.TypicalPersons.ALICE;
-import static seedu.address.testutil.TypicalPersons.BENSON_WITH_REMINDER_INTERVIEW;
-import static seedu.address.testutil.TypicalPersons.FIONA;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalApplications.ALICE;
+import static seedu.address.testutil.TypicalApplications.BENSON_WITH_REMINDER_INTERVIEW;
+import static seedu.address.testutil.TypicalApplications.FIONA;
+import static seedu.address.testutil.TypicalApplications.getTypicalAddressBook;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,12 +17,12 @@ import org.junit.jupiter.api.Test;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.person.ApplicationMatchesAllPredicate;
-import seedu.address.model.person.CompanyContainsKeywordPredicate;
-import seedu.address.model.person.DateMatchesPredicate;
-import seedu.address.model.person.RoleMatchesPredicate;
-import seedu.address.model.person.StatusMatchesPredicate;
-import seedu.address.model.person.TagMatchesPredicate;
+import seedu.address.model.application.ApplicationMatchesAllPredicate;
+import seedu.address.model.application.CompanyContainsKeywordPredicate;
+import seedu.address.model.application.DateMatchesPredicate;
+import seedu.address.model.application.RoleMatchesPredicate;
+import seedu.address.model.application.StatusMatchesPredicate;
+import seedu.address.model.application.TagMatchesPredicate;
 
 /**
  * Contains integration tests for {@code FilterCommand}.
@@ -51,9 +51,9 @@ public class FilterCommandTest {
         CompanyContainsKeywordPredicate predicate = new CompanyContainsKeywordPredicate("alice");
         FilterCommand command = new FilterCommand(predicate);
 
-        expectedModel.updateFilteredPersonList(predicate);
+        expectedModel.updateFilteredApplicationList(predicate);
         assertCommandSuccess(command, model, String.format(FilterCommand.MESSAGE_MATCHES_FOUND, 1), expectedModel);
-        assertEquals(Collections.singletonList(ALICE), model.getFilteredPersonList());
+        assertEquals(Collections.singletonList(ALICE), model.getFilteredApplicationList());
     }
 
     @Test
@@ -61,9 +61,9 @@ public class FilterCommandTest {
         DateMatchesPredicate predicate = new DateMatchesPredicate("2024-02-20");
         FilterCommand command = new FilterCommand(predicate);
 
-        expectedModel.updateFilteredPersonList(predicate);
+        expectedModel.updateFilteredApplicationList(predicate);
         assertCommandSuccess(command, model, String.format(FilterCommand.MESSAGE_MATCHES_FOUND, 1), expectedModel);
-        assertEquals(Collections.singletonList(BENSON_WITH_REMINDER_INTERVIEW), model.getFilteredPersonList());
+        assertEquals(Collections.singletonList(BENSON_WITH_REMINDER_INTERVIEW), model.getFilteredApplicationList());
     }
 
     @Test
@@ -71,9 +71,9 @@ public class FilterCommandTest {
         StatusMatchesPredicate predicate = new StatusMatchesPredicate("withdrawn");
         FilterCommand command = new FilterCommand(predicate);
 
-        expectedModel.updateFilteredPersonList(predicate);
+        expectedModel.updateFilteredApplicationList(predicate);
         assertCommandSuccess(command, model, FilterCommand.MESSAGE_NO_MATCHES, expectedModel);
-        assertEquals(Collections.emptyList(), model.getFilteredPersonList());
+        assertEquals(Collections.emptyList(), model.getFilteredApplicationList());
     }
 
     @Test
@@ -81,9 +81,9 @@ public class FilterCommandTest {
         RoleMatchesPredicate predicate = new RoleMatchesPredicate("Software Engineer");
         FilterCommand command = new FilterCommand(predicate);
 
-        expectedModel.updateFilteredPersonList(predicate);
+        expectedModel.updateFilteredApplicationList(predicate);
         assertCommandSuccess(command, model, String.format(FilterCommand.MESSAGE_MATCHES_FOUND, 1), expectedModel);
-        assertEquals(Collections.singletonList(ALICE), model.getFilteredPersonList());
+        assertEquals(Collections.singletonList(ALICE), model.getFilteredApplicationList());
     }
 
     @Test
@@ -91,21 +91,20 @@ public class FilterCommandTest {
         TagMatchesPredicate predicate = new TagMatchesPredicate("owesMoney");
         FilterCommand command = new FilterCommand(predicate);
 
-        expectedModel.updateFilteredPersonList(predicate);
+        expectedModel.updateFilteredApplicationList(predicate);
         assertCommandSuccess(command, model, String.format(FilterCommand.MESSAGE_MATCHES_FOUND, 1), expectedModel);
-        assertEquals(Collections.singletonList(BENSON_WITH_REMINDER_INTERVIEW), model.getFilteredPersonList());
+        assertEquals(Collections.singletonList(BENSON_WITH_REMINDER_INTERVIEW), model.getFilteredApplicationList());
     }
 
     @Test
     public void execute_multipleFilters_singleMatchFound() {
         ApplicationMatchesAllPredicate predicate = new ApplicationMatchesAllPredicate(List.of(
-                new RoleMatchesPredicate("DevOps Engineer"),
-                new StatusMatchesPredicate("applied"),
-                new DateMatchesPredicate("2024-03-22")));
+                                        new RoleMatchesPredicate("DevOps Engineer"),
+                                        new StatusMatchesPredicate("applied"), new DateMatchesPredicate("2024-03-22")));
         FilterCommand command = new FilterCommand(predicate);
 
-        expectedModel.updateFilteredPersonList(predicate);
+        expectedModel.updateFilteredApplicationList(predicate);
         assertCommandSuccess(command, model, String.format(FilterCommand.MESSAGE_MATCHES_FOUND, 1), expectedModel);
-        assertEquals(Collections.singletonList(FIONA), model.getFilteredPersonList());
+        assertEquals(Collections.singletonList(FIONA), model.getFilteredApplicationList());
     }
 }

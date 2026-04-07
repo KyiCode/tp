@@ -6,8 +6,8 @@ import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.ROLE_DESC_AMY;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalPersons.AMY;
+import static seedu.address.testutil.TypicalApplications.AMY;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_APPLICATION;
 
 import org.junit.jupiter.api.Test;
 
@@ -26,24 +26,22 @@ public class DeleteCommandParserTest {
 
     @Test
     public void parse_validIndexArgs_returnsDeleteCommand() {
-        assertParseSuccess(parser, "1", new DeleteCommand(INDEX_FIRST_PERSON));
+        assertParseSuccess(parser, "1", new DeleteCommand(INDEX_FIRST_APPLICATION));
     }
 
     @Test
     public void parse_invalidIndexArgs_throwsParseException() {
-        assertParseFailure(parser, "a", String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                DeleteCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, "a", String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_validNormalArgs_returnsDeleteCommand() {
-        assertParseSuccess(parser, NAME_DESC_AMY + ROLE_DESC_AMY, new DeleteCommand(AMY.getName(),
-                AMY.getRole()));
+        assertParseSuccess(parser, NAME_DESC_AMY + ROLE_DESC_AMY, new DeleteCommand(AMY.getName(), AMY.getRole()));
     }
 
     @Test
     public void parse_invalidNormalArgs_throwsParseException() {
         assertParseFailure(parser, NAME_DESC_AMY + INVALID_ROLE_DESC,
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+                                        String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
     }
 }

@@ -9,8 +9,8 @@ import java.util.stream.Stream;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.RemoveReminderCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Role;
+import seedu.address.model.application.Name;
+import seedu.address.model.application.Role;
 
 /**
  * Parses Remove Reminder Commands.
@@ -29,7 +29,7 @@ public class RemoveReminderCommandParser implements Parser<RemoveReminderCommand
 
             // Checks if it is a remove Reminder via Company Name and Role.
             if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_ROLE) || !argMultimap.getPreamble().isEmpty()) {
-                Index index = ParserUtil.parseIndex(args); // Checks for invalid inputs like non integers.
+                Index index = ParserUtil.parseIndex(args); // Checks for invalid inputs like non-integers.
                 return new RemoveReminderCommand(index);
             }
             argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_ROLE);
@@ -37,8 +37,8 @@ public class RemoveReminderCommandParser implements Parser<RemoveReminderCommand
             Role role = ParserUtil.parseRole(argMultimap.getValue(PREFIX_ROLE).get());
             return new RemoveReminderCommand(name, role);
         } catch (ParseException pe) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    RemoveReminderCommand.MESSAGE_USAGE), pe);
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RemoveReminderCommand.MESSAGE_USAGE),
+                                            pe);
         }
     }
 

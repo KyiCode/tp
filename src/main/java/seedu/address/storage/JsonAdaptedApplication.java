@@ -13,15 +13,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Application;
-import seedu.address.model.person.Date;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Phone;
-import seedu.address.model.person.Reminder;
-import seedu.address.model.person.Role;
-import seedu.address.model.person.Status;
+import seedu.address.model.application.Address;
+import seedu.address.model.application.Application;
+import seedu.address.model.application.Date;
+import seedu.address.model.application.Email;
+import seedu.address.model.application.Name;
+import seedu.address.model.application.Phone;
+import seedu.address.model.application.Reminder;
+import seedu.address.model.application.Role;
+import seedu.address.model.application.Status;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -45,19 +45,16 @@ class JsonAdaptedApplication {
     private boolean hasReminder = false;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
 
-
     /**
-     * Constructs a {@code JsonAdaptedPerson} with the given person details.
+     * Constructs a {@code JsonAdaptedApplication} with the given application details.
      */
     @JsonCreator
     public JsonAdaptedApplication(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
-                                  @JsonProperty("email") String email, @JsonProperty("address") String address,
-                                  @JsonProperty("tags") List<JsonAdaptedTag> tags,
-                                  @JsonProperty("date") String date,
-                                  @JsonProperty("role") String role,
-                                  @JsonProperty("status") String status,
-                                  @JsonProperty("reminderEvent") String reminderEvent,
-                                  @JsonProperty("reminderDate") String reminderDate) {
+                                    @JsonProperty("email") String email, @JsonProperty("address") String address,
+                                    @JsonProperty("tags") List<JsonAdaptedTag> tags, @JsonProperty("date") String date,
+                                    @JsonProperty("role") String role, @JsonProperty("status") String status,
+                                    @JsonProperty("reminderEvent") String reminderEvent,
+                                    @JsonProperty("reminderDate") String reminderDate) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -84,9 +81,7 @@ class JsonAdaptedApplication {
         date = source.getDate() != null ? source.getDate().value : NONE_STRING;
         status = source.getStatus() != null ? source.getStatus().value : NONE_STRING;
 
-        tags.addAll(source.getTags().stream()
-                .map(JsonAdaptedTag::new)
-                .collect(Collectors.toList()));
+        tags.addAll(source.getTags().stream().map(JsonAdaptedTag::new).collect(Collectors.toList()));
 
         hasReminder = source.hasReminder();
         reminderEvent = hasReminder ? source.getReminder().getReminderName() : null;
@@ -110,17 +105,16 @@ class JsonAdaptedApplication {
         final Phone modelPhone = parseOptional(phone, Phone::isValidPhone, Phone.MESSAGE_CONSTRAINTS, Phone::new);
         final Email modelEmail = parseOptional(email, Email::isValidEmail, Email.MESSAGE_CONSTRAINTS, Email::new);
         final Date modelDate = parseOptional(date, Date::isValidDate, Date.MESSAGE_CONSTRAINTS, Date::new);
-        final Address modelAddress = parseOptional(address, Address::isValidAddress,
-                    Address.MESSAGE_CONSTRAINTS, Address::new);
-        final Status modelStatus = parseOptional(status, Status::isValidStatus,
-                    Status.MESSAGE_CONSTRAINTS, Status::new);
+        final Address modelAddress = parseOptional(address, Address::isValidAddress, Address.MESSAGE_CONSTRAINTS,
+                                        Address::new);
+        final Status modelStatus = parseOptional(status, Status::isValidStatus, Status.MESSAGE_CONSTRAINTS,
+                                        Status::new);
         final Set<Tag> modelTags = new HashSet<>(applicationTags);
         final Reminder modelReminder = parseOptionalReminder();
 
-        return new Application(modelName, modelPhone, modelEmail, modelAddress, modelTags,
-                modelDate, modelRole, modelStatus, modelReminder);
+        return new Application(modelName, modelPhone, modelEmail, modelAddress, modelTags, modelDate, modelRole,
+                                        modelStatus, modelReminder);
     }
-
 
     /**
      * Checks for valid and present Application Name and Role fields.
@@ -154,7 +148,7 @@ class JsonAdaptedApplication {
             if (reminderEvent == null || reminderDate == null) {
                 logger.info("Should never reach here, check Code!");
                 throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
-                        Reminder.class.getSimpleName()));
+                                                Reminder.class.getSimpleName()));
             }
             if (!Reminder.isValidReminder(reminderEvent)) {
                 logger.warning("Invalid reminder: " + reminderEvent);
@@ -188,11 +182,8 @@ class JsonAdaptedApplication {
      * @return Parsed object, or null if value is empty.
      * @throws IllegalValueException If invalid value is passed.
      */
-    private <T> T parseOptional(
-            String value,
-            Predicate<String> validator,
-            String errorMessage,
-            Function<String, T> constructor) throws IllegalValueException {
+    private <T> T parseOptional(String value, Predicate<String> validator, String errorMessage,
+                                    Function<String, T> constructor) throws IllegalValueException {
         if (value == null || value.isEmpty()) {
             return null;
         }
