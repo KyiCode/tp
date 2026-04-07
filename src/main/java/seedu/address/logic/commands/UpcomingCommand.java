@@ -19,7 +19,7 @@ public class UpcomingCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD_WITH_SLASH + ": Sets reminder to display all "
             + "applications within the specified number of days from the current date, then displays one "
-            + "such notifcation. \nParameters: [DAYS_OFFSET]...\nExample: " + COMMAND_WORD_WITH_SLASH + " 9";
+            + "such notifcation. \nParameters: [DAYS_OFFSET]...\nExample: " + COMMAND_WORD_WITH_SLASH + " 7";
     public static final String MESSAGE_NO_MATCHES = "No upcoming applications in %d days";
     public static final String MESSAGE_MATCHES_FOUND = "There are %d application(s) due in %d days.";
     public static final String MESSAGE_INVALID_ARGS = "Days parameter must be an " + "an integer between " + MIN_OFFSET
