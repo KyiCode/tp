@@ -221,6 +221,24 @@ When `StatusCommand` executes, it:
 This design keeps `Application` immutable from the perspective of command logic. Instead of mutating the existing
 object in place, the command creates a new `Application` instance and swaps it into the model.
 
+### Dynamic UI
+
+#### Implementation
+
+Dynamic UI allows different visual styles to be applied based on the states of an application.
+
+The sequence diagram below shows how dynamic UI is generated for an application's status:
+
+<puml src="diagrams/DynamicStyleSequence.puml" alt="Sequence diagram for dynamic" width="760" />
+
+Additional changes to UI styling may be performed in `ApplicationCard` without modifying other components:
+
+1. When updating a JavaFX component's style, get the `StyleClass` of the relevant JavaFX component
+2. Check and remove any unnecessary style classes
+3. Add the new style class
+4. Add the relevant styles in the corresponding CSS stylesheet
+
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
