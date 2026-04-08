@@ -159,6 +159,68 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
+### Filter feature
+
+#### Implementation
+
+The `filter` command is responsible for narrowing the currently displayed application list without modifying the
+underlying stored applications.
+
+The sequence diagram below shows how a filter command is parsed and executed:
+
+<puml src="diagrams/FilterSequenceDiagram.puml" alt="Sequence diagram for filter command" width="760" />
+
+`AddressBookParser` routes `filter ...` input to `FilterCommandParser`. The parser then:
+
+* tokenizes the input using the supported filter prefixes:
+  `n/` (company name), `d/` (application date), `r/` (role), `s/` (status), and `t/` (tag)
+* rejects malformed commands such as unsupported prefixes, repeated single-value prefixes, empty values, or invalid
+  dates
+* constructs a list of predicates, one for each supplied criterion
+* wraps those predicates in `ApplicationMatchesAllPredicate`, so an application must satisfy every supplied filter
+  condition to remain visible
+
+When the resulting `FilterCommand` executes, it calls `Model#updateFilteredApplicationList(predicate)`. In
+`ModelManager`, this updates the `FilteredList<Application>` that backs the UI. As a result:
+
+* the address book data itself is unchanged
+* only the visible subset of applications changes
+* the UI refreshes automatically because it observes the filtered application list
+
+An additional implementation detail is that `AddressBookParser` also accepts compact commands such as
+`filter/n Google` by normalizing command words that start with `filter/` before forwarding them to
+`FilterCommandParser`.
+
+### Update status feature
+
+#### Implementation
+
+The `status` command updates the status field of exactly one existing application, identified by company name and job
+role.
+
+The sequence diagram below shows how a status update command is parsed and executed:
+
+<puml src="diagrams/StatusSequenceDiagram.puml" alt="Sequence diagram for status command" width="760" />
+
+`AddressBookParser` routes `status ...` input to `StatusCommandParser`. The parser:
+
+* requires the prefixes `n/` (company name), `r/` (role), and `s/` (new status)
+* explicitly rejects prefixes unrelated to status updates such as phone, email, address, tag, and date
+* prevents duplicate occurrences of the required prefixes
+* parses the target name, role, and new status into domain objects before constructing `StatusCommand`
+
+When `StatusCommand` executes, it:
+
+1. reads the current filtered application list from the model
+1. scans that list to find the application whose name and role match the user input, ignoring case
+1. creates a replacement `Application` with the new `Status`
+1. preserves the rest of the application data, including any existing reminder
+1. calls `Model#setApplication(target, updatedApplication)` to replace the old application in the address book
+1. calls `Model#updateFilteredApplicationList(PREDICATE_SHOW_ALL_APPLICATIONS)` so the UI returns to the full list
+
+This design keeps `Application` immutable from the perspective of command logic. Instead of mutating the existing
+object in place, the command creates a new `Application` instance and swaps it into the model.
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
