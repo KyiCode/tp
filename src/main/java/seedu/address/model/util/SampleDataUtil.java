@@ -37,7 +37,7 @@ public class SampleDataUtil {
                     new Address("410 Terry Ave N, Seattle, WA 98109"),
                     getTagSet("tech", "cloud"), new Date("2026-03-22"),
                     new Role("Cloud Architect"), new Status("Pending"),
-                    new Reminder("Follow up Email", "2024-04-19")),
+                    new Reminder("Follow up Email", "2026-04-19")),
             new Application(new Name("Stripe"), new Phone("6282187000"), new Email("jobs@stripe.com"),
                     new Address("510 Townsend Street, San Francisco, CA 94103"),
                     getTagSet("startup", "fintech"), new Date("2026-04-08"),
