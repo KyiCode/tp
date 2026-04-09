@@ -375,6 +375,29 @@ The execution follows the same delegation pattern as `folder`. `ToggleCommand#ex
 
 After every command, `MainWindow` calls `Logic#getAddressBookFilePath()` and updates the status bar footer, so the currently active folder is always reflected in the GUI.
 
+### Upcoming feature
+
+The `upcoming` command is responsible for first narrowing the currently displayed application list similar to `filter`, 
+and secondly saving the parameter to disk so that the application may re-apply the same operation on start-up. 
+
+The sequence diagram below shows how an upcoming command is parsed and executed:
+
+<puml src="diagrams/UpcomingSequenceDiagram.puml" alt="Sequence diagram for upcoming command" width="760" />
+
+`AddressBookParser` routes `upcoming ...` input to `UpcomingCommandParser`. The parser then:
+
+* rejects malformed commands such as empty values, non-integer values, or invalid integer values 
+* constructs a predicate `ReminderWithinOffsetPredicate`, which is used similarly to the predicate constructed
+  by the `filter` command
+
+When the resulting `UpcomingCommand` executes, it calls `Model#updateFilteredApplicationList(predicate)` to a similar
+effect as the `filter` command. 
+In addition, the command will save the parameter given to disk. Due to similar restrictions in accessing storage as in `folder` command, 
+the command instead updates this value by calling `Model#setReminderOffset(offset)` which in turn calls `UserPrefs#setReminderOffset(reminderOffset)`. This will set
+the value of a variable which will be saved to disk via `preferences.json` upon closure of the application. 
+
+
+
 ### \[Proposed\] Data archiving
 
 _{Explain here how the data archiving feature will be implemented}_
