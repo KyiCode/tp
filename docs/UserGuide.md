@@ -8,14 +8,18 @@ pageNav: 3
 
 ## 🎯 For the Internship-Hunting CS Student
 
-Let's be honest applying for internships can be a nightmare. Between grinding LeetCode questions, projects and actually attending classes, tracking internship applications can itself become a full-time job.
+Applying for internships is complex and time-consuming — balancing technical
+interviews, projects, and academic commitments makes tracking applications overwhelming.
 
-Hence, **OfferFlow** was built by CS students by CS students as we understand the struggle. OfferFlow is a desktop app that helps you:
-- Track every internship application without the spreadsheet and calender reminder chaos
-- Update and moniter application statuses in seconds unlike spreadsheet which can be very time-consuming
-- Keep all your opportunities organised with minimal overhead!
+**OfferFlow** is designed to simplify this process. Built by CS students who understand
+these challenges firsthand, OfferFlow is a desktop application that helps CS students:
 
-If you can type fast, OfferFlow will manage your internship pipeline faster than any GUI-focused application!
+- Track all internship applications in one place, replacing scattered spreadsheets and reminders
+- Update and monitor application statuses quickly and easily
+- Stay organised with minimal effort
+
+OfferFlow is optimised for speed and efficiency, letting keyboard-focused users manage
+their internship pipeline faster than traditional GUI-based tools.
 
 <!-- * Table of Contents -->
 
@@ -27,24 +31,29 @@ If you can type fast, OfferFlow will manage your internship pipeline faster than
 
 1. Ensure you have Java `17` or above installed in your Computer.<br>
    **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+   **Window users:** [Download](https://se-education.org/guides/tutorials/javaInstallationWindows.html) Java `17`
+   **Linux users:** [Download](https://se-education.org/guides/tutorials/javaInstallationLinux.html) Java `17`
 
-1. Download the latest `.jar` file from [here](https://github.com/AY2526S2-CS2103T-F10-4/tp/releases).
+2. Download the latest `.jar` file from [here](https://github.com/AY2526S2-CS2103T-F10-4/tp/releases).
 
-1. Copy the file to the folder you want to use as the _home folder_ for your OfferFlow.
+3. Copy the file to the folder you want to use as the _home folder_ for your OfferFlow.
 
-1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar OfferFlow.jar` command to run the application.<br>
-   A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
+4. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar OfferFlow.jar` command to run the application.<br>
+   The GUI always shows all applications with upcoming reminders due within the next 7 days at start-up. When you type `list` you will note that the app contains some sample data as shown below.<br>
 
    ![Ui](images/Ui.png)
+
 5. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
    Some example commands you can try:
-
    * `list` : Lists all internship applications.
    * `add n/Google p/96789012 e/google@gmail.com a/70 Pasir Panjang Rd, #03-71 d/2024-06-18 r/Backend Developer s/interview t/java` : Adds your internship application to Offerflow.
    * `delete 3` : Deletes the 3rd contact shown in the current list.
    * `clear` : Deletes all applications.
    * `exit` : Exits the app.
-6. Refer to the [Features](#features) below for details of each command.
+
+6. Type the `clear` command to clear all the sample data and start adding your own applications that you wish to track!
+
+7. Refer to the [Features](#features) below for details of each command.
 
 ---
 
@@ -60,20 +69,12 @@ If you can type fast, OfferFlow will manage your internship pipeline faster than
   e.g `n/NAME [t/TAG]` can be used as `n/Google t/java` or as `n/Google`.
 * Items with `…` after them can be used multiple times including zero times.<br>
   e.g. `[t/TAG]…` can be used as ` ` (i.e. 0 times), `t/java`, `t/java t/React` etc.
-* Parameters can be in any order.`<br>
+* Parameters can be in any order.<br>
   e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
 * Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit`, `clear` and `overwrite`) will be ignored.<br>
   e.g. if the command specifies `help 123`, it will be interpreted as `help`.
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
   </box>
-
-### Viewing help : `help`
-
-Shows you a message explaining how to access the help page.
-
-  ![help message](images/helpMessage.png)
-
-Format: `help`
 
 ### Application
 
@@ -109,7 +110,6 @@ Format: `add n/NAME r/ROLE ...`
 
 </box>
 
-Notes:
 ⚠️ Note:
 * name and role is case insensitive
 * Emails should be of the format `local-part@domain`
@@ -146,15 +146,6 @@ If you choose to overwrite, type `overwrite`. If not, continue using the app as 
   ![Overwrite](images/Overwrite.png)
 
 
-### Listing all internship applications : `list`
-
-Shows a list of all the internship applications you have added on OfferFlow.
-
-Format: `list`
-
-#### Expected Outcome:
-Shows a list of all the applications you have added into OfferFlow
-
 ### Editing an application : `editmode`
 
 Format:
@@ -162,7 +153,7 @@ Format:
 2. Type in any combination of at least one of the parameters below to edit the application
 3. `exitedit` to finish editing and exit the editing mode
 
-Notes:
+⚠️ Notes:
 * Enters editing mode for the application at the specified `INDEX` or with the specified `NAME` and `ROLE`. The index refers to the index number shown in the displayed application list. The index **must be a positive integer** 1, 2, 3, …
 * Once editing mode is entered, *all commands* except for *editexit* and *editing commands* will be disabled.
 * Edit the application in edit mode by typing in at least one of the optional fields.
@@ -229,8 +220,7 @@ Format: `rmr INDEX` or `rmr n/NAME r/ROLE`
 * `rmr 2` or `rmr n/Tiktok r/data analyst`
 
 #### expected outcome:
-
-  ![Remove](images/Remove.png)
+* Removes the reminder for the application at index 2 or the application with the specified company name and job role.
 
 ### Updating application status: `status`
 
@@ -305,10 +295,17 @@ Format: `find KEYWORD [MORE_KEYWORDS]`
 
   ![result for 'find Google Meta'](images/Find.png)
 
+### Listing all internship applications : `list`
+
+Format: `list`
+
+#### Expected Outcome:
+Shows a list of all the applications you have added into OfferFlow
+
 ### Locating applications with upcoming deadlines: `upcoming`
 
 Helps you finds applications with upcoming reminders. Moreover, OfferFlow automatically
-filters for applications with reminders due within the specified number of days on start-up.
+filters for applications with reminders due within one week on start-up.
 
 Format: `upcoming DAYS`
 
@@ -323,9 +320,7 @@ Format: `upcoming DAYS`
 * `upcoming 7` returns all applications with reminders due within 7 days of today, ergo within a week.
 
 #### Expected Outcome:
-
-  ![result for 'upcoming 7'](images/Upcoming.png)
-
+* Displays all the applications with reminders due within the specified number of DAYS
 
 ### Filtering applications: `filter`
 
@@ -465,6 +460,14 @@ Closes OfferFlow.
 
 Format: `exit`
 
+### Viewing help : `help`
+
+Shows you a message explaining how to access the help page.
+
+  ![help message](images/helpMessage.png)
+
+Format: `help`
+
 ### Saving the data
 
 OfferFlow data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
@@ -498,18 +501,20 @@ Furthermore, certain edits can cause OfferFlow to behave in unexpected ways (e.g
 
 ## Command summary
 
-| Action | Format | Example |
-|:-------|:-------|:--------|
-| **Add** | `add n/NAME p/PHONE e/EMAIL a/ADDRESS d/DATE r/ROLE s/STATUS [t/TAG]...` | `add n/Google p/96789012 e/google@gmail.com a/70 Pasir Panjang Rd, #03-71 d/2024-06-18 r/Backend Developer s/interviewed t/java` |
-| **Overwrite** | `overwrite` | `overwrite` |
-| **Clear** | `clear` | `clear` |
-| **Delete** | `delete INDEX` or `delete n/NAME r/ROLE` | `delete 3` or `delete n/Google r/Backend Developer` |
-| **Edit** | `editmode INDEX` or `editmode n/NAME r/ROLE` | `editmode 1` then `a/Mapletree Business City II, Pasir Panjang area` then `editexit`  |
-| **Status** | `status n/COMPANY r/ROLE s/STATUS` | `status n/Tiktok r/Data Analyst s/Rejected` |
-| **Find** | `find KEYWORD [MORE_KEYWORDS]` | `find James Jake` |
-| **Filter** | `filter n/NAME` or `filter r/ROLE` or `filter d/YYYY-MM-DD` or `filter s/STATUS` or `filter t/TAG` | `filter n/Tiktok` or `filter r/Software Engineer` or `filter d/2024-06-18` or `filter s/Rejected t/java` |
-| **Folder** | `folder FOLDER_NAME` | `folder Y1S2` |
-| **Toggle** | `toggle FOLDER_NAME` | `toggle Y1S2` |
-| **List Folders** | `folders` | `folders` |
-| **List** | `list` | `list` |
-| **Help** | `help` | `help` |
+| Action           | Format                                                                                             | Example                                                                                                                          |
+|:-----------------|:---------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|
+| **Add**          | `add n/NAME p/PHONE e/EMAIL a/ADDRESS d/DATE r/ROLE s/STATUS [t/TAG]...`                           | `add n/Google p/96789012 e/google@gmail.com a/70 Pasir Panjang Rd, #03-71 d/2024-06-18 r/Backend Developer s/interviewed t/java` |
+| **Overwrite**    | `overwrite`                                                                                        | `overwrite`                                                                                                                      |
+| **Delete**       | `delete INDEX` or `delete n/NAME r/ROLE`                                                           | `delete 3` or `delete n/Google r/Backend Developer`                                                                              |
+| **Enter Edit**   | `editmode INDEX` or `editmode n/NAME r/ROLE`                                                       | `editmode 1` or `editmode n/Nus r/System Engineer`                                                                               |
+| **Edit**         | While in editmode: `n/NAME` or `r/ROLE` or ...                                                     | `a/Mapletree Business City II, Pasir Panjang area` or `s/applied`                                                                |
+| **Exit Edit**    | `editexit`                                                                                         | `exitedit`                                                                                                                       |
+| **Status**       | `status n/COMPANY r/ROLE s/STATUS`                                                                 | `status n/Tiktok r/Data Analyst s/Rejected`                                                                                      |
+| **Find**         | `find KEYWORD [MORE_KEYWORDS]`                                                                     | `find James Jake`                                                                                                                |
+| **Filter**       | `filter n/NAME` or `filter r/ROLE` or `filter d/YYYY-MM-DD` or `filter s/STATUS` or `filter t/TAG` | `filter n/Tiktok` or `filter r/Software Engineer` or `filter d/2024-06-18` or `filter s/Rejected t/java`                         |
+| **Folder**       | `folder FOLDER_NAME`                                                                               | `folder Y1S2`                                                                                                                    |
+| **Toggle**       | `toggle FOLDER_NAME`                                                                               | `toggle Y1S2`                                                                                                                    |
+| **List Folders** | `folders`                                                                                          | `folders`                                                                                                                        |
+| **List**         | `list`                                                                                             | `list`                                                                                                                           |
+| **Clear**        | `clear`                                                                                            | `clear`                                                                                                                          |
+| **Help**         | `help`                                                                                             | `help`                                                                                                                           |

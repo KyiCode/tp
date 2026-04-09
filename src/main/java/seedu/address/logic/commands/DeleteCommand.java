@@ -3,7 +3,9 @@ package seedu.address.logic.commands;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.logging.Logger;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
@@ -30,7 +32,7 @@ public class DeleteCommand extends Command {
             + "Example: " + COMMAND_WORD + " n/Goog r/CEO";
 
     public static final String MESSAGE_DELETE_APPLICATION_SUCCESS = "Deleted Application: %1$s";
-
+    private final Logger logger = LogsCenter.getLogger(DeleteCommand.class);
     private final boolean isIndexDelete;
     private final Index targetIndex;
     private final Name name;
@@ -64,8 +66,10 @@ public class DeleteCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         if (isIndexDelete) {
+            logger.info("Executing delete by Index");
             return executeDeleteByIndex(model);
         } else {
+            logger.info("Executing delete by Name and Role");
             return executeDeleteByApplication(model);
         }
     }
@@ -85,7 +89,9 @@ public class DeleteCommand extends Command {
             throw new CommandException(Messages.MESSAGE_INVALID_APPLICATION_DISPLAYED_INDEX);
         }
         Application applicationToDelete = lastShownList.get(targetIndex.getZeroBased());
+        assert applicationToDelete != null : "Issue with targetIndex or zeroBased index";
         model.deleteApplication(applicationToDelete);
+        assert !model.hasApplication(applicationToDelete) : "failed to delete application";
         return new CommandResult(String.format(MESSAGE_DELETE_APPLICATION_SUCCESS,
                                         Messages.format(applicationToDelete)));
     }
@@ -105,8 +111,9 @@ public class DeleteCommand extends Command {
                 .filter(predicate)
                 .findFirst()
                 .orElseThrow(() -> new CommandException(Messages.MESSAGE_INVALID_APPLICATION_IDENTIFIER));
-
+        assert applicationToDelete != null : "should have thrown exception";
         model.deleteApplication(applicationToDelete);
+        assert !model.hasApplication(applicationToDelete) : "failed to delete application";
         return new CommandResult(String.format(MESSAGE_DELETE_APPLICATION_SUCCESS,
                                         Messages.format(applicationToDelete)));
     }

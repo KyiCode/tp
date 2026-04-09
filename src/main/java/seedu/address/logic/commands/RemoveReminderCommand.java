@@ -5,7 +5,9 @@ import static seedu.address.model.Model.PREDICATE_SHOW_ALL_APPLICATIONS;
 
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
@@ -38,6 +40,7 @@ public class RemoveReminderCommand extends Command {
             + "Example: " + COMMAND_WORD + " n/Google r/CEO";
 
     public static final String MESSAGE_REMOVE_REMINDER_SUCCESS = "Removed Reminder: %1$s";
+    private final Logger logger = LogsCenter.getLogger(RemoveReminderCommand.class);
 
     private final boolean isIndexDelete;
     private final Index targetIndex;
@@ -73,14 +76,17 @@ public class RemoveReminderCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         Application applicationToEdit;
         if (isIndexDelete) {
+            logger.info("Index reminder removal");
             applicationToEdit = getTargetApplicationByIndex(model);
         } else {
+            logger.info("Application Name and Role reminder removal");
             applicationToEdit = getTargetApplicationByApplication(model);
         }
         EditCommand.EditApplicationDescriptor editApplicationDescriptor = new EditCommand.EditApplicationDescriptor();
         Application removedReminder = createEditedApplication(applicationToEdit, editApplicationDescriptor);
         model.setApplication(applicationToEdit, removedReminder);
         model.updateFilteredApplicationList(PREDICATE_SHOW_ALL_APPLICATIONS);
+        assert !removedReminder.hasReminder() : "Reminder not removed";
         return new CommandResult(String.format(MESSAGE_REMOVE_REMINDER_SUCCESS, Messages.format(removedReminder)));
     }
 

@@ -1,0 +1,27 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box UI UI_COLOR_T1
+participant ":ApplicationListPanel" as ApplicationListPanel UI_COLOR
+participant ":ApplicationCard" as ApplicationCard UI_COLOR
+end box
+
+box Javafx STORAGE_COLOR_T2
+participant ":Control" as Javafx STORAGE_COLOR
+end box
+
+
+[-> ApplicationListPanel : updateItem(application)
+activate ApplicationListPanel
+
+create ApplicationCard
+ApplicationListPanel -> ApplicationCard :
+activate ApplicationCard
+ApplicationCard -> Javafx : getStyleClass().add("Applied")
+ApplicationCard --> ApplicationListPanel
+deactivate ApplicationCard
+ApplicationListPanel -> Javafx : setGraphic()
+[<--ApplicationListPanel
+deactivate ApplicationListPanel
+@enduml

@@ -118,7 +118,7 @@ How the parsing works:
 ### Model component
 **API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
 
-<puml src="diagrams/ModelClassDiagram.puml" width="450" />
+<puml src="diagrams/ModelClassDiagram.puml" width="760" />
 
 
 The `Model` component,
@@ -132,7 +132,7 @@ The `Model` component,
 
 **Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in `OfferFlow`, which `Application` references. This allows `OfferFlow` to only require one `Tag` object per unique tag, instead of each `Application` needing their own `Tag` objects.<br>
 
-<puml src="diagrams/BetterModelClassDiagram.puml" width="450" />
+<puml src="diagrams/BetterModelClassDiagram.puml" width="760" />
 
 </box>
 
@@ -160,8 +160,6 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 This section describes some noteworthy details on how certain features are implemented.
 
 ### Filter feature
-
-#### Implementation
 
 The `filter` command is responsible for narrowing the currently displayed application list without modifying the
 underlying stored applications.
@@ -193,8 +191,6 @@ An additional implementation detail is that `AddressBookParser` also accepts com
 
 ### Update status feature
 
-#### Implementation
-
 The `status` command updates the status field of exactly one existing application, identified by company name and job
 role.
 
@@ -221,6 +217,22 @@ When `StatusCommand` executes, it:
 This design keeps `Application` immutable from the perspective of command logic. Instead of mutating the existing
 object in place, the command creates a new `Application` instance and swaps it into the model.
 
+### Dynamic UI
+
+Dynamic UI allows different visual styles to be applied based on the states of an application.
+
+The sequence diagram below shows how dynamic UI is generated for an application's status:
+
+<puml src="diagrams/DynamicStyleSequence.puml" alt="Sequence diagram for dynamic" width="760" />
+
+Additional changes to UI styling may be performed in `ApplicationCard` without modifying other components:
+
+1. When updating a JavaFX component's style, get the `StyleClass` of the relevant JavaFX component
+2. Check and remove any unnecessary style classes
+3. Add the new style class
+4. Add the relevant styles in the corresponding CSS stylesheet
+
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
@@ -243,7 +255,7 @@ Step 2. The user executes `delete 5` command to delete the 5th application in th
 
 <puml src="diagrams/UndoRedoState1.puml" alt="UndoRedoState1" />
 
-Step 3. The user executes `add n/David …​` to add a new application. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
+Step 3. The user executes `add n/Google r/Software Engineer...` to add a new application. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
 
 <puml src="diagrams/UndoRedoState2.puml" alt="UndoRedoState2" />
 
@@ -291,7 +303,7 @@ Step 5. The user then decides to execute the command `list`. Commands that do no
 
 <puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
 
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
+Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/Google r/Software Engineer…​` command. This is the behavior that most modern desktop applications follow.
 
 <puml src="diagrams/UndoRedoState5.puml" alt="UndoRedoState5" />
 
@@ -375,7 +387,61 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 (For all use cases below, the **System** is the `OfferFlow` and the **Actor** is the `user`, unless specified otherwise)
 
-**Use case: Edit a company contact**
+**Use case: UC1 - Add an application**
+
+**MSS**
+
+1. User enters the new job application that they want to add, minimally the company name and job position they applied
+but can also choose to add other optional details (date of application, contact details like email, phone number, address, status of application, reminders.)
+
+2. OfferFlow creates and adds the application with the given details
+
+   Use case ends.
+
+**Extensions**
+
+   * 1a. The user enters an application which has the same company name and job position as a previously added application.
+
+      * 1a1. OfferFlow shows an error message stating that another application with the same name and role is already present
+
+      * 1a2. User <u>chooses to overwrite the previously added application with the new application. (UC5)</u>
+
+         Use case ends.
+
+   * 1b. The user enters an application with invalid company name format.
+
+      * 1b1. OfferFlow shows an error message stating that the name format is invalid and shows the valid format for adding company name.
+
+         Use case resumes from step 1 if user trys to add an application again.
+
+   * 1c. If the user enters an application with invalid format for any detail field (job position, date, reminder, status, address, email, or phone number)
+
+      * 1c1. the process follows step 1b extension. However, the error message will be specific to each invalid field,
+      showing either the valid format or the specific error reason.
+
+   * 1d. The user enters the wrong command format when trying to add an application
+
+      * 1d1. OfferFlows shows an error message stating the valid command format together with an example
+
+         Use case resumes from step 1 if user trys to add an application again.
+
+
+**Use case: UC2 - Overwrite an application**
+
+**MSS**
+
+1. User enters the `overwrite` command
+2. OfferFlow deletes the existing duplicate application and adds the new application
+
+**Extensions**
+
+* 1a. There is no duplicate application.
+
+    * 1a1. OfferFlow shows an error message stating that there is no duplicate application to overwrite.
+
+      Use case ends.
+
+**Use case: Edit an application**
 
 **MSS**
 
@@ -407,7 +473,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
       Use case resumes at step 3.
 
-**Use case: Edit application**
+**Use case: Edit Reminder**
 
 **MSS**
 
@@ -470,62 +536,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
       Use case ends.
 
-**Use case: UC4 - Add application**
-
-**MSS**
-
-1. User enters the new job application that they want to add, minimally the company name and job position they applied but can also choose to add other details like date of application, contact details like email, phone number, address, status of application, reminders.
-2. OfferFlow creates and adds the application with the given details
-
-   Use case ends.
-
-**Extensions**
-
-   * 1a. The user enters an application which has the same company name and job position as a previously added application.
-
-      *1a1. OfferFlow saves the incoming duplicate application incase the user would like to overwrite the previously added application with the new application
-
-      * 1a2. OfferFlow shows an error message stating that a duplication application has been found and displays the string format of the previously existing application for user to see.
-
-      * 1a3. OfferFlow also tells user that if they can overwrite the previously added duplicate application with the saved new application using the `overwrite` command else the saved new application would be discarded.
-
-      * 1a4. User <u>chooses to overwrite the previously added application with the new application. (UC5)</u>
-
-         Use case ends.
-
-   * 1b. The user enters an application with invalid company name format.
-
-      * 1b1. OfferFlow shows an error message stating that the name format is invalid and shows the valid format for adding company name.
-
-         Use case resumes from step 1 if user trys to add an application again.
-
-   * 1c. If the user enters an application with invalid format for any detail field (job position, date, reminder, status, address, email, or phone number)
-
-      * 1c1. the process follows step 1b extension. However, the error message will be specific to each invalid field, showing either the valid format or the specific error reason.
-
-   * 1d. The user enters the wrong command format when trying to add an application
-
-      * 1d1. OfferFlows shows an error message stating the valid command format together with an example
-
-         Use case resumes from step 1 if user trys to add an application again.
-
-
-**Use case: UC5 - Overwrite an application**
-
-**MSS**
-
-1. User enters the `overwrite` command
-2. OfferFlow deletes the existing duplicate application and adds the stored new application
-3. OfferFlow clears the storage of the new application
-
-**Extensions**
-
-* 1a. There is no new duplicate application stored.
-
-    * 1a1. OfferFlow shows an error message stating that there is no duplicate application to overwrite.
-
-      Use case ends.
-
 **Use case: Delete an application**
 
 **MSS**
@@ -556,10 +566,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1. User requests to filter the application list.
-2. OfferFlow prompts for the filter criteria.
-3. User specifies one or more filter criteria.
-4. OfferFlow applies the given filter criteria and displays the matching applications.
+1. User requests to filter the application list and specifies one or more filter criteria.
+2. OfferFlow applies the given filter criteria and displays the matching applications.
 
    Use case ends.
 
@@ -569,17 +577,22 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
     * 1a1. OfferFlow shows an error message.
 
-      Use case ends.
+    * 1a2. User re-enters the details.
 
-* 2b. The user provides an invalid filter value.
+      Use case resumes at step 2.
 
-    * 2b1. OfferFlow shows an error message.
 
-      Use case ends.
+* 1b. The user provides an invalid filter value.
 
-* 3a. No applications match the specified criteria.
+    * 1b1. OfferFlow shows an error message.
 
-    * 3a1. OfferFlow informs the user that no matching applications were found.
+    * 1b2. User re-enters the details.
+
+      Use case resumes at step 2.
+
+* 1c. No applications match the specified criteria.
+
+    * 1c1. OfferFlow informs the user that no matching applications were found.
 
       Use case ends.
 
@@ -625,9 +638,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 * **Cache / Archive**:  A way to store old job search records so that users can start a new job search while keeping historical data.
 * **Filtering**:  A feature that allows users to view applications based on certain attributes such as company name or deadline.
 
-
-
-
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Appendix: Instructions for manual testing**
@@ -658,20 +668,54 @@ testers are expected to do more *exploratory* testing.
 
 1. _{ more test cases …​ }_
 
-### Deleting a application
+### Adding an application
 
-1. Deleting a application while all applications are being shown
+1. Add different applications with different parameters
 
-   1. Prerequisites: List all applications using the `list` command. Multiple applications in the list.
+    1. Test case: `add n/NUS r/tester`<br>
+       Expected: Application to NUS for tester role added into list. Status should show `Interested`.
 
-   1. Test case: `delete 1`<br>
-      Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+    1. Test case: `add n/NUS r/QA s/Interview u/Interview ud/2026-12-12`<br>
+       Expected: Application to NUS for QA role added into list. Status shows `Interview`. Yellow Reminder Box appears.
 
-   1. Test case: `delete 0`<br>
-      Expected: No application is deleted. Error details shown in the status message. Status bar remains the same.
+    1. Test case: `add n/NUS s/Applied`<br>
+       Expected: Application not added. Error details appear.
 
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-      Expected: Similar to previous.
+1. _{ more test cases …​ }_
+
+### Overwriting an application
+
+1. Add different applications with different parameters
+
+   1. Prerequisites: Performed the testcases under "Adding an Application".
+
+   2. Test case: `add n/NUS r/tester s/Applied`<br>
+       Expected: `Overwrite` warning appears, replace command with `overwrite`. Status would now show `Applied`.
+
+1. _{ more test cases …​ }_
+
+### Deleting an application
+
+1. Deleting an Application via Name and Role
+
+    1. Test case: `delete n/NUS r/tester`<br>
+       Expected: Specified application is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+
+    2. Testcase: `delete n/NUS r/tester`<br>
+       Expected: Delete failed. Application not found.
+
+2. Deleting an application via index
+
+    1. Prerequisites: List all application using the `list` command. Multiple application in the list.
+
+    1. Test case: `delete 1`<br>
+       Expected: First application is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+
+    1. Test case: `delete 0`<br>
+       Expected: No application is deleted. Error details shown in the status message. Status bar remains the same.
+
+    1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
+       Expected: Similar to previous.
 
 1. _{ more test cases …​ }_
 
@@ -682,3 +726,7 @@ testers are expected to do more *exploratory* testing.
    1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
 
 1. _{ more test cases …​ }_
+
+--------------------------------------------------------------------------------------------------------------------
+
+## **Appendix: Effort**
