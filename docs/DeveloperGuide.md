@@ -233,6 +233,79 @@ Additional changes to UI styling may be performed in `ApplicationCard` without m
 4. Add the relevant styles in the corresponding CSS stylesheet
 
 
+### Folder feature
+
+The `folder` command creates a new empty address book saved as a JSON file under the `data/` directory and immediately switches to it.
+
+The sequence diagram below shows how a folder command is parsed and executed:
+
+<puml src="diagrams/FolderSequenceDiagram.puml" alt="Sequence diagram for folder command" width="760" />
+
+<box type="info" seamless>
+
+**Note:** The lifeline for `FolderCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
+
+</box>
+
+`AddressBookParser` routes `folder ...` input to `FolderCommandParser`. The parser:
+
+* rejects an empty folder name
+* only accepts names containing letters, numbers, underscores, and hyphens
+
+Unlike most commands, `FolderCommand#execute(model)` does not perform the actual work. Because `Command` only has access to `Model` and not `Storage`, the command instead signals `LogicManager` via `CommandResult` with `folderName` and `isCreateNew=true`. `LogicManager` then:
+
+1. calls `Storage#createFolder(folderName)` to create the new JSON file
+2. loads the newly created empty address book into `Model` via `Model#setAddressBook()`
+3. updates the active file path via `Model#setAddressBookFilePath()`
+
+
+### Toggle feature
+
+The `toggle` command switches the active address book to an existing folder under the `data/` directory.
+
+The sequence diagram below shows how a toggle command is parsed and executed:
+
+<puml src="diagrams/ToggleSequenceDiagram.puml" alt="Sequence diagram for toggle command" width="760" />
+
+<box type="info" seamless>
+
+**Note:** The lifeline for `ToggleCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
+
+</box>
+
+`AddressBookParser` routes `toggle ...` input to `ToggleCommandParser`. The parser applies the same validation as `FolderCommandParser`: rejecting empty names and names with invalid characters.
+
+The execution follows the same delegation pattern as `folder`. `ToggleCommand#execute(model)` signals `LogicManager` via `CommandResult` with `folderName` and `isCreateNew=false`. `LogicManager` then:
+
+1. calls `Storage#toggleFolder(folderName)` which loads the existing JSON file, throwing an error if it does not exist
+2. loads the returned address book into `Model` via `Model#setAddressBook()`
+3. updates the active file path via `Model#setAddressBookFilePath()`
+
+After every command, `MainWindow` calls `Logic#getAddressBookFilePath()` and updates the status bar footer, so the currently active folder is always reflected in the GUI.
+
+
+### Upcoming feature
+
+The `upcoming` command is responsible for first narrowing the currently displayed application list similar to `filter`,
+and secondly saving the parameter to disk so that the application may re-apply the same operation on start-up.
+
+The sequence diagram below shows how an upcoming command is parsed and executed:
+
+<puml src="diagrams/UpcomingSequenceDiagram.puml" alt="Sequence diagram for upcoming command" width="760" />
+
+`AddressBookParser` routes `upcoming ...` input to `UpcomingCommandParser`. The parser then:
+
+* rejects malformed commands such as empty values, non-integer values, or invalid integer values
+* constructs a predicate `ReminderWithinOffsetPredicate`, which is used similarly to the predicate constructed
+  by the `filter` command
+
+When the resulting `UpcomingCommand` executes, it calls `Model#updateFilteredApplicationList(predicate)` to a similar
+effect as the `filter` command.
+In addition, the command will save the parameter given to disk. Due to similar restrictions in accessing storage as in `folder` command,
+the command instead updates this value by calling `Model#setReminderOffset(offset)` which in turn calls `UserPrefs#setReminderOffset(reminderOffset)`. This will set
+the value of a variable which will be saved to disk via `preferences.json` upon closure of the application.
+
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
@@ -325,83 +398,6 @@ The following activity diagram summarizes what happens when a user executes a ne
   * Cons: We must ensure that the implementation of each individual command are correct.
 
 _{more aspects and alternatives to be added}_
-
-### Folder feature
-
-The `folder` command creates a new empty address book saved as a JSON file under the `data/` directory and immediately switches to it.
-
-The sequence diagram below shows how a folder command is parsed and executed:
-
-<puml src="diagrams/FolderSequenceDiagram.puml" alt="Sequence diagram for folder command" width="760" />
-
-<box type="info" seamless>
-
-**Note:** The lifeline for `FolderCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
-
-</box>
-
-`AddressBookParser` routes `folder ...` input to `FolderCommandParser`. The parser:
-
-* rejects an empty folder name
-* only accepts names containing letters, numbers, underscores, and hyphens
-
-Unlike most commands, `FolderCommand#execute(model)` does not perform the actual work. Because `Command` only has access to `Model` and not `Storage`, the command instead signals `LogicManager` via `CommandResult` with `folderName` and `isCreateNew=true`. `LogicManager` then:
-
-1. calls `Storage#createFolder(folderName)` to create the new JSON file
-2. loads the newly created empty address book into `Model` via `Model#setAddressBook()`
-3. updates the active file path via `Model#setAddressBookFilePath()`
-
-### Toggle feature
-
-The `toggle` command switches the active address book to an existing folder under the `data/` directory.
-
-The sequence diagram below shows how a toggle command is parsed and executed:
-
-<puml src="diagrams/ToggleSequenceDiagram.puml" alt="Sequence diagram for toggle command" width="760" />
-
-<box type="info" seamless>
-
-**Note:** The lifeline for `ToggleCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
-
-</box>
-
-`AddressBookParser` routes `toggle ...` input to `ToggleCommandParser`. The parser applies the same validation as `FolderCommandParser`: rejecting empty names and names with invalid characters.
-
-The execution follows the same delegation pattern as `folder`. `ToggleCommand#execute(model)` signals `LogicManager` via `CommandResult` with `folderName` and `isCreateNew=false`. `LogicManager` then:
-
-1. calls `Storage#toggleFolder(folderName)` which loads the existing JSON file, throwing an error if it does not exist
-2. loads the returned address book into `Model` via `Model#setAddressBook()`
-3. updates the active file path via `Model#setAddressBookFilePath()`
-
-After every command, `MainWindow` calls `Logic#getAddressBookFilePath()` and updates the status bar footer, so the currently active folder is always reflected in the GUI.
-
-### Upcoming feature
-
-The `upcoming` command is responsible for first narrowing the currently displayed application list similar to `filter`, 
-and secondly saving the parameter to disk so that the application may re-apply the same operation on start-up. 
-
-The sequence diagram below shows how an upcoming command is parsed and executed:
-
-<puml src="diagrams/UpcomingSequenceDiagram.puml" alt="Sequence diagram for upcoming command" width="760" />
-
-`AddressBookParser` routes `upcoming ...` input to `UpcomingCommandParser`. The parser then:
-
-* rejects malformed commands such as empty values, non-integer values, or invalid integer values 
-* constructs a predicate `ReminderWithinOffsetPredicate`, which is used similarly to the predicate constructed
-  by the `filter` command
-
-When the resulting `UpcomingCommand` executes, it calls `Model#updateFilteredApplicationList(predicate)` to a similar
-effect as the `filter` command. 
-In addition, the command will save the parameter given to disk. Due to similar restrictions in accessing storage as in `folder` command, 
-the command instead updates this value by calling `Model#setReminderOffset(offset)` which in turn calls `UserPrefs#setReminderOffset(reminderOffset)`. This will set
-the value of a variable which will be saved to disk via `preferences.json` upon closure of the application. 
-
-
-
-### \[Proposed\] Data archiving
-
-_{Explain here how the data archiving feature will be implemented}_
-
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -552,11 +548,10 @@ but can also choose to add other optional details (date of application, contact 
 
 **MSS**
 
-1. User requests to edit a particular company application
+1. User requests to edit a particular application
 2. OfferFlow shows the company's current application details
-3. User edits application details such as adding reminder interviews and/or update application date
-4. User confirms all changes made to the application
-5. OfferFlow updates the application details to reflect the new changes if any
+3. User creates or edits both reminder description and reminder date
+4. OfferFlow updates the application details to reflect the new changes if any
 
    Use case ends.
 
@@ -568,13 +563,13 @@ but can also choose to add other optional details (date of application, contact 
 
       Use case ends.
 
-* 3a. The given interview date/time is invalid.
+* 3a. The given reminder description or reminder date is invalid.
 
    * 3a1. OfferFlow shows an error message.
 
       Use case resumes at step 3.
 
-* 3b. The given application date is invalid.
+* 3b. The reminder description or reminder date is not inputted.
 
    * 3b1. OfferFlow shows an error message.
 
@@ -671,7 +666,96 @@ but can also choose to add other optional details (date of application, contact 
 
       Use case ends.
 
-**Use case: View upcoming applications**
+**Use case: UC3 - Create a new folder**
+
+**System:** OfferFlow
+**Actor:** User
+
+**MSS**
+
+1. User requests to create a new folder with a given name.
+2. OfferFlow creates a new empty address book under the given folder name and switches to it.
+3. OfferFlow confirms the creation and displays the active folder.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. User enters an empty folder name.
+
+   * 1a1. OfferFlow shows an error message stating that the folder name cannot be empty.
+
+      Use case ends.
+
+* 1b. User enters a folder name with invalid characters (e.g. spaces, `@`, `.`).
+
+   * 1b1. OfferFlow shows an error message stating the valid folder name format.
+
+      Use case ends.
+
+* 1c. A folder with the same name already exists.
+
+   * 1c1. OfferFlow shows an error message stating the folder already exists.
+   * 1c2. OfferFlow suggests using `toggle` to switch to the existing folder.
+
+      Use case ends.
+
+**Use case: UC4 - Switch to an existing folder**
+
+**System:** OfferFlow
+**Actor:** User
+
+**MSS**
+
+1. User requests to switch to an existing folder with a given name.
+2. OfferFlow loads the address book from the folder and switches to it.
+3. OfferFlow displays the loaded applications.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. User enters an empty folder name.
+
+   * 1a1. OfferFlow shows an error message stating that the folder name cannot be empty.
+
+      Use case ends.
+
+* 1b. User enters a folder name with invalid characters.
+
+   * 1b1. OfferFlow shows an error message stating the valid folder name format.
+
+      Use case ends.
+
+* 2a. OfferFlow cannot find a folder with the given name.
+
+   * 2a1. OfferFlow shows an error message stating the folder does not exist.
+   * 2a2. OfferFlow suggests using `folder` to create a new one.
+
+      Use case ends.
+
+**Use case: UC5 - List all folders**
+
+**System:** OfferFlow
+**Actor:** User
+
+**MSS**
+
+1. User requests to list all existing folders.
+2. OfferFlow displays the folder names sorted alphabetically.
+
+   Use case ends.
+
+**Extensions**
+
+* 2a. No folders exist in the data directory.
+
+   * 2a1. OfferFlow informs the user that no folders were found.
+
+      Use case ends.
+
+
+**Use case: UC6 - View upcoming applications**
 
 **MSS**
 
@@ -797,8 +881,6 @@ testers are expected to do more *exploratory* testing.
     4. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
        Expected: Similar to previous.
 
-1. _{ more test cases …​ }_
-
 ### [Editing an application](https://ay2526s2-cs2103t-f10-4.github.io/tp/UserGuide.html#editing-an-application-editmode)
 
 1. Edit different applications with [different parameters](https://ay2526s2-cs2103t-f10-4.github.io/tp/UserGuide.html#application)
@@ -815,13 +897,94 @@ testers are expected to do more *exploratory* testing.
        Expected: Application exits `editing mode`.
 
 
+### [Creating a new folder](https://ay2526s2-cs2103t-f10-4.github.io/tp/UserGuide.html#creating-a-new-offerflow-folder--folder)
+
+1. Creating a folder with a valid name
+
+   1. Test case: `folder Y1S2`<br>
+      Expected: New folder created. Status bar updates to `./data/y1s2.json`. Result message shows `Created and switched to folder: y1s2`.
+
+   2. Test case: `folder internships-2025`<br>
+      Expected: New folder created at `./data/internships-2025.json`.
+
+2. Creating a folder that already exists
+
+   1. Prerequisites: Run `folder Y1S2` first so `data/y1s2.json` exists.
+
+   2. Test case: `folder Y1S2`<br>
+      Expected: No folder created. Error message shown stating folder already exists and to use `toggle` instead.
+
+   3. Test case: `folder y1s2`<br>
+      Expected: Same error as above — folder names are case-insensitive.
+
+3. Creating a folder with invalid names
+
+   1. Test case: `folder`<br>
+      Expected: No folder created. Error message stating folder name cannot be empty.
+
+   2. Test case: `folder Y1 S2`<br>
+      Expected: No folder created. Error message stating folder name can only contain letters, numbers, underscores, and hyphens.
+
+   3. Test case: `folder name@folder`<br>
+      Expected: No folder created. Same error as above.
+
+### [Switching to an existing folder](https://ay2526s2-cs2103t-f10-4.github.io/tp/UserGuide.html#switching-to-an-existing-offerflow-folder--toggle)
+
+1. Switching to an existing folder
+
+   1. Prerequisites: Run `folder Y1S2` to ensure `data/y1s2.json` exists. Then run `folder Y2S1` to create and switch to a second folder.
+
+   2. Test case: `toggle Y1S2`<br>
+      Expected: Switched to `data/y1s2.json`. Status bar updates accordingly. Result message shows `Switched to folder: y1s2`.
+
+   3. Test case: `toggle y1s2`<br>
+      Expected: Same result as above — folder names are case-insensitive.
+
+2. Switching to a non-existent folder
+
+   1. Test case: `toggle nonexistent`<br>
+      Expected: No switch occurs. Error message shown stating folder not found and to use `folder` to create a new one.
+
+3. Switching with invalid names
+
+   1. Test case: `toggle`<br>
+      Expected: No switch occurs. Error message stating folder name cannot be empty.
+
+   2. Test case: `toggle Y1 S2`<br>
+      Expected: No switch occurs. Error message stating folder name can only contain letters, numbers, underscores, and hyphens.
+
+### [Listing all folders](https://ay2526s2-cs2103t-f10-4.github.io/tp/UserGuide.html#listing-all-address-books--folders)
+
+1. Listing folders when folders exist
+
+   1. Prerequisites: Run `folder Y1S2` and `folder Y2S1` to create at least two folders.
+
+   2. Test case: `folders`<br>
+      Expected: All folder names in `data/` are listed alphabetically, including `addressbook`, `y1s2`, `y2s1`.
+
+2. Listing folders when only the default exists
+
+   1. Prerequisites: Fresh install with no additional folders created.
+
+   2. Test case: `folders`<br>
+      Expected: Only `addressbook` is listed.
+
 ### Saving data
 
-1. Dealing with missing/corrupted data files
+1. Dealing with missing data files
 
-   1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+   1. Manually change a status of an application in `[JAR file location]/data/addressbook.json` to `""`
+      Expected: When user reopens the app, the status gets automatically updated to `"Interested"`
 
-1. _{ more test cases …​ }_
+   2. Manually change other fields in `[JAR file location]/data/addressbook.json` to `""`
+      Testcase: change name field to `""`
+      Expected: OfferFlow would clear all the applications and start with an empty file
+
+2. Dealing with corrupt data files
+
+   1. Manually change fields in `[JAR file location]/data/addressbook.json` to invalid values
+      Testcase: change phone number field to `12` (phone number must be atleast 3 digits)
+      Expected: OfferFlow would clear all the applications and start with an empty file
 
 
 
