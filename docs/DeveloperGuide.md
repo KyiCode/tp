@@ -893,6 +893,12 @@ testers are expected to do more *exploratory* testing.
     3. Test case: `s/Applied`<br>
        Expected: Application status now changed to `Applied`.
 
+    4. Test case: `d/abcde`<br>
+       Expected: Edit failed, error details appear.
+    
+    5. Test case: `editexit`<br>
+       Expected: Application exits editing mode.
+
 ### [Removing reminder](https://ay2526s2-cs2103t-f10-4.github.io/tp/UserGuide.html#modifying-reminders-reminder)
 
 1. Removing a reminder of an Application via Name and Role
