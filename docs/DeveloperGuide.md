@@ -399,7 +399,6 @@ The following activity diagram summarizes what happens when a user executes a ne
 
 _{more aspects and alternatives to be added}_
 
-
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**
@@ -546,11 +545,10 @@ but can also choose to add other optional details (date of application, contact 
 
 **MSS**
 
-1. User requests to edit a particular company application
+1. User requests to edit a particular application
 2. OfferFlow shows the company's current application details
-3. User edits application details such as adding reminder interviews and/or update application date
-4. User confirms all changes made to the application
-5. OfferFlow updates the application details to reflect the new changes if any
+3. User creates or edits both reminder description and reminder date
+4. OfferFlow updates the application details to reflect the new changes if any
 
    Use case ends.
 
@@ -562,13 +560,13 @@ but can also choose to add other optional details (date of application, contact 
 
       Use case ends.
 
-* 3a. The given interview date/time is invalid.
+* 3a. The given reminder description or reminder date is invalid.
 
    * 3a1. OfferFlow shows an error message.
 
       Use case resumes at step 3.
 
-* 3b. The given application date is invalid.
+* 3b. The reminder description or reminder date is not inputted.
 
    * 3b1. OfferFlow shows an error message.
 
@@ -869,8 +867,6 @@ testers are expected to do more *exploratory* testing.
     4. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
        Expected: Similar to previous.
 
-1. _{ more test cases …​ }_
-
 ### [Editing an application](https://ay2526s2-cs2103t-f10-4.github.io/tp/UserGuide.html#editing-an-application-editmode)
 
 1. Edit different applications with [different parameters](https://ay2526s2-cs2103t-f10-4.github.io/tp/UserGuide.html#application)
@@ -958,11 +954,20 @@ testers are expected to do more *exploratory* testing.
 
 ### Saving data
 
-1. Dealing with missing/corrupted data files
+1. Dealing with missing data files
 
-   1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+   1. Manually change a status of an application in `[JAR file location]/data/addressbook.json` to `""`
+      Expected: When user reopens the app, the status gets automatically updated to `"Interested"`
 
-1. _{ more test cases …​ }_
+   2. Manually change other fields in `[JAR file location]/data/addressbook.json` to `""`
+      Testcase: change name field to `""`
+      Expected: OfferFlow would clear all the applications and start with an empty file
+
+2. Dealing with corrupt data files
+
+   1. Manually change fields in `[JAR file location]/data/addressbook.json` to invalid values
+      Testcase: change phone number field to `12` (phone number must be atleast 3 digits)
+      Expected: OfferFlow would clear all the applications and start with an empty file
 
 --------------------------------------------------------------------------------------------------------------------
 
