@@ -927,7 +927,7 @@ testers are expected to do more *exploratory* testing.
       Expected: No folder created. Error message shown stating folder already exists and to use `toggle` instead.
 
    3. Test case: `folder y1s2`<br>
-      Expected: Same error as above — folder names are case-insensitive.
+      Expected: Same error as above. Folder names are case-insensitive.
 
 3. Creating a folder with invalid names
 
@@ -950,7 +950,7 @@ testers are expected to do more *exploratory* testing.
       Expected: Switched to `data/y1s2.json`. Status bar updates accordingly. Result message shows `Switched to folder: y1s2`.
 
    3. Test case: `toggle y1s2`<br>
-      Expected: Same result as above — folder names are case-insensitive.
+      Expected: Same result as above. Folder names are case-insensitive.
 
 2. Switching to a non-existent folder
 
