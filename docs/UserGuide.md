@@ -150,7 +150,7 @@ If you choose to overwrite, type `overwrite`. If not, continue using the app as 
 
 Format:
 1. `editmode INDEX` or `editmode n/NAME r/ROLE` to enter edit mode to edit that particular application
-2. Type in any combination of at least one of the parameters below to edit the application
+2. Type in any combination of at least one of the internship application parameters above to edit the application
 3. `exitedit` to finish editing and exit the editing mode
 
 ⚠️ Notes:
@@ -161,17 +161,6 @@ Format:
 * When editing tags, the existing tags of the application will be removed i.e adding of tags is not cumulative.
 * You can remove all the application’s tags by typing `t/` without
   specifying any tags after it.
-
-#### Parameters
-- `n/NAME` → Name of the company
-- `p/PHONE` → company telephone number
-- `e/EMAIL` → company email
-- `a/ADDRESS` → company location
-- `d/DATE` → date when you applied
-- `r/ROLE` → job position applied for
-- `s/STATUS` → application progress
-- `t/TAGS` → optional fields
-- `u/REMINDER ud/DATE` → Reminder description and Date of reminder
 
 #### Examples:
 * `editmode 1` or `editmode n/Google r/Software Engineer`
