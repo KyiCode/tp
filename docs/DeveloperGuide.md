@@ -671,6 +671,16 @@ but can also choose to add other optional details (date of application, contact 
 
       Use case ends.
 
+**Use case: View upcoming applications**
+
+**MSS**
+
+The MSS is similar to Use case: Filter applications but user only specifies the range of days.
+
+**Extensions**
+
+The extensions are similar to Use case: Filter applications.
+
 ### Non-Functional Requirements
 
 1.  Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
@@ -801,12 +811,42 @@ testers are expected to do more *exploratory* testing.
     3. Test case: `s/Applied`<br>
        Expected: Application status now changed to `Applied`.
 
+    4. Test case: `editexit`<br>
+       Expected: Application exits `editing mode`.
+
 
 ### Saving data
 
 1. Dealing with missing/corrupted data files
 
    1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+
+1. _{ more test cases …​ }_
+
+
+
+### [Viewing upcoming applications](https://ay2526s2-cs2103t-f10-4.github.io/tp/UserGuide.html#locating-applications-with-upcoming-deadlines-upcoming)
+
+1. Viewing upcoming applications
+
+    1. Test case: `upcoming 5`<br>
+       Expected: Only applications with deadlines due within 5 days of current date are shown. Applications with overdue deadlines or no deadlines should not be shown.
+
+    2. Testcase: `upcoming 9`<br>
+       Expected: Command fails. Specified number of days out of bounds.
+
+    3. Testcase: `upcoming i`<br>
+       Expected: Command fails. i is not a valid input for number of days.
+
+    4. Testcase: `upcoming`<br>
+       Expected: Command fails. Specified number of days cannot be blank.
+
+2. Upcoming command is saved between exit and startup.
+
+    1. Prerequisites: Perform test case: `upcoming 5`.
+
+    2. Testcase: Close the application either by typing `exit` or clicking the X on the window. Re-launch the app by double-clicking the jar file.<br>
+       Expected: Observed application list on re-launch is the same as before closing the application.
 
 1. _{ more test cases …​ }_
 
