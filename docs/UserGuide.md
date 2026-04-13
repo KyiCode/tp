@@ -123,7 +123,7 @@ Format: `add n/NAME r/ROLE ...`
 * Reminder due today or earlier will be displayed in red, others will be displayed in orange
 * Multiple tags allowed
 * Default status is `Interested`
-* Blank parameters are stored as empty strings during the session; reloading the app resets them back to `None`.
+* Blank parameters are stored as empty strings during the session; reloading the app resets them back to `None`
 
 </box>
 
