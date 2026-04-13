@@ -10,6 +10,9 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.application.Application;
+import seedu.address.model.application.Name;
+import seedu.address.model.application.Role;
+import seedu.address.model.application.SameCompanySameRolePredicate;
 import seedu.address.model.application.Status;
 
 /**
@@ -66,6 +69,11 @@ public class StatusCommand extends Command {
                 target = app;
                 break;
             }
+        }
+
+        SameCompanySameRolePredicate predicate = new SameCompanySameRolePredicate(new Name(name), new Role(role));
+        if (model.appNotInFullList(predicate)) {
+            throw new CommandException(Messages.MESSAGE_APPLICATION_NOT_IN_FILTERED);
         }
 
         if (target == null) {

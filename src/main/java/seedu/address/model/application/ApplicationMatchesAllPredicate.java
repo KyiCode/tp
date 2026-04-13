@@ -25,7 +25,7 @@ public class ApplicationMatchesAllPredicate implements Predicate<Application> {
 
     @Override
     public boolean test(Application application) {
-        return predicates.stream().allMatch(predicate -> predicate.test(application));
+        return predicates.stream().anyMatch(predicate -> predicate.test(application));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ApplicationMatchesAllPredicate implements Predicate<Application> {
 
         ApplicationMatchesAllPredicate otherPredicate = (ApplicationMatchesAllPredicate) other;
         return predicates.size() == otherPredicate.predicates.size()
-                && new HashSet<>(predicates).equals(new HashSet<>(otherPredicate.predicates));
+                                        && new HashSet<>(predicates).equals(new HashSet<>(otherPredicate.predicates));
     }
 
     @Override

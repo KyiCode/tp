@@ -177,7 +177,7 @@ The sequence diagram below shows how a filter command is parsed and executed:
 * rejects malformed commands such as unsupported prefixes, repeated single-value prefixes, empty values, or invalid
   dates
 * constructs a list of predicates, one for each supplied criterion
-* wraps those predicates in `ApplicationMatchesAllPredicate`, so an application must satisfy every supplied filter
+* wraps those predicates in `ApplicationMatchesAllPredicate`, so any application must satisfy every supplied filter
   condition to remain visible
 
 When the resulting `FilterCommand` executes, it calls `Model#updateFilteredApplicationList(predicate)`. In
@@ -187,9 +187,6 @@ When the resulting `FilterCommand` executes, it calls `Model#updateFilteredAppli
 * only the visible subset of applications changes
 * the UI refreshes automatically because it observes the filtered application list
 
-An additional implementation detail is that `AddressBookParser` also accepts compact commands such as
-`filter/n Google` by normalizing command words that start with `filter/` before forwarding them to
-`FilterCommandParser`.
 
 ### Update status feature
 
