@@ -1065,6 +1065,15 @@ testers are expected to do more *exploratory* testing.
    1. Manually change fields in `[JAR file location]/data/addressbook.json` to invalid values
       Testcase: change phone number field to `12` (phone number must be atleast 3 digits)
       Expected: OfferFlow would clear all the applications and start with an empty file
+
+--------------------------------------------------------------------------------------------------------------------
+
+## **Appendix: Planned Enhancements**
+
+Team size: 5
+
+1. **Valid statuses limited**: Currently our status only allows a fixed set of status (`Interested`, `Interview`, `Pending`, `Rejected`, `Offered` and `Accepted`). We plan to expand this set of status to allow more statuses like `OA`, `Assignment` and other custom statuses
+
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Appendix: Effort**
