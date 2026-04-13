@@ -142,11 +142,14 @@ public class RemoveReminderCommand extends Command {
         requireNonNull(model);
         List<Application> lastShownList = model.getFilteredApplicationList();
         SameCompanySameRolePredicate predicate = new SameCompanySameRolePredicate(name, role);
+        if (model.appNotInFullList(predicate)) {
+            throw new CommandException(Messages.MESSAGE_INVALID_APPLICATION_IDENTIFIER);
+        }
 
         return lastShownList.stream()
                 .filter(predicate)
                 .findFirst()
-                .orElseThrow(() -> new CommandException(Messages.MESSAGE_INVALID_APPLICATION_IDENTIFIER));
+                .orElseThrow(() -> new CommandException(Messages.MESSAGE_APPLICATION_NOT_IN_FILTERED));
     }
 
     @Override
