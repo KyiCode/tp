@@ -153,7 +153,7 @@ If you choose to overwrite, type `overwrite`. If not, continue using the app as 
 Format:
 1. `editmode INDEX` or `editmode n/NAME r/ROLE` to enter edit mode to edit that particular application
 2. Type in any combination of at least one of the internship application parameters [above](#application) to edit the application
-3. `exitedit` to finish editing and exit the editing mode
+3. `editexit` to finish editing and exit the editing mode
 
 ⚠️ Notes:
 * Enters editing mode for the application at the specified `INDEX` or with the specified `NAME` and `ROLE`. The index refers to the index number shown in the displayed application list. The index **must be a positive integer** 1, 2, 3, …
@@ -486,7 +486,7 @@ Furthermore, certain edits can cause OfferFlow to behave in unexpected ways (e.g
 | **Delete**          | `delete INDEX` or `delete n/NAME r/ROLE`                                                           | `delete 3` or `delete n/Google r/Backend Developer`                                                                              |
 | **Enter Edit**      | `editmode INDEX` or `editmode n/NAME r/ROLE`                                                       | `editmode 1` or `editmode n/Nus r/System Engineer`                                                                               |
 | **Edit**            | While in editmode: `a/ADDRESS` or `s/STATUS` or ...                                                   | `a/Mapletree Business City II, Pasir Panjang area` or `s/applied`                                                                |
-| **Exit Edit**       | `editexit`                                                                                         | `exitedit`                                                                                                                       |
+| **Exit Edit**       | `editexit`                                                                                         | `editexit`                                                                                                                       |
 | **Remove Reminder** | `rmr INDEX` or `rmr n/NAME r/ROLE`                                                                 | `rmr 3` or `rmr n/Google r/Backend Developer`                                                                                    |
 | **Status**          | `status n/COMPANY r/ROLE s/STATUS`                                                                 | `status n/Tiktok r/Data Analyst s/Rejected`                                                                                      |
 | **Find**            | `find KEYWORD [MORE_KEYWORDS]`                                                                     | `find James Jake`                                                                                                                |
