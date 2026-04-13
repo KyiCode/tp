@@ -50,6 +50,9 @@ public class AddressBookEditingParser extends AddressBookParser {
         if (commandWord.equals(EditExitCommand.COMMAND_WORD)) {
             return new EditExitCommand();
         }
+
+        new EditCommandParser().parse("edit " + commandWord); //hacky way of detecting invalid command (like "add")
+
         // "edit " appended for one reason: ArgumentTokenizer expects a preamble / command word
         // and will ignore it. EditCommand's new syntax has no preamble, so this causes
         // the first arg to be ignored. This hack-y method isn't ideal, but minimizes how much
