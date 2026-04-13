@@ -12,7 +12,7 @@ public class Name {
     public static final String MESSAGE_CONSTRAINTS =
             "Company names must start with a letter or number and cannot be blank.\n"
             + "Allowed characters: letters, numbers, spaces, and "
-            + "symbols: & . ' , ( ) ! @ # $ % * + - / = ? _ "
+            + "symbols: & . ' , ( ) ! @ # $ % * + - = ? _ "
             + "Note: Company names cannot end with any symbols except . ! "
             + "and cannot have consecutive spaces or be a single character.";
 
