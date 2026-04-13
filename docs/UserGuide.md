@@ -106,7 +106,9 @@ Format: `add n/NAME r/ROLE ...`
 
 <box type="tip" seamless>
 
-**Tip:** Application can be added with only the `n/NAME` and `r/ROLE` fields, other fields are optional
+**Tip:** 
+* Application can be added with only the `n/NAME` and `r/ROLE` fields, other fields are optional
+* Application parameters (except name and role) can be removed by leaving the value after the prefix empty
 
 </box>
 
@@ -121,6 +123,7 @@ Format: `add n/NAME r/ROLE ...`
 * Reminder due today or earlier will be displayed in red, others will be displayed in orange
 * Multiple tags allowed
 * Default status is `Interested`
+* Blank parameters are stored as empty strings during the session; reloading the app resets them back to `None`.
 
 </box>
 
@@ -142,7 +145,7 @@ Format: `add n/NAME r/ROLE ...`
 Overwrites pre-existing application in OfferFlow that has the same name and role, with the new application when you try to add an application with the same name and role as another already existing application
 
 #### Example:
-* `add n/Google r/QA Engineer d/2025-12-12`
+* `add n/Google r/QA Engineer d/2025-12-12 s/ `
 
   <img src="images/DuplicateApplication.png" width="500" height="400"/>
 
